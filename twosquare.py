@@ -8,3 +8,9 @@ aka double Playfair.
 It can also be used as a module. 
 
 """
+
+def __main__():
+    pass
+
+if __name__ == '__main__':
+    __main__()
