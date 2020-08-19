@@ -33,13 +33,23 @@ def __main__():
         while True:
             mode = input("Select mode: 1 for encrypt or 2 for decrypt >> ")
 
-            return 'encrypt' if mode == '1' else 'decrypt'        
+            if mode == '1':
+                return 'encrypt'
+
+            elif mode == '2':
+                return 'decrypt'
+
+            else:
+                return False
 
     print()
     
     mode = get_mode()
 
     assert mode == 'encrypt' or mode == 'decrypt'
+
+
+
 
 
     # prompt user for first key
