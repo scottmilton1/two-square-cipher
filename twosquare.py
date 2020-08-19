@@ -30,8 +30,13 @@ def __main__():
 
     # prompt user for mode - encrypt or decrypt
     def get_mode():
-        return False
-        
+        while True:
+            mode = input("Select mode: 1 for encrypt or 2 for decrypt >> ")
+
+            return 'encrypt' if mode == '1' else 'decrypt'        
+
+    print()
+    
     mode = get_mode()
 
     assert mode == 'encrypt' or mode == 'decrypt'
