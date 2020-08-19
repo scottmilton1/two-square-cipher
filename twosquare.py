@@ -29,7 +29,14 @@ def __main__():
     print('{:^80}'.format(border))
 
     # prompt user for mode - encrypt or decrypt
-    
+    def get_mode():
+        return False
+        
+    mode = get_mode()
+
+    assert mode == 'encrypt' or mode == 'decrypt'
+
+
     # prompt user for first key
 
     # validate key
