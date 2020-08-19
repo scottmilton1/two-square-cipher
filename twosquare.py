@@ -43,13 +43,12 @@ def __main__():
                 return False
 
     print()
-    
-    mode = get_mode()
 
+    # get mode until user chooses a valid selection
+    while not (mode := get_mode()):
+        print('Invalid selection. Please try again!')
+       
     assert mode == 'encrypt' or mode == 'decrypt'
-
-
-
 
 
     # prompt user for first key
