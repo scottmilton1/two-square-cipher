@@ -12,6 +12,23 @@ The functionality of this program can also be used as a module.
 
 """
 
+def get_key():
+    """Gets key from user and returns it.
+
+    Prompts user for keyword or key phrase. Does not perform any
+    validaty checks of user input for proper key formatting
+    restrictions, which is left to validate_key() function.
+
+    Returns the string value entered by the user.
+
+    """
+
+    while not (key := input("Enter keyword or key phrase >> ")):
+
+        print("Invalid entry. Please try again.")
+
+    return key
+
 def get_mode():
     """Gets program mode from user.
 
@@ -58,46 +75,11 @@ def __main__():
 ##       
 ##    assert mode == 'encrypt' or mode == 'decrypt'
 
-
     # prompt user for first key
+    first_key = get_key()
 
-    def get_key():
-        """Gets key from user and returns it.
+    assert first_key
 
-        Prompts user for keyword or key phrase. Does not perform any
-        validaty checks of user input for proper key formatting
-        restrictions, which is left to validate_key() function.
-
-        Returns the string value entered by the user.
-
-        """
-
-##        if key := input("Enter keyword or key phrase >> "):
-##            return key
-
-        while not (key := input("Enter keyword or key phrase >> ")):
-
-            print("Invalid entry. Please try again.")
-
-        return key
-
-
-##        while True:
-##            
-##            key = input("Enter keyword or key phrase >> ")
-##
-##            if key:
-##                return key
-##
-##            else:
-##                print("Invalid entry. Please try again.")
-##
-##        return False
-
-    assert get_key()
-
-
-    
 
     # validate key
 
