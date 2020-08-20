@@ -108,16 +108,24 @@ def __main__():
 
         else:
             return True
+        
+    def test_validate_key():
+        """Test suite for validate_key() function.
+        """
 
-    # test for types
-    assert validate_key('astring')
-    assert not validate_key(['list', 2])
-    assert not validate_key(123)
-    assert not validate_key(True)
-    assert not validate_key(None)
-    assert not validate_key({})
+        print('Running unit tests for validate_key() function.')
+
+        # test for types
+        assert validate_key('astring')
+        assert not validate_key(['list', 2])
+        assert not validate_key(123)
+        assert not validate_key(True)
+        assert not validate_key(None)
+        assert not validate_key({})
+
+        print('All tests passed.')
     
-
+    test_validate_key()
 
 
 
