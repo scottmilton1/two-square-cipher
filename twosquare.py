@@ -72,17 +72,27 @@ def __main__():
 
         """
 
-        while True:
-            
-            key = input("Enter keyword or key phrase >> ")
+##        if key := input("Enter keyword or key phrase >> "):
+##            return key
 
-            if key:
-                return key
+        while not (key := input("Enter keyword or key phrase >> ")):
 
-            else:
-                print("Invalid entry. Please try again.")
+            print("Invalid entry. Please try again.")
 
-        return False
+        return key
+
+
+##        while True:
+##            
+##            key = input("Enter keyword or key phrase >> ")
+##
+##            if key:
+##                return key
+##
+##            else:
+##                print("Invalid entry. Please try again.")
+##
+##        return False
 
     assert get_key()
 
