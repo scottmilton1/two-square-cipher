@@ -168,11 +168,10 @@ def __main__():
     print()
 
     # get input until user chooses a valid selection
-##    while not (mode := get_mode()):
-##        print('Invalid selection. Please try again!')
-##       
-##    assert mode == 'encrypt' or mode == 'decrypt'
-
+    while not (mode := get_mode()):
+        print('Invalid selection. Please try again!')
+       
+    assert mode == 'encrypt' or mode == 'decrypt'
 
     # prompt user for first key
     first_key = get_key('first')
@@ -192,7 +191,6 @@ def __main__():
     if __debug__ == True:
         assert first_key
         test_validate_key()
-
 
     # create first table with first key
 
