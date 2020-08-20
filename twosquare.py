@@ -76,9 +76,9 @@ def __main__():
 ##    assert mode == 'encrypt' or mode == 'decrypt'
 
     # prompt user for first key
-    first_key = get_key()
-
-    assert first_key
+##    first_key = get_key()
+##
+##    assert first_key
 
     # validate key
     def validate_key(key):
@@ -93,7 +93,8 @@ def __main__():
         """
 
         try:
-            pass
+            if type(key) is not str:
+                raise ValueError('key must be a string')
             
         except ValueError as err:
             print(err)
@@ -108,7 +109,16 @@ def __main__():
         else:
             return True
 
-    assert validate_key(first_key)
+    # test for types
+    assert validate_key('astring')
+    assert not validate_key(['list', 2])
+    assert not validate_key(123)
+    assert not validate_key(True)
+    assert not validate_key(None)
+    assert not validate_key({})
+    
+
+
 
 
     # prompt user for second key
