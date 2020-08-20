@@ -49,6 +49,98 @@ def get_mode():
     else:
         return False
 
+def test_validate_key():
+    """Test suite for validate_key() function.
+    """
+
+    print('Running unit tests for validate_key() function.')
+
+    # test against argument types
+    assert validate_key('astring')
+    assert not validate_key(['list', 2])
+    assert not validate_key(123)
+    assert not validate_key(True)
+    assert not validate_key(None)
+    assert not validate_key({})
+
+    # test for return types
+    assert type(validate_key('foo')) is bool
+    assert not type(validate_key('bar')) == None
+    assert not type(validate_key('baz')) == str
+    assert not type(validate_key('bah')) == int     
+
+    print('All tests passed.')
+
+
+def validate_key(key):
+    """Validates a key for a Playfair table.
+
+    Takes a string as input and validates it against the formatting
+    specifications of a keyword or key phrase for a Playfair table.
+
+    Returns True if key passes all checks.
+    Prints a failure message and returns False if key in invalid.
+
+    """
+
+    try:
+        # check that key is a string
+        if type(key) is not str:
+            raise ValueError('Key must be a string.')
+
+        # make sure key not empty - added this for use at module
+        # level as main program already will not allow this
+        if len(key) < 1:
+            raise ValueError('Key must not be empty.')
+                            
+        key = key.upper()
+
+        # make list to track which letters are in the key
+        letters_in_key = [ ]
+
+        for character in key:
+
+            # check for white space
+            if character.isspace():
+                raise ValueError('Key cannot contain white space. ' +
+                    'Only letters are allowed.')
+
+            # check for digits
+            if character.isdigit():
+                raise ValueError('Key cannot contain digits. ' +
+                    'Numbers must be spelled out.')
+
+            # check for other forbidden characters
+            if not character.isalpha():
+                raise ValueError('Key cannot contain punctuation ' +
+                    'or special characters.')
+
+            # check for duplicate letters
+            if character in letters_in_key:
+                raise ValueError('Key must not contain duplicate letters.')
+
+            # if character is a letter add it to the list to track it
+            elif character.isalpha():
+                letters_in_key.append(character)
+
+        # make sure key does not contain more than twenty five letters
+        if len(key) > 25:
+            raise ValueError('Key cannot contain more than ' +
+                'twenty-five characters.')
+        
+    except ValueError as err:
+        print(err)
+        return False
+
+    except Exception as err:
+        print('Unexpected exception type raised during execution.')
+        print(type(err))
+        print(err)
+        raise
+
+    else:
+        return True
+
 def __main__():
     """This is the main program.
 
@@ -75,65 +167,20 @@ def __main__():
 ##       
 ##    assert mode == 'encrypt' or mode == 'decrypt'
 
+
     # prompt user for first key
-##    first_key = get_key()
-##
-##    assert first_key
+    first_key = get_key()
+
+    # run unit tests
+    if __debug__ == True:
+        assert first_key
+        test_validate_key()
 
     # validate key
-    def validate_key(key):
-        """Validates a key for a Playfair table.
+    while not validate_key(first_key):
+        first_key = get_key()
 
-        Takes a string as input and validates it against the formatting
-        specifications of a keyword or key phrase for a Playfair table.
-
-        Returns True if key passes all checks.
-        Prints a failure message and returns False if key in invalid.
-
-        """
-
-        try:
-            if type(key) is not str:
-                raise ValueError('key must be a string')
-            
-        except ValueError as err:
-            print(err)
-            return False
-
-        except Exception as err:
-            print('Unexpected exception type raised during execution.')
-            print(type(err))
-            print(err)
-            raise
-
-        else:
-            return True
-        
-    def test_validate_key():
-        """Test suite for validate_key() function.
-        """
-
-        print('Running unit tests for validate_key() function.')
-
-        # test against argument types
-        assert validate_key('astring')
-        assert not validate_key(['list', 2])
-        assert not validate_key(123)
-        assert not validate_key(True)
-        assert not validate_key(None)
-        assert not validate_key({})
-
-        # test for return types
-        assert type(validate_key('foo')) is bool
-        assert not type(validate_key('bar')) == None
-        assert not type(validate_key('baz')) == str
-        assert not type(validate_key('bah')) == int     
-
-        print('All tests passed.')
-    
-    test_validate_key()
-
-
+    print('that is a valid key')
 
     # prompt user for second key
 
