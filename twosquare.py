@@ -80,8 +80,12 @@ def __main__():
 
     assert first_key
 
-
     # validate key
+    def validate_key(key):
+
+        return False
+
+    assert validate_key(first_key)
 
     # prompt user for second key
 
