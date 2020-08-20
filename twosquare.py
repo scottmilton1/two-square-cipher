@@ -82,10 +82,34 @@ def __main__():
 
     # validate key
     def validate_key(key):
+        """Validates a key for a Playfair table.
 
-        return False
+        Takes a string as input and validates it against the formatting
+        specifications of a keyword or key phrase for a Playfair table.
+
+        Returns True if key passes all checks.
+        Prints a failure message and returns False if key in invalid.
+
+        """
+
+        try:
+            pass
+            
+        except ValueError as err:
+            print(err)
+            return False
+
+        except Exception as err:
+            print('Unexpected exception type raised during execution.')
+            print(type(err))
+            print(err)
+            raise
+
+        else:
+            return True
 
     assert validate_key(first_key)
+
 
     # prompt user for second key
 
