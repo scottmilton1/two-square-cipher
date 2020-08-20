@@ -12,9 +12,30 @@ The functionality of this program can also be used as a module.
 
 """
 
+def get_mode():
+    """Gets program mode from user.
+
+    Prompts user for program mode (encryption or decryption).
+
+    Returns string value 'encrypt' or 'decrypt' based on user selection
+    or returns False if user has made an invalid selection.
+    """
+
+    mode = input("Select mode: 1 for encrypt or 2 for decrypt >> ")
+
+    if mode == '1':
+        return 'encrypt'
+
+    elif mode == '2':
+        return 'decrypt'
+
+    else:
+        return False
+
 def __main__():
-    """This is the main program. The functionality of this
-    implementation can also be used as a module.
+    """This is the main program.
+
+    The functionality of this implementation can also be used as a module.
     """
 
     # display program title and brief description
@@ -29,22 +50,9 @@ def __main__():
     print('{:^80}'.format(border))
 
     # prompt user for mode - encrypt or decrypt
-    def get_mode():
-        while True:
-            mode = input("Select mode: 1 for encrypt or 2 for decrypt >> ")
-
-            if mode == '1':
-                return 'encrypt'
-
-            elif mode == '2':
-                return 'decrypt'
-
-            else:
-                return False
-
     print()
 
-    # get mode until user chooses a valid selection
+    # get input until user chooses a valid selection
     while not (mode := get_mode()):
         print('Invalid selection. Please try again!')
        
