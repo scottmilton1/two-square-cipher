@@ -12,18 +12,24 @@ The functionality of this program can also be used as a module.
 
 """
 
-def get_key():
+def get_key(ordinal = ''):
     """Gets key from user and returns it.
 
     Prompts user for keyword or key phrase. Does not perform any
     validaty checks of user input for proper key formatting
     restrictions, which is left to validate_key() function.
 
+    The arg ordinal is optional string value for print formatting. If
+    provided, it should be an ordinal number (e.g. - 'first', 'second').
+
     Returns the string value entered by the user.
 
     """
 
-    while not (key := input("Enter keyword or key phrase >> ")):
+    if len(ordinal) > 0:
+        ordinal += " "
+        
+    while not (key := input("Enter %skeyword or key phrase >> " % ordinal)):
 
         print("Invalid entry. Please try again.")
 
@@ -169,22 +175,24 @@ def __main__():
 
 
     # prompt user for first key
-    first_key = get_key()
+    first_key = get_key('first')
+
+    # validate key
+    while not validate_key(first_key):
+        first_key = get_key()
+
+    # prompt user for second key
+    second_key = get_key('second')
+
+    # validate key
+    while not validate_key(second_key):
+        second_key = get_key()
 
     # run unit tests
     if __debug__ == True:
         assert first_key
         test_validate_key()
 
-    # validate key
-    while not validate_key(first_key):
-        first_key = get_key()
-
-    print('that is a valid key')
-
-    # prompt user for second key
-
-    # validate key
 
     # create first table with first key
 
