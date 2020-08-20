@@ -53,15 +53,34 @@ def __main__():
     print()
 
     # get input until user chooses a valid selection
-    while not (mode := get_mode()):
-        print('Invalid selection. Please try again!')
-       
-    assert mode == 'encrypt' or mode == 'decrypt'
+##    while not (mode := get_mode()):
+##        print('Invalid selection. Please try again!')
+##       
+##    assert mode == 'encrypt' or mode == 'decrypt'
 
 
     # prompt user for first key
 
     def get_key():
+        """Gets key from user and returns it.
+
+        Prompts user for keyword or key phrase. Does not perform any
+        validaty checks of user input for proper key formatting
+        restrictions, which is left to validate_key() function.
+
+        Returns the string value entered by the user.
+
+        """
+
+        while True:
+            
+            key = input("Enter keyword or key phrase >> ")
+
+            if key:
+                return key
+
+            else:
+                print("Invalid entry. Please try again.")
 
         return False
 
