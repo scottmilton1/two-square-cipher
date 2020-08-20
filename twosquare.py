@@ -61,6 +61,15 @@ def __main__():
 
     # prompt user for first key
 
+    def get_key():
+
+        return False
+
+    assert get_key()
+
+
+    
+
     # validate key
 
     # prompt user for second key
