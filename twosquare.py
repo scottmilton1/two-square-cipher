@@ -16,7 +16,7 @@ def get_key(ordinal = ''):
     """Gets key from user and returns it.
 
     Prompts user for keyword or key phrase. Does not perform any
-    validaty checks of user input for proper key formatting
+    validity checks of user input for proper key formatting
     restrictions, which is left to validate_key() function.
 
     The arg ordinal is optional string value for print formatting. If
@@ -85,7 +85,7 @@ def validate_key(key):
     specifications of a keyword or key phrase for a Playfair table.
 
     Returns True if key passes all checks.
-    Prints a failure message and returns False if key in invalid.
+    Prints a failure message and returns False if key is invalid.
 
     """
 
