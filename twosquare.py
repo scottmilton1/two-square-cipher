@@ -12,6 +12,103 @@ The functionality of this program can also be used as a module.
 
 """
 
+def create_table(key):
+    """Create a Playfair table.
+
+    Creates a Playfair table using the provided key. This table is a
+    5 x 5 matrix that is used by the cipher to encrypt and decrypt
+    messages.
+
+    key must be a string in valid format. The validate_key()
+    function can be used to verify that a key meets all necessary
+    requirements prior to calling this function.
+    
+    Returns a valid populated table if successful or 
+    prints a failure message and returns False if unsuccessful.
+
+    """
+
+    # set table size
+    MAX_ROWS = 5
+    MAX_COLUMNS = 5
+
+    try:
+        if type(key) is not str or key.isalpha() == False:
+            raise ValueError('Invalid key format.')
+
+        # capitalize all letters in the key
+        key = key.upper()
+
+        # create empty list for storage
+        key_as_letters = [ ]
+
+        # check for I and J in key and combine into single IJ letter
+        for letter in key:         
+            if letter == 'I' or letter == 'J':
+                letter = 'IJ'
+            key_as_letters.append(letter)
+
+        # create full list of letters to track letters not in key
+        alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"           
+        letters_not_in_key = [ ]
+
+        # combine I and J into IJ
+        for letter in alphabet:
+            if letter == 'J':
+                letter = 'IJ'
+                letters_not_in_key.remove('I')
+            letters_not_in_key.append(letter)
+
+        # remove key letters from list of letters not in key
+        for letter in key_as_letters:
+            if letter in letters_not_in_key:
+                letters_not_in_key.remove(letter)
+
+        # reverse the two lists for sake of efficiency when creating
+        # the table below: linear time instead of quadratic for pops
+        key_as_letters.reverse()
+        letters_not_in_key.reverse()
+
+        # create empty table
+        table = [ ]
+
+        # create and populate the table
+        for row in range(MAX_ROWS):
+
+            # create a new empty row
+            this_row = [ ]
+
+            # populate the new row with characters
+            for column in range(MAX_COLUMNS):
+
+                # use the key letters to populate the table
+                if len(key_as_letters) > 0:
+                    current_letter = key_as_letters.pop()
+
+                # then fill table with remaining letters of alphabet
+                else:
+                    current_letter = letters_not_in_key.pop()
+
+                # populate each cell with the current letter
+                this_row.append(current_letter)
+
+            # append new row to table
+            table.append(this_row)
+
+        return table
+
+    except ValueError as err:
+        print(err)
+        return False
+
+    except Exception as err:
+        print('Unexpected exception type raised during execution.')
+        print(type(err))
+        print(err)
+        raise
+
+    return False
+
 def get_key(ordinal = ''):
     """Gets key from user and returns it.
 
@@ -54,6 +151,34 @@ def get_mode():
 
     else:
         return False
+
+def test_create_table():
+    """Test suite for create_table() function.
+    """
+
+    # use logging for test output   
+    import logging
+    logging.basicConfig(level=logging.DEBUG, format = '%(message)s',)
+
+    logging.debug('\nRunning unit tests for create_table() function.')
+    logging.debug('Testing different argument types...')
+
+    # test against argument types
+    assert create_table('string')
+    assert not create_table(str)
+    assert not create_table('') #mt string
+    assert not create_table(' an invalid string!')
+    assert not create_table(123)
+    assert not create_table(b'01') #bytes
+
+    logging.debug('Testing return values...')
+
+    # test for return value types
+    assert type(create_table('keyword')) in [list, bool]
+    assert type(create_table('keyword')) not in [str, int, tuple, dict]
+    assert type(create_table('keyword')) not in [True, None, [ ], '']
+    
+    logging.debug('All tests passed.')
 
 def test_validate_key():
     """Test suite for validate_key() function.
@@ -199,140 +324,12 @@ def __main__():
 
     # create first table with first key
 
-    def create_table(key):
-        """Create a Playfair table.
 
-        Creates a Playfair table using the provided key. This table is a
-        5 x 5 matrix that is used by the cipher to encrypt and decrypt
-        messages.
-
-        key must be a string in valid format. The validate_key()
-        function can be used to verify that a key meets all necessary
-        requirements prior to calling this function.
-        
-        Returns a valid populated table if successful or 
-        prints a failure message and returns False if unsuccessful.
-
-        """
-
-        # set table size
-        MAX_ROWS = 5
-        MAX_COLUMNS = 5
-
-        try:
-            if type(key) is not str or key.isalpha() == False:
-                raise ValueError('Invalid key format.')
-
-            # capitalize all letters in the key
-            key = key.upper()
-
-            # create empty list for storage
-            key_as_letters = [ ]
-
-            # check for I and J in key and combine into single IJ letter
-            for letter in key:         
-                if letter == 'I' or letter == 'J':
-                    letter = 'IJ'
-                key_as_letters.append(letter)
-
-            # create full list of letters to track letters not in key
-            alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"           
-            letters_not_in_key = [ ]
-
-            # combine I and J into IJ
-            for letter in alphabet:
-                if letter == 'J':
-                    letter = 'IJ'
-                    letters_not_in_key.remove('I')
-                letters_not_in_key.append(letter)
-
-            # remove key letters from list of letters not in key
-            for letter in key_as_letters:
-                if letter in letters_not_in_key:
-                    letters_not_in_key.remove(letter)
-
-            # reverse the two lists for sake of efficiency when creating
-            # the table below: linear time instead of quadratic for pops
-            key_as_letters.reverse()
-            letters_not_in_key.reverse()
-
-            # create empty table
-            table = [ ]
-
-            # create and populate the table
-            for row in range(MAX_ROWS):
-
-                # create a new empty row
-                this_row = [ ]
-
-                # populate the new row with characters
-                for column in range(MAX_COLUMNS):
-
-                    # use the key letters to populate the table
-                    if len(key_as_letters) > 0:
-                        current_letter = key_as_letters.pop()
-
-                    # then fill table with remaining letters of alphabet
-                    else:
-                        current_letter = letters_not_in_key.pop()
-
-                    # populate each cell with the current letter
-                    this_row.append(current_letter)
-
-                # append new row to table
-                table.append(this_row)
-
-##                # print statement for development purposes - REMOVE LATER
-##                print(this_row)
-
-            return table
-
-        except ValueError as err:
-            print(err)
-            return False
-
-        except Exception as err:
-            print('Unexpected exception type raised during execution.')
-            print(type(err))
-            print(err)
-            raise
-
-        return False
-
-    def test_create_table():
-        """Test suite for create_table() function.
-        """
-
-        # use logging for test output   
-        import logging
-        logging.basicConfig(level=logging.DEBUG, format = '%(message)s',)
-
-        logging.debug('\nRunning unit tests for create_table() function.')
-        logging.debug('Testing different argument types...')
-
-        # test against argument types
-        assert create_table('string')
-        assert not create_table(str)
-        assert not create_table('') #mt string
-        assert not create_table(' an invalid string!')
-        assert not create_table(123)
-        assert not create_table(b'01') #bytes
-
-        logging.debug('Testing return values...')
-
-        # test for return value types
-        assert type(create_table('keyword')) in [list, bool]
-        assert type(create_table('keyword')) not in [str, int, tuple, dict]
-        assert type(create_table('keyword')) not in [True, None, [ ], '']
-        
-        logging.debug('All tests passed.')
-        
+       
 
     test_create_table()
     # perhaps create decorator for unit tests and wrap functions in it
     
-    
-
     # this creates problem unmentioned in the requirements for a key
     # since 'I' and 'J' are combined into a single letter in a Playfair
     # table, the key must not contain both to avoid duplicate letters
