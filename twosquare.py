@@ -172,32 +172,40 @@ def __main__():
     print('{:^80}'.format(border))
     print()
 
-    # prompt user for mode - encrypt or decrypt
-    # get input until user chooses a valid selection
-    while not (mode := get_mode()):
-        print('Invalid selection. Please try again!')
-       
-    # prompt user for first key
-    first_key = get_key('first')
-
-    # validate key
-    while not validate_key(first_key):
-        first_key = get_key()
-
-    # prompt user for second key
-    second_key = get_key('second')
-
-    # validate key
-    while not validate_key(second_key):
-        second_key = get_key()
-
-    # run unit tests
-    if __debug__ == True:
-        assert mode == 'encrypt' or mode == 'decrypt'
-        assert first_key
-        test_validate_key()
+##    # prompt user for mode - encrypt or decrypt
+##    # get input until user chooses a valid selection
+##    while not (mode := get_mode()):
+##        print('Invalid selection. Please try again!')
+##       
+##    # prompt user for first key
+##    first_key = get_key('first')
+##
+##    # validate key
+##    while not validate_key(first_key):
+##        first_key = get_key()
+##
+##    # prompt user for second key
+##    second_key = get_key('second')
+##
+##    # validate key
+##    while not validate_key(second_key):
+##        second_key = get_key()
+##
+##    # run unit tests
+##    if __debug__ == True:
+##        assert mode == 'encrypt' or mode == 'decrypt'
+##        assert first_key
+##        test_validate_key()
 
     # create first table with first key
+
+    def create_table(key):
+
+        return False
+
+    assert create_table('string')
+
+    
 
     # create second table with second key
 
