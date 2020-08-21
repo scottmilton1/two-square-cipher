@@ -59,7 +59,12 @@ def test_validate_key():
     """Test suite for validate_key() function.
     """
 
-    print('Running unit tests for validate_key() function.')
+    # use logging for test output   
+    import logging
+    logging.basicConfig(level=logging.DEBUG, format = '%(message)s',)
+
+    logging.debug('\nRunning unit tests for validate_key() function.')
+    logging.debug('Testing different argument types...')
 
     # test against argument types
     assert validate_key('astring')
@@ -69,13 +74,15 @@ def test_validate_key():
     assert not validate_key(None)
     assert not validate_key({})
 
+    logging.debug('Testing return values...')
+
     # test for return types
     assert type(validate_key('foo')) is bool
     assert not type(validate_key('bar')) == None
     assert not type(validate_key('baz')) == str
     assert not type(validate_key('bah')) == int     
 
-    print('All tests passed.')
+    logging.debug('All tests passed.')
 
 
 def validate_key(key):
