@@ -215,10 +215,44 @@ def __main__():
 
         """
 
+        # set table size
+        MAX_ROWS = 5
+        MAX_COLUMNS = 5
+
+        try:
+            if type(key) is not str or key.isalpha() == False:
+                raise ValueError('Invalid key format.')
+
+            # capitalize all letters in the key
+            key = key.upper()
+
+            # create empty list for storage
+            key_as_letters = [ ]
+
+        except ValueError as err:
+            print(err)
+            return False
+
+        except Exception as err:
+            print('Unexpected exception type raised during execution.')
+            print(type(err))
+            print(err)
+            raise
+        
+        else:
+            return True
+            # return table
+
         return False
 
+    # test for argument data types
     assert create_table('string')
+    assert not create_table(123)
 
+    # test for invalid string
+    assert not create_table(' an invalid string!')
+
+    # test for return values
     
 
     # create second table with second key
