@@ -163,16 +163,13 @@ def __main__():
     border_character = '-'
     border = border_character * len(description)
     print('{:^80}'.format(border))
-
-    # prompt user for mode - encrypt or decrypt
     print()
 
+    # prompt user for mode - encrypt or decrypt
     # get input until user chooses a valid selection
     while not (mode := get_mode()):
         print('Invalid selection. Please try again!')
        
-    assert mode == 'encrypt' or mode == 'decrypt'
-
     # prompt user for first key
     first_key = get_key('first')
 
@@ -189,6 +186,7 @@ def __main__():
 
     # run unit tests
     if __debug__ == True:
+        assert mode == 'encrypt' or mode == 'decrypt'
         assert first_key
         test_validate_key()
 
