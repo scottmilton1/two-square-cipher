@@ -282,8 +282,8 @@ def __main__():
                 # append new row to table
                 table.append(this_row)
 
-                # print statement for development purposes - REMOVE LATER
-                print(this_row)
+##                # print statement for development purposes - REMOVE LATER
+##                print(this_row)
 
             return table
 
@@ -299,21 +299,45 @@ def __main__():
 
         return False
 
-    # test for argument data types
-    assert create_table('string')
-    assert not create_table(123)
+    def test_create_table():
+        """Test suite for create_table() function.
+        """
 
-    # test for invalid string
-    assert not create_table(' an invalid string!')
+        # use logging for test output   
+        import logging
+        logging.basicConfig(level=logging.DEBUG, format = '%(message)s',)
 
+        logging.debug('\nRunning unit tests for create_table() function.')
+        logging.debug('Testing different argument types...')
+
+        # test against argument types
+        assert create_table('string')
+        assert not create_table(str)
+        assert not create_table('') #mt string
+        assert not create_table(' an invalid string!')
+        assert not create_table(123)
+        assert not create_table(b'01') #bytes
+
+        logging.debug('Testing return values...')
+
+        # test for return value types
+        assert type(create_table('keyword')) in [list, bool]
+        assert type(create_table('keyword')) not in [str, int, tuple, dict]
+        assert type(create_table('keyword')) not in [True, None, [ ], '']
+        
+        logging.debug('All tests passed.')
+        
+
+    test_create_table()
+    # perhaps create decorator for unit tests and wrap functions in it
+    
+    
 
     # this creates problem unmentioned in the requirements for a key
     # since 'I' and 'J' are combined into a single letter in a Playfair
     # table, the key must not contain both to avoid duplicate letters
-    # assert create_table('jim') 
+    # assert create_table('jim')    
     
-    
-    # test for return values
     
 
     # create second table with second key
