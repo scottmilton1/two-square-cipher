@@ -171,6 +171,11 @@ def test_create_table():
     assert not create_table(123)
     assert not create_table(b'01') #bytes
 
+    # this creates problem unmentioned in the requirements for a key
+    # since 'I' and 'J' are combined into a single letter in a Playfair
+    # table, the key must not contain both to avoid duplicate letters
+    # assert create_table('jim')
+
     logging.debug('Testing return values...')
 
     # test for return value types
@@ -297,47 +302,51 @@ def __main__():
     print('{:^80}'.format(border))
     print()
 
-##    # prompt user for mode - encrypt or decrypt
-##    # get input until user chooses a valid selection
-##    while not (mode := get_mode()):
-##        print('Invalid selection. Please try again!')
-##       
-##    # prompt user for first key
-##    first_key = get_key('first')
-##
-##    # validate key
-##    while not validate_key(first_key):
-##        first_key = get_key()
-##
-##    # prompt user for second key
-##    second_key = get_key('second')
-##
-##    # validate key
-##    while not validate_key(second_key):
-##        second_key = get_key()
-##
-##    # run unit tests
-##    if __debug__ == True:
-##        assert mode == 'encrypt' or mode == 'decrypt'
-##        assert first_key
-##        test_validate_key()
+    # prompt user for mode - encrypt or decrypt
+    # get input until user chooses a valid selection
+    while not (mode := get_mode()):
+        print('Invalid selection. Please try again!')
+       
+    # prompt user for first key
+    first_key = get_key('first')
+
+    # validate key
+    while not validate_key(first_key):
+        first_key = get_key()
+
+    # prompt user for second key
+    second_key = get_key('second')
+
+    # validate key
+    while not validate_key(second_key):
+        second_key = get_key()
 
     # create first table with first key
-
-
-       
-
-    test_create_table()
-    # perhaps create decorator for unit tests and wrap functions in it
-    
-    # this creates problem unmentioned in the requirements for a key
-    # since 'I' and 'J' are combined into a single letter in a Playfair
-    # table, the key must not contain both to avoid duplicate letters
-    # assert create_table('jim')    
-    
-    
+    first_table = create_table(first_key) 
 
     # create second table with second key
+    second_table = create_table(second_key)
+
+    # display the tables - for development purposes only - DELETE LATER
+
+    print() # white space
+    
+    for row in first_table:
+        print(row)
+
+    print() # white space
+
+    for row in second_table:
+        print(row)
+
+    # run unit tests if debugging is on
+    if __debug__:
+        assert mode == 'encrypt' or mode == 'decrypt'
+        assert first_key
+        test_validate_key()
+        test_create_table()
+        # perhaps create decorator for unit tests and wrap functions in it
+
 
     # display the tables to the console for viewing - optional functionality
 
