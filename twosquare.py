@@ -200,6 +200,20 @@ def __main__():
     # create first table with first key
 
     def create_table(key):
+        """Create a Playfair table.
+
+        Creates a Playfair table using the provided key. This table is a
+        5 x 5 matrix that is used by the cipher to encrypt and decrypt
+        messages.
+
+        key must be a string in valid format. The validate_key()
+        function can be used to verify that a key meets all necessary
+        requirements prior to calling this function.
+        
+        Returns a valid populated table if successful or 
+        prints a failure message and returns False if unsuccessful.
+
+        """
 
         return False
 
