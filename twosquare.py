@@ -283,7 +283,7 @@ def validate_key(key):
 
     else:
         return True
-
+    
 def __main__():
     """This is the main program.
 
@@ -302,63 +302,89 @@ def __main__():
     print('{:^80}'.format(border))
     print()
 
-    # prompt user for mode - encrypt or decrypt
-    # get input until user chooses a valid selection
-    while not (mode := get_mode()):
-        print('Invalid selection. Please try again!')
-       
-    # prompt user for first key
-    first_key = get_key('first')
-
-    # validate key
-    while not validate_key(first_key):
-        first_key = get_key()
-
-    # prompt user for second key
-    second_key = get_key('second')
-
-    # validate key
-    while not validate_key(second_key):
-        second_key = get_key()
-
-    # create first table with first key
-    first_table = create_table(first_key) 
-
-    # create second table with second key
-    second_table = create_table(second_key)
-
-    # display the tables - for development purposes only - DELETE LATER
-
-    print() # white space
-    
-    for row in first_table:
-        print(row)
-
-    print() # white space
-
-    for row in second_table:
-        print(row)
-
-    # run unit tests if debugging is on
-    if __debug__:
-        assert mode == 'encrypt' or mode == 'decrypt'
-        assert first_key
-        test_validate_key()
-        test_create_table()
-        # perhaps create decorator for unit tests and wrap functions in it
+##    # prompt user for mode - encrypt or decrypt
+##    # get input until user chooses a valid selection
+##    while not (mode := get_mode()):
+##        print('Invalid selection. Please try again!')
+##       
+##    # prompt user for first key
+##    first_key = get_key('first')
+##
+##    # validate key
+##    while not validate_key(first_key):
+##        first_key = get_key()
+##
+##    # prompt user for second key
+##    second_key = get_key('second')
+##
+##    # validate key
+##    while not validate_key(second_key):
+##        second_key = get_key()
+##
+##    # create first table with first key
+##    first_table = create_table(first_key) 
+##
+##    # create second table with second key
+##    second_table = create_table(second_key)
+##
+##    # display the tables - for development purposes only - DELETE LATER
+##
+##    print() # white space
+##    
+##    for row in first_table:
+##        print(row)
+##
+##    print() # white space
+##
+##    for row in second_table:
+##        print(row)
+##
+##    # run unit tests if debugging is on
+##    if __debug__:
+##        assert mode == 'encrypt' or mode == 'decrypt'
+##        assert first_key
+##        test_validate_key()
+##        test_create_table()
+##        # perhaps create decorator for unit tests and wrap functions in it
 
     # display the tables to the console for viewing - optional functionality
 
-    def display_table(table)
+    def display_table(table: list) -> bool:
         """Print a Playfair table to the screen.
 
         Prints a Playfair table to the console for viewing purposes to
         facilitate development and testing.
         """
 
+        try:
+            pass
+
+        except ValueError as err:
+            print(err)
+            return False
+
+        except Exception as err:
+            from inspect import currentframe as cf
+            print('Unexpected exception type raised during execution:')
+            print(f'In function: {cf().f_code.co_name}') # function name
+            print(type(err))
+            print(err)
+            raise
+
+        else:
+            pass
+            # return True
+
         return False
-    
+
+    # check that return value matches type hint in function annotation
+    dta = display_table.__annotations__
+    assert(type(display_table([1,2,3])) == dta.get('return')) # bool
+
+    # check against arg types
     assert display_table('string')
+
+
     
 
     # prompt the user for message (or text file) to encrypt / decrypt
