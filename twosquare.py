@@ -347,8 +347,14 @@ def __main__():
         test_create_table()
         # perhaps create decorator for unit tests and wrap functions in it
 
-
     # display the tables to the console for viewing - optional functionality
+
+    def display_table()
+
+        return False
+    
+    assert display_table()
+    
 
     # prompt the user for message (or text file) to encrypt / decrypt
 
