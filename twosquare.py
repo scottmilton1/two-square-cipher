@@ -349,11 +349,16 @@ def __main__():
 
     # display the tables to the console for viewing - optional functionality
 
-    def display_table()
+    def display_table(table)
+        """Print a Playfair table to the screen.
+
+        Prints a Playfair table to the console for viewing purposes to
+        facilitate development and testing.
+        """
 
         return False
     
-    assert display_table()
+    assert display_table('string')
     
 
     # prompt the user for message (or text file) to encrypt / decrypt
