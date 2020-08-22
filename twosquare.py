@@ -357,9 +357,24 @@ def __main__():
         """
 
         try:
-            pass
+            if type(table) is not list:
+                raise TypeError('Table must be a list.')
 
-        except ValueError as err:
+            print()
+
+            # print each row of the table
+            for row in table:
+
+                # print each cell in current row
+                for cell in row:
+                    print('%6s' % cell, end='')
+
+                # white space to separate rows
+                print('\n')
+
+            print()
+
+        except TypeError as err:
             print(err)
             return False
 
@@ -372,19 +387,22 @@ def __main__():
             raise
 
         else:
-            pass
-            # return True
+            return True
 
         return False
 
+    # check against arg types
+    assert display_table(['list']) # bad table structure
+    assert not display_table(list)
+    assert not display_table('string')
+    assert not display_table(123)
+    
+    assert not display_table({'dict': 'ionary'})
+
     # check that return value matches type hint in function annotation
     dta = display_table.__annotations__
-    assert(type(display_table([1,2,3])) == dta.get('return')) # bool
-
-    # check against arg types
-    assert display_table('string')
-
-
+    assert(type(display_table([[1,2],[3,4]])) == dta.get('return')) # bool
+    assert(type(display_table(123) == dta.get('return'))) # bool
     
 
     # prompt the user for message (or text file) to encrypt / decrypt
