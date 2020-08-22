@@ -140,9 +140,7 @@ def display_table(table: list) -> bool:
                 print('%6s' % cell, end='')
 
             # white space to separate rows
-            print('\n')
-
-        print()
+            print('\n\n')
 
     except ValueError as err:
         print(err)
@@ -422,55 +420,51 @@ def __main__():
     print('{:^80}'.format(border))
     print()
 
-##    # prompt user for mode - encrypt or decrypt
-##    # get input until user chooses a valid selection
-##    while not (mode := get_mode()):
-##        print('Invalid selection. Please try again!')
-##       
-##    # prompt user for first key
-##    first_key = get_key('first')
-##
-##    # validate key
-##    while not validate_key(first_key):
-##        first_key = get_key()
-##
-##    # prompt user for second key
-##    second_key = get_key('second')
-##
-##    # validate key
-##    while not validate_key(second_key):
-##        second_key = get_key()
-##
-##    # create first table with first key
-##    first_table = create_table(first_key) 
-##
-##    # create second table with second key
-##    second_table = create_table(second_key)
-##
-##    # display the tables - for development purposes only - DELETE LATER
-##
-##    print() # white space
-##    
-##    for row in first_table:
-##        print(row)
-##
-##    print() # white space
-##
-##    for row in second_table:
-##        print(row)
-##
-##    # run unit tests if debugging is on
-##    if __debug__:
-##        assert mode == 'encrypt' or mode == 'decrypt'
-##        assert first_key
-##        test_validate_key()
-##        test_create_table()
-##        # perhaps create decorator for unit tests and wrap functions in it
-    test_display_table()
+    # prompt user for mode - encrypt or decrypt
+    # get input until user chooses a valid selection
+    while not (mode := get_mode()):
+        print('Invalid selection. Please try again!')
+       
+    # prompt user for first key
+    first_key = get_key('first')
+
+    # validate key
+    while not validate_key(first_key):
+        first_key = get_key()
+
+    # prompt user for second key
+    second_key = get_key('second')
+
+    # validate key
+    while not validate_key(second_key):
+        second_key = get_key()
+
+    # create first table with first key
+    first_table = create_table(first_key) 
+
+    # create second table with second key
+    second_table = create_table(second_key)
 
     # display the tables to the console for viewing - optional functionality
 
+    print('\nHere are the Playfair tables generated with your keys:')
+    
+    print('\nTABLE ONE:')
+    display_table(first_table)
+    
+    print('TABLE TWO:')
+    display_table(second_table)
+    
+    ##### Progress marker #####
 
+    # run unit tests if debugging is on
+    if __debug__:
+        assert mode == 'encrypt' or mode == 'decrypt'
+        assert first_key
+        test_validate_key()
+        test_create_table()
+        test_display_table()
+        # perhaps create decorator for unit tests and wrap functions in it
 
     # prompt the user for message (or text file) to encrypt / decrypt
 
