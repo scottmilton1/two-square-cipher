@@ -109,6 +109,63 @@ def create_table(key):
 
     return False
 
+def display_table(table: list) -> bool:
+    """Print a Playfair table to the screen.
+
+    Prints a Playfair table to the console for viewing purposes to
+    facilitate development and testing.
+    """
+
+    try:
+        if type(table) is not list:
+            raise TypeError('Table must be a list.')
+
+        if len(table) != 5:
+            raise ValueError('Illegal number of rows in table.')
+
+        print()
+
+        # print each row of the table
+        for row in table:
+
+            if len(row) != 5:
+                raise ValueError('Illegal number of columns in table row.')
+
+            # print each cell in current row
+            for cell in row:
+
+                if type(cell) is not str or len(cell) > 2:
+                    raise(ValueError('Bad table data.'))
+                
+                print('%6s' % cell, end='')
+
+            # white space to separate rows
+            print('\n')
+
+        print()
+
+    except ValueError as err:
+        print(err)
+        return False
+
+    except TypeError as err:
+        print(err)
+        return False
+
+    except Exception as err:
+        from inspect import currentframe as cf
+        print('Unexpected exception type raised during execution:')
+        print(f'In function: {cf().f_code.co_name}') # function name
+        print(type(err))
+        print(err)
+        raise
+
+    else:
+        return True
+
+    return False
+
+
 def get_key(ordinal = ''):
     """Gets key from user and returns it.
 
@@ -183,6 +240,69 @@ def test_create_table():
     assert type(create_table('keyword')) not in [str, int, tuple, dict]
     assert type(create_table('keyword')) not in [True, None, [ ], '']
     
+    logging.debug('All tests passed.')
+
+def test_display_table():
+    """Test suite for display_table() function.
+    """
+
+    # use logging for test output   
+    import logging
+    logging.basicConfig(level=logging.DEBUG, format = '%(message)s',)
+
+    logging.debug('\nRunning unit tests for display_table() function.')
+    logging.debug('Testing different argument types...')
+
+    # test against argument types
+    assert not display_table(list)
+    assert not display_table('string')
+    assert not display_table(123)        
+    assert not display_table({'dict': 'ionary'})
+
+
+    logging.debug('Testing more table values and structures...')
+
+    # test for values
+    assert display_table([
+        ['A', 'B', 'C', 'D', 'E'],
+        ['A', 'B', 'C', 'D', 'E'],
+        ['A', 'B', 'C', 'D', 'E'],
+        ['A', 'B', 'C', 'D', 'E'],
+        ['A', 'B', 'C', 'D', 'E'],
+        ])
+    assert not display_table(['list'])  # bad table structure
+    # not enough rows in table
+    assert not display_table([              
+        ['A', 'B', 'C', 'D', 'E'],
+        ['A', 'B', 'C', 'D', 'E'],
+        ])
+    # too many items in row
+    assert not display_table([
+        ['A', 'B', 'C', 'D', 'E', 'F'], 
+        ['A', 'B', 'C', 'D', 'E'],
+        ['A', 'B', 'C', 'D', 'E'],
+        ['A', 'B', 'C', 'D', 'E'],
+        ['A', 'B', 'C', 'D', 'E'],
+        ])
+    # table data is not of type string
+    assert not display_table([
+        [1,2,3,4,5],
+        [1,2,3,4,5],
+        [1,2,3,4,5],
+        [1,2,3,4,5],
+        [1,2,3,4,5],
+        ])
+
+    logging.debug('Testing return values...')
+
+    # check that return value matches type hint in function annotation
+    dta = display_table.__annotations__
+    assert type(display_table([[1,2],[3,4]])) == dta.get('return') # bool
+    assert type(display_table(123) == dta.get('return')) # bool
+
+    assert type(display_table([[5,6],[7,8]])) is bool
+    assert type(display_table('false return')) is bool  
+
     logging.debug('All tests passed.')
 
 def test_validate_key():
@@ -346,129 +466,11 @@ def __main__():
 ##        test_validate_key()
 ##        test_create_table()
 ##        # perhaps create decorator for unit tests and wrap functions in it
+    test_display_table()
 
     # display the tables to the console for viewing - optional functionality
 
-    def display_table(table: list) -> bool:
-        """Print a Playfair table to the screen.
 
-        Prints a Playfair table to the console for viewing purposes to
-        facilitate development and testing.
-        """
-
-        try:
-            if type(table) is not list:
-                raise TypeError('Table must be a list.')
-
-            if len(table) != 5:
-                raise ValueError('Illegal number of rows in table.')
-
-            print()
-
-            # print each row of the table
-            for row in table:
-
-                if len(row) != 5:
-                    raise ValueError('Illegal number of columns in table row.')
-
-                # print each cell in current row
-                for cell in row:
-
-                    if type(cell) is not str or len(cell) > 2:
-                        raise(ValueError('Bad table data.'))
-                    
-                    print('%6s' % cell, end='')
-
-                # white space to separate rows
-                print('\n')
-
-            print()
-
-        except ValueError as err:
-            print(err)
-            return False
-
-        except TypeError as err:
-            print(err)
-            return False
-
-        except Exception as err:
-            from inspect import currentframe as cf
-            print('Unexpected exception type raised during execution:')
-            print(f'In function: {cf().f_code.co_name}') # function name
-            print(type(err))
-            print(err)
-            raise
-
-        else:
-            return True
-
-        return False
-
-    def test_display_table():
-        """Test suite for display_table() function.
-        """
-
-        # use logging for test output   
-        import logging
-        logging.basicConfig(level=logging.DEBUG, format = '%(message)s',)
-
-        logging.debug('\nRunning unit tests for display_table() function.')
-        logging.debug('Testing different argument types...')
-
-        # test against argument types
-        assert not display_table(list)
-        assert not display_table('string')
-        assert not display_table(123)        
-        assert not display_table({'dict': 'ionary'})
-
-
-        logging.debug('Testing more table values and structures...')
-
-        # test for values
-        assert display_table([
-            ['A', 'B', 'C', 'D', 'E'],
-            ['A', 'B', 'C', 'D', 'E'],
-            ['A', 'B', 'C', 'D', 'E'],
-            ['A', 'B', 'C', 'D', 'E'],
-            ['A', 'B', 'C', 'D', 'E'],
-            ])
-        assert not display_table(['list'])  # bad table structure
-        # not enough rows in table
-        assert not display_table([              
-            ['A', 'B', 'C', 'D', 'E'],
-            ['A', 'B', 'C', 'D', 'E'],
-            ])
-        # too many items in row
-        assert not display_table([
-            ['A', 'B', 'C', 'D', 'E', 'F'], 
-            ['A', 'B', 'C', 'D', 'E'],
-            ['A', 'B', 'C', 'D', 'E'],
-            ['A', 'B', 'C', 'D', 'E'],
-            ['A', 'B', 'C', 'D', 'E'],
-            ])
-        # table data is not of type string
-        assert not display_table([
-            [1,2,3,4,5],
-            [1,2,3,4,5],
-            [1,2,3,4,5],
-            [1,2,3,4,5],
-            [1,2,3,4,5],
-            ])
-
-        logging.debug('Testing return values...')
-
-        # check that return value matches type hint in function annotation
-        dta = display_table.__annotations__
-        assert type(display_table([[1,2],[3,4]])) == dta.get('return') # bool
-        assert type(display_table(123) == dta.get('return')) # bool
-
-        assert type(display_table([[5,6],[7,8]])) is bool
-        assert type(display_table('false return')) is bool  
-
-        logging.debug('All tests passed.')
-
-    test_display_table()
 
     # prompt the user for message (or text file) to encrypt / decrypt
 
