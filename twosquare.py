@@ -362,10 +362,10 @@ def validate_key(key: str) -> bool:
         if len(key) < 1:
             raise ValueError('Key must not be empty.')
                             
-        key = key.upper()
+        key: str = key.upper()
 
         # make list to track which letters are in the key
-        letters_in_key = [ ]
+        letters_in_key: list = [ ]
 
         for character in key:
 
@@ -417,14 +417,14 @@ def __main__():
     """
 
     # display program title and brief description
-    name = "twosquare"
-    description = "encrypt and decrypt messages with the two-square cipher"
+    name: str = "twosquare"
+    description: str = "encrypt and decrypt messages with the two-square cipher"
     print('{:^80}'.format('>> ' + name.upper() + ' <<'))
     print('{:^80}'.format(description.title()))
 
     # print bottom border that matches the length of the program description
-    border_character = '-'
-    border = border_character * len(description)
+    border_character: str = '-'
+    border: str = border_character * len(description)
     print('{:^80}'.format(border))
     print()
 
@@ -432,26 +432,26 @@ def __main__():
     # get input until user chooses a valid selection
     while not (mode := get_mode()):
         print('Invalid selection. Please try again!')
-       
+      
     # prompt user for first key
-    first_key = get_key('first')
+    first_key: str = get_key('first')
 
     # validate key
     while not validate_key(first_key):
-        first_key = get_key()
+        first_key: str = get_key()
 
     # prompt user for second key
-    second_key = get_key('second')
+    second_key: str = get_key('second')
 
     # validate key
     while not validate_key(second_key):
-        second_key = get_key()
+        second_key: str = get_key()
 
     # create first table with first key
-    first_table = create_table(first_key) 
+    first_table: Table = create_table(first_key) 
 
     # create second table with second key
-    second_table = create_table(second_key)
+    second_table: Table = create_table(second_key)
 
     # display the tables to the console for viewing - optional functionality
 
