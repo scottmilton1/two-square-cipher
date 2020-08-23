@@ -12,7 +12,8 @@ The functionality of this program can also be used as a module.
 
 """
 
-from typing import List, Union
+# globals
+from typing import List, NoReturn, Union
 
 # Use type aliases for type hints on complex types
 Row = List[str]
@@ -115,11 +116,12 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
 
     return False
 
-def display_table(table) -> bool:
+def display_table(table: Table) -> bool:
     """Print a Playfair table to the screen.
 
     Prints a Playfair table to the console for viewing purposes to
     facilitate development and testing.
+    
     """
 
     try:
@@ -170,7 +172,7 @@ def display_table(table) -> bool:
     return False
 
 
-def get_key(ordinal = ''):
+def get_key(ordinal: str = '') -> str:
     """Gets key from user and returns it.
 
     Prompts user for keyword or key phrase. Does not perform any
@@ -193,7 +195,7 @@ def get_key(ordinal = ''):
 
     return key
 
-def get_mode():
+def get_mode() -> Union[str, bool]:
     """Gets program mode from user.
 
     Prompts user for program mode (encryption or decryption).
@@ -202,7 +204,7 @@ def get_mode():
     or returns False if user has made an invalid selection.
     """
 
-    mode = input("Select mode: 1 for encrypt or 2 for decrypt >> ")
+    mode: str = input("Select mode: 1 for encrypt or 2 for decrypt >> ")
 
     if mode == '1':
         return 'encrypt'
@@ -213,7 +215,7 @@ def get_mode():
     else:
         return False
 
-def test_create_table():
+def test_create_table() -> NoReturn:
     """Test suite for create_table() function.
     """
 
@@ -246,7 +248,7 @@ def test_create_table():
     
     logging.debug('All tests passed.')
 
-def test_display_table():
+def test_display_table() -> NoReturn:
     """Test suite for display_table() function.
     """
 
@@ -309,7 +311,7 @@ def test_display_table():
 
     logging.debug('All tests passed.')
 
-def test_validate_key():
+def test_validate_key() -> NoReturn:
     """Test suite for validate_key() function.
     """
 
@@ -339,7 +341,7 @@ def test_validate_key():
     logging.debug('All tests passed.')
 
 
-def validate_key(key):
+def validate_key(key: str) -> bool:
     """Validates a key for a Playfair table.
 
     Takes a string as input and validates it against the formatting
