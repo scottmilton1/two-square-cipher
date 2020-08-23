@@ -12,7 +12,13 @@ The functionality of this program can also be used as a module.
 
 """
 
-def create_table(key):
+from typing import List, Union
+
+# Use type aliases for type hints on complex types
+Row = List[str]
+Table = List[Row]
+
+def create_table(key: str) -> Union[Table, bool]: # return either Table or False
     """Create a Playfair table.
 
     Creates a Playfair table using the provided key. This table is a
