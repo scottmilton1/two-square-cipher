@@ -35,18 +35,18 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
     """
 
     # set table size
-    MAX_ROWS = 5
-    MAX_COLUMNS = 5
+    MAX_ROWS: int = 5
+    MAX_COLUMNS: int = 5
 
     try:
         if type(key) is not str or key.isalpha() == False:
             raise ValueError('Invalid key format.')
 
         # capitalize all letters in the key
-        key = key.upper()
+        key: str = key.upper()
 
         # create empty list for storage
-        key_as_letters = [ ]
+        key_as_letters: list = [ ]
 
         # check for I and J in key and combine into single IJ letter
         for letter in key:         
@@ -55,8 +55,8 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
             key_as_letters.append(letter)
 
         # create full list of letters to track letters not in key
-        alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"           
-        letters_not_in_key = [ ]
+        alphabet: str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"           
+        letters_not_in_key: list = [ ]
 
         # combine I and J into IJ
         for letter in alphabet:
@@ -76,13 +76,13 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
         letters_not_in_key.reverse()
 
         # create empty table
-        table = [ ]
+        table: list = [ ]
 
         # create and populate the table
         for row in range(MAX_ROWS):
 
             # create a new empty row
-            this_row = [ ]
+            this_row: list = [ ]
 
             # populate the new row with characters
             for column in range(MAX_COLUMNS):
@@ -115,7 +115,7 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
 
     return False
 
-def display_table(table: list) -> bool:
+def display_table(table) -> bool:
     """Print a Playfair table to the screen.
 
     Prints a Playfair table to the console for viewing purposes to
