@@ -81,7 +81,7 @@ def test_runner(tests: list) -> Tuple[int, int]:
 
 ##### CUSTOM ASSERTIONS #####
 
-def assert_equal(expected_result, func, *args, **kwargs):
+def assert_equal(expected_result, func, *args, **kwargs) -> str:
     """Tests that a function's return value equals an expected result.
 
     """
@@ -181,7 +181,7 @@ def test_create_table(verbose: bool = True) -> NoReturn:
     global_passed += local_passed
     global_failed += local_failed
 
-def test_display_table() -> NoReturn:
+def test_display_table(verbose: bool = True) -> NoReturn:
     """Test suite for display_table() function.
 
     """
@@ -192,16 +192,20 @@ def test_display_table() -> NoReturn:
     local_passed: int = 0
     local_failed: int = 0
 
-    logging.debug('\nRunning unit tests for display_table() function.')
-    logging.debug('Testing different argument types...')
+    if verbose:
+        logging.debug('\nRunning unit tests for display_table() function.')
+        logging.debug('Testing different argument types...')
 
     # test against argument types
+    result = assert_equal(True, display_table, 'string')
+    if verbose:
+        logging.debug(result)
     assert not display_table(list)
-    assert not display_table('string')
     assert not display_table(123)        
     assert not display_table({'dict': 'ionary'})
 
-    logging.debug('Testing more table values and structures...')
+    if verbose:
+        logging.debug('Testing more table values and structures...')
 
     # test for values
     assert display_table([
@@ -234,7 +238,8 @@ def test_display_table() -> NoReturn:
         [1,2,3,4,5],
         ])
 
-    logging.debug('Testing return values...')
+    if verbose:
+        logging.debug('Testing return values...')
 
     # check that return value matches type hint in function annotation
     dta = display_table.__annotations__
@@ -244,13 +249,14 @@ def test_display_table() -> NoReturn:
     assert type(display_table([[5,6],[7,8]])) is bool
     assert type(display_table('false return')) is bool  
 
-    logging.debug(f'{local_passed} tests passed.')
-    logging.debug(f'{local_failed} tests failed.')
+    if verbose:
+        logging.debug(f'{local_passed} tests passed.')
+        logging.debug(f'{local_failed} tests failed.')
 
     global_passed += local_passed
     global_failed += local_failed
 
-def test_validate_key() -> NoReturn:
+def test_validate_key(verbose: bool = True) -> NoReturn:
     """Test suite for validate_key() function.
 
     """
@@ -261,8 +267,9 @@ def test_validate_key() -> NoReturn:
     local_passed: int = 0
     local_failed: int = 0
 
-    logging.debug('\nRunning unit tests for validate_key() function.')
-    logging.debug('Testing different argument types...')
+    if verbose:
+        logging.debug('\nRunning unit tests for validate_key() function.')
+        logging.debug('Testing different argument types...')
 
     # test against argument types
     assert validate_key('astring')
@@ -272,7 +279,8 @@ def test_validate_key() -> NoReturn:
     assert not validate_key(None)
     assert not validate_key({})
 
-    logging.debug('Testing return values...')
+    if verbose:
+        logging.debug('Testing return values...')
 
     # test for return types
     assert type(validate_key('foo')) is bool
@@ -280,8 +288,9 @@ def test_validate_key() -> NoReturn:
     assert not type(validate_key('baz')) == str
     assert not type(validate_key('bah')) == int     
 
-    logging.debug(f'{local_passed} tests passed.')
-    logging.debug(f'{local_failed} tests failed.')
+    if verbose:
+        logging.debug(f'{local_passed} tests passed.')
+        logging.debug(f'{local_failed} tests failed.')
 
     global_passed += local_passed
     global_failed += local_failed
