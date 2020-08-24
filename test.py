@@ -29,11 +29,30 @@ logging.basicConfig(level=logging.DEBUG, format = '%(message)s',)
 global_passed: int = 0
 global_failed: int = 0
 
+def run_test(assertion: str) -> bool:
+    """Runs an assertion.
+
+    Returns True if assertion passes or False if fails.
+    
+    """
+
+    try:
+        exec(assertion)
+  
+    except AssertionError as err:
+        logging.debug('FAIL')
+        return False
+        
+    else:
+        logging.debug('PASS')
+        return True
+        
+
 def test_create_table() -> NoReturn:
     """Test suite for create_table() function.
 
     """
-
+    
     global global_passed
     global global_failed
 
@@ -46,18 +65,13 @@ def test_create_table() -> NoReturn:
     # test against argument types
     try:
         assert create_table('string')
+        
     except AssertionError as err:
         logging.debug('FAIL')
         local_failed += 1
     else:
         logging.debug('PASS')
         local_passed += 1  
-
-##    assert not create_table(str)
-##    assert not create_table('') #mt string
-##    assert not create_table(' an invalid string!')
-##    assert not create_table(123)
-##    assert not create_table(b'01') #bytes
 
     tests: list = [
         "assert not create_table(str)",
@@ -71,11 +85,6 @@ def test_create_table() -> NoReturn:
 
 
     """
-
-    def run_test(assertion: str) -> NoReturn:
-        eval(assertion)
-
-    import subprocess
 
     for test in tests:
         
