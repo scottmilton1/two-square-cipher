@@ -79,9 +79,48 @@ def test_runner(tests: list) -> Tuple[int, int]:
     return (number_passed, number_failed)
 
 
+##### CUSTOM ASSERTIONS #####
+
+def assert_equal(expected_result, func, *args, **kwargs):
+    """Tests that a function's return value equals an expected result.
+
+    """
+
+    try:
+        assert expected_result == func(*args, **kwargs)
+        
+    except AssertionError as err:
+        message = f'FAIL: {func.__name__}('
+
+        if len(args) > 0:
+            message = message + str(args[0])
+
+        if len(args) > 1:
+            for i in range(1, len(args)):
+                message = message + ', ' + str(args[i])
+
+        if len(kwargs) == 1:
+            for k, v in kwargs.items():
+                message = message + str(k) + '=' + str(v) 
+
+        elif len(kwargs) > 1:
+            for k, v in kwargs.items():
+                message = message + str(k) + '=' + str(v) + ', '
+            message = message[0:-2]
+
+        message = message + ') == ' +  str(expected_result)
+
+        return message               
+
+    except Exception as err:
+        return f'Unexpected exception raised during test execution: \n{err}'
+
+    else:
+        return "PASS"
 
 
-##### TESTS #####
+
+##### UNIT TESTS FOR TWOSQUARE FUNCTIONS #####
 
 def test_create_table(verbose: bool = True) -> NoReturn:
     """Test suite for create_table() function.
