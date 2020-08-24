@@ -11,6 +11,13 @@ abstract away the basic underlying processes involved.
 Feel free to replace this test suite with your test runner of choice.
 
 """
+from typing import List, NoReturn, Union
+
+from twosquare.twosquare import Row
+from twosquare.twosquare import Table
+from twosquare.twosquare import create_table
+from twosquare.twosquare import display_table
+from twosquare.twosquare import validate_key
 
 def test_create_table() -> NoReturn:
     """Test suite for create_table() function.
@@ -138,3 +145,20 @@ def test_validate_key() -> NoReturn:
     logging.debug('All tests passed.')
 
 
+def __main__():
+
+    # run unit tests if debugging is on
+    if __debug__:
+
+        # THESE TWO WON'T WORK HERE - CREATE NEW TESTS???
+        # assert mode == 'encrypt' or mode == 'decrypt'
+        # assert first_key
+
+        test_validate_key()
+        test_create_table()
+        test_display_table()
+
+        # perhaps create decorator for unit tests and wrap functions in it
+
+if __name__ == '__main__':
+    __main__()

@@ -465,14 +465,20 @@ def __main__():
     
     ##### Progress marker #####
 
-    # run unit tests if debugging is on
-    if __debug__:
-        assert mode == 'encrypt' or mode == 'decrypt'
-        assert first_key
-        test_validate_key()
-        test_create_table()
-        test_display_table()
-        # perhaps create decorator for unit tests and wrap functions in it
+
+
+
+    # # run unit tests if debugging is on
+    # if __debug__:
+    #     assert mode == 'encrypt' or mode == 'decrypt'
+    #     assert first_key
+    #     test_validate_key()
+    #     test_create_table()
+    #     test_display_table()
+    #     # perhaps create decorator for unit tests and wrap functions in it
+
+
+
 
     # prompt the user for message (or text file) to encrypt / decrypt
 
