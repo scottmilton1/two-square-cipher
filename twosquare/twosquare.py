@@ -173,7 +173,6 @@ def display_table(table: Table) -> bool:
 
     return False
 
-
 def get_key(ordinal: str = '') -> str:
     """Gets key from user and returns it.
 

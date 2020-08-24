@@ -25,21 +25,71 @@ from twosquare.twosquare import validate_key
 import logging
 logging.basicConfig(level=logging.DEBUG, format = '%(message)s',)
 
+# globals
+global_passed: int = 0
+global_failed: int = 0
+
 def test_create_table() -> NoReturn:
     """Test suite for create_table() function.
 
     """
 
+    global global_passed
+    global global_failed
+
+    local_passed: int = 0
+    local_failed: int = 0
+
     logging.debug('\nRunning unit tests for create_table() function.')
     logging.debug('Testing different argument types...')
 
     # test against argument types
-    assert create_table('string')
-    assert not create_table(str)
-    assert not create_table('') #mt string
-    assert not create_table(' an invalid string!')
-    assert not create_table(123)
-    assert not create_table(b'01') #bytes
+    try:
+        assert create_table('string')
+    except AssertionError as err:
+        logging.debug('FAIL')
+        local_failed += 1
+    else:
+        logging.debug('PASS')
+        local_passed += 1  
+
+##    assert not create_table(str)
+##    assert not create_table('') #mt string
+##    assert not create_table(' an invalid string!')
+##    assert not create_table(123)
+##    assert not create_table(b'01') #bytes
+
+    tests: list = [
+        "assert not create_table(str)",
+        "assert not create_table('') #mt string",
+        "assert not create_table(' an invalid string!')",
+        "assert not create_table(123)",
+        "assert not create_table(b'01') #bytes",
+        ]
+
+    test_suite: str = """
+
+
+    """
+
+    def run_test(assertion: str) -> NoReturn:
+        eval(assertion)
+
+    import subprocess
+
+    for test in tests:
+        
+        try:
+            exec(test)
+          
+        except AssertionError as err:
+            logging.debug('FAIL')
+            logging.debug(err)
+            local_failed += 1
+            
+        else:
+            logging.debug('PASS')
+            local_passed += 1
 
     # this creates problem unmentioned in the requirements for a key
     # since 'I' and 'J' are combined into a single letter in a Playfair
@@ -53,12 +103,22 @@ def test_create_table() -> NoReturn:
     assert type(create_table('keyword')) not in [str, int, tuple, dict]
     assert type(create_table('keyword')) not in [True, None, [ ], '']
     
-    logging.debug('All tests passed.')
+    logging.debug(f'{local_passed} tests passed.')
+    logging.debug(f'{local_failed} tests failed.')
+
+    global_passed += local_passed
+    global_failed += local_failed
 
 def test_display_table() -> NoReturn:
     """Test suite for display_table() function.
 
     """
+
+    global global_passed
+    global global_failed
+
+    local_passed: int = 0
+    local_failed: int = 0
 
     logging.debug('\nRunning unit tests for display_table() function.')
     logging.debug('Testing different argument types...')
@@ -112,12 +172,22 @@ def test_display_table() -> NoReturn:
     assert type(display_table([[5,6],[7,8]])) is bool
     assert type(display_table('false return')) is bool  
 
-    logging.debug('All tests passed.')
+    logging.debug(f'{local_passed} tests passed.')
+    logging.debug(f'{local_failed} tests failed.')
+
+    global_passed += local_passed
+    global_failed += local_failed
 
 def test_validate_key() -> NoReturn:
     """Test suite for validate_key() function.
 
     """
+
+    global global_passed
+    global global_failed
+
+    local_passed: int = 0
+    local_failed: int = 0
 
     logging.debug('\nRunning unit tests for validate_key() function.')
     logging.debug('Testing different argument types...')
@@ -138,13 +208,20 @@ def test_validate_key() -> NoReturn:
     assert not type(validate_key('baz')) == str
     assert not type(validate_key('bah')) == int     
 
-    logging.debug('All tests passed.')
+    logging.debug(f'{local_passed} tests passed.')
+    logging.debug(f'{local_failed} tests failed.')
+
+    global_passed += local_passed
+    global_failed += local_failed
 
 
 def __main__():
 
     # run unit tests if debugging is on
     if __debug__:
+
+        global global_passed
+        global global_failed
 
         # THESE TWO WON'T WORK HERE - CREATE NEW TESTS???
         # assert mode == 'encrypt' or mode == 'decrypt'
@@ -153,6 +230,9 @@ def __main__():
         test_validate_key()
         test_create_table()
         test_display_table()
+
+        logging.debug(f'TOTAL TESTS PASSED: {global_passed}')
+        logging.debug(f'TOTAL TESTS FAILED: {global_failed}')
 
         # perhaps create decorator for unit tests and wrap functions in it
 
