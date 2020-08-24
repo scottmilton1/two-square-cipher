@@ -11,7 +11,9 @@ abstract away the basic underlying processes involved.
 Feel free to replace this test suite with your test runner of choice.
 
 """
-from typing import List, NoReturn, Union
+from typing import List
+from typing import NoReturn
+from typing import Union
 
 from twosquare.twosquare import Row
 from twosquare.twosquare import Table
@@ -19,13 +21,14 @@ from twosquare.twosquare import create_table
 from twosquare.twosquare import display_table
 from twosquare.twosquare import validate_key
 
+# use logging for test output   
+import logging
+logging.basicConfig(level=logging.DEBUG, format = '%(message)s',)
+
 def test_create_table() -> NoReturn:
     """Test suite for create_table() function.
-    """
 
-    # use logging for test output   
-    import logging
-    logging.basicConfig(level=logging.DEBUG, format = '%(message)s',)
+    """
 
     logging.debug('\nRunning unit tests for create_table() function.')
     logging.debug('Testing different argument types...')
@@ -54,11 +57,8 @@ def test_create_table() -> NoReturn:
 
 def test_display_table() -> NoReturn:
     """Test suite for display_table() function.
-    """
 
-    # use logging for test output   
-    import logging
-    logging.basicConfig(level=logging.DEBUG, format = '%(message)s',)
+    """
 
     logging.debug('\nRunning unit tests for display_table() function.')
     logging.debug('Testing different argument types...')
@@ -68,7 +68,6 @@ def test_display_table() -> NoReturn:
     assert not display_table('string')
     assert not display_table(123)        
     assert not display_table({'dict': 'ionary'})
-
 
     logging.debug('Testing more table values and structures...')
 
@@ -117,11 +116,8 @@ def test_display_table() -> NoReturn:
 
 def test_validate_key() -> NoReturn:
     """Test suite for validate_key() function.
-    """
 
-    # use logging for test output   
-    import logging
-    logging.basicConfig(level=logging.DEBUG, format = '%(message)s',)
+    """
 
     logging.debug('\nRunning unit tests for validate_key() function.')
     logging.debug('Testing different argument types...')
