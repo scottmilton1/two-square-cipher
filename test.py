@@ -13,6 +13,7 @@ Feel free to replace this test suite with your test runner of choice.
 """
 from typing import List
 from typing import NoReturn
+from typing import Tuple
 from typing import Union
 
 from twosquare.twosquare import Row
@@ -28,6 +29,8 @@ logging.basicConfig(level=logging.DEBUG, format = '%(message)s',)
 # globals
 global_passed: int = 0
 global_failed: int = 0
+
+##### TEST RUNNERS #####
 
 def run_test(assertion: str, verbose: bool = True) -> bool:
     """Runs an assertion.
@@ -53,10 +56,36 @@ def run_test(assertion: str, verbose: bool = True) -> bool:
             logging.debug('PASS')
             
         return True
-        
 
-def test_create_table() -> NoReturn:
+def test_runner(tests: list) -> Tuple[int, int]:
+    """Runs a list of tests using run_test function.
+
+    Returns a tuple with the number of tests (passed, failed).
+
+    """
+
+    number_passed = number_failed = 0
+    
+    for test in tests:
+
+        result = run_test(test, verbose = True)
+
+        if result == True:
+            number_passed += 1
+            
+        else:
+            number_failed += 1
+
+    return (number_passed, number_failed)
+
+
+
+
+##### TESTS #####
+
+def test_create_table(verbose: bool = True) -> NoReturn:
     """Test suite for create_table() function.
+
 
     """
     
@@ -66,11 +95,12 @@ def test_create_table() -> NoReturn:
     local_passed: int = 0
     local_failed: int = 0
 
-    logging.debug('\nRunning unit tests for create_table() function.')
-    logging.debug('Testing different argument types...')
+    if verbose:
+        logging.debug('\nRunning unit tests for create_table() function.')
+        logging.debug('Testing different argument types...')
 
-    # test against argument types
-    tests: list = [
+    # create tests against argument types
+    tests_arg_types: list = [
         "assert create_table('string')",
         "assert not create_table(str)",
         "assert not create_table('') #mt string",
@@ -79,30 +109,35 @@ def test_create_table() -> NoReturn:
         "assert not create_table(b'01') #bytes",
         ]
 
-    for test in tests:
-    
-        result = run_test(test, verbose = True)
-    
-        if result == True:
-            local_passed += 1
-            
-        else:
-            local_failed += 1
-      
-    # this creates problem unmentioned in the requirements for a key
-    # since 'I' and 'J' are combined into a single letter in a Playfair
-    # table, the key must not contain both to avoid duplicate letters
-    # assert create_table('jim')
+    # test for correct return value types
+    tests_ret_val: list = [        
+        "assert type(create_table('keyword')) in [list, bool]",
+        "assert type(create_table('keyword')) not in [str, int, tuple, dict]",
+        "assert type(create_table('keyword')) not in [True, None, [ ], '']",
+        ]
 
-    logging.debug('Testing return values...')
+    # aliases for type hints
+    Result: Tuple[str, str]
+    Summary: List[Result, Result] = [ ]
 
-    # test for return value types
-    assert type(create_table('keyword')) in [list, bool]
-    assert type(create_table('keyword')) not in [str, int, tuple, dict]
-    assert type(create_table('keyword')) not in [True, None, [ ], '']
+    # run tests using the list of assertions
+    Summary.append(test_runner(tests_arg_types))
     
-    logging.debug(f'{local_passed} tests passed.')
-    logging.debug(f'{local_failed} tests failed.')
+    if verbose:
+        logging.debug('Testing return values...')
+
+    # run second block of tests
+    Summary.append(test_runner(tests_ret_val))
+
+    # unpack results and add to local counters
+    for result in Summary:
+        passed, failed = result
+        local_passed += passed
+        local_failed += failed
+
+    if verbose:
+        logging.debug(f'{local_passed} tests passed.')
+        logging.debug(f'{local_failed} tests failed.')
 
     global_passed += local_passed
     global_failed += local_failed
