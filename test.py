@@ -29,7 +29,7 @@ logging.basicConfig(level=logging.DEBUG, format = '%(message)s',)
 global_passed: int = 0
 global_failed: int = 0
 
-def run_test(assertion: str) -> bool:
+def run_test(assertion: str, verbose: bool = True) -> bool:
     """Runs an assertion.
 
     Returns True if assertion passes or False if fails.
@@ -40,11 +40,18 @@ def run_test(assertion: str) -> bool:
         exec(assertion)
   
     except AssertionError as err:
-        logging.debug('FAIL')
+
+        if verbose:
+            logging.debug(err)
+            logging.debug('FAIL')
+            
         return False
         
     else:
-        logging.debug('PASS')
+        
+        if verbose:
+            logging.debug('PASS')
+            
         return True
         
 
@@ -63,17 +70,8 @@ def test_create_table() -> NoReturn:
     logging.debug('Testing different argument types...')
 
     # test against argument types
-    try:
-        assert create_table('string')
-        
-    except AssertionError as err:
-        logging.debug('FAIL')
-        local_failed += 1
-    else:
-        logging.debug('PASS')
-        local_passed += 1  
-
     tests: list = [
+        "assert create_table('string')",
         "assert not create_table(str)",
         "assert not create_table('') #mt string",
         "assert not create_table(' an invalid string!')",
@@ -81,25 +79,16 @@ def test_create_table() -> NoReturn:
         "assert not create_table(b'01') #bytes",
         ]
 
-    test_suite: str = """
-
-
-    """
-
     for test in tests:
-        
-        try:
-            exec(test)
-          
-        except AssertionError as err:
-            logging.debug('FAIL')
-            logging.debug(err)
-            local_failed += 1
+    
+        result = run_test(test, verbose = True)
+    
+        if result == True:
+            local_passed += 1
             
         else:
-            logging.debug('PASS')
-            local_passed += 1
-
+            local_failed += 1
+      
     # this creates problem unmentioned in the requirements for a key
     # since 'I' and 'J' are combined into a single letter in a Playfair
     # table, the key must not contain both to avoid duplicate letters
