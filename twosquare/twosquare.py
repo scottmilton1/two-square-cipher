@@ -337,16 +337,35 @@ def __main__():
     
     print('TABLE TWO:')
     display_table(second_table)
+
+    text_prefix: str = 'plain' if mode == 'encrypt' else 'cipher'
+
+    prompt: str = f'Enter {text_prefix}text to {mode}: '
     
+    # prompt the user for message to encrypt / decrypt
+    message = input(prompt)
+
     ##### Progress marker #####
 
-    # prompt the user for message (or text file) to encrypt / decrypt
+    # perform encoding or decoding of message
 
-    # perform encoding or decoding of message (or text file)
+    # display success / failure message to confirm operation status
 
-    # display message to confirm operation success or failure
+    # display (en/de)coded message    
 
-    # print out the modified text to the console - optional functionality
+    # OPTIONAL FUNCTIONALITY TO POSSIBLY IMPLEMENT LATER:
+
+    # command-line usage
+
+    # prompt user to accept or redo keys after table display
+
+    # confirm message before (en/de)coding - e.g. - [P]roceed or [R]edo
+
+    # get message text from file instead of keyboard
+
+    # print out the modified text to the console 
+
+    # prompt user to continue or quit
 
 if __name__ == '__main__':
     __main__()

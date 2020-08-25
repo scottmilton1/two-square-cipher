@@ -130,11 +130,21 @@ def assert_equal(expected_result, func, *args, **kwargs) -> str:
         message = f'FAIL: {func.__name__}('
 
         if len(args) > 0:
-            message = message + str(args[0])
+            if type(args[0]) == str:
+                message = message + "'" + str(args[0]) + "'"
+                
+            else:
+                message = message + str(args[0])
 
         if len(args) > 1:
             for i in range(1, len(args)):
-                message = message + ', ' + str(args[i])
+                message = message + ', '
+
+                if type(args[i]) == str:
+                    message = message + "'" + str(args[i]) + "'"
+
+                else:
+                    message += str(args[i])
 
         if len(kwargs) == 1:
             for k, v in kwargs.items():
@@ -154,8 +164,6 @@ def assert_equal(expected_result, func, *args, **kwargs) -> str:
 
     else:
         return "PASS"
-
-
 
 ##### UNIT TESTS FOR TWOSQUARE FUNCTIONS #####
 
@@ -234,7 +242,19 @@ def test_display_table(verbose: bool = True) -> NoReturn:
         logging.debug('Testing different argument types...')
 
     # test against argument types
-    result = assert_equal(True, display_table, 'string')
+    result = assert_equal(False, display_table, 'string')
+   
+    if result == 'PASS':
+        local_passed += 1
+        
+    elif result.startswith('FAIL'):
+        local_failed += 1
+        
+    else:
+        if verbose:
+            logging.debug('Unexpected test result from assert_equal function.')
+        local_failed += 1
+        
     if verbose:
         logging.debug(result)
 
