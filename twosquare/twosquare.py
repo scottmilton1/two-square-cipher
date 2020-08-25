@@ -345,9 +345,27 @@ def __main__():
     # prompt the user for message to encrypt / decrypt
     message = input(prompt)
 
-    ##### Progress marker #####
-
     # perform encoding or decoding of message
+    
+    def encrypt(plaintext: str, key1: str, key2: str) -> str:
+        return False
+
+    def decrypt(ciphertext: str, key1: str, key2: str) -> str:
+        return False  
+
+    if mode == 'encrypt':
+        message = encrypt(message, first_key, second_key)
+
+    elif mode == 'decrypt':
+        message = decrypt(message, first_key, second_key)
+
+    else:
+        raise Exception('Error: Invalid Mode.')
+
+    # temporary test - move to test.py
+    assert(message)
+
+    ##### Progress marker #####
 
     # display success / failure message to confirm operation status
 
