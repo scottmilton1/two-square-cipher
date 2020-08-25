@@ -85,7 +85,7 @@ def assert_equal(expected_result, func, *args, **kwargs) -> str:
     """Tests that a function's return value equals an expected result.
 
     This is a custom assertion designed to display improved output for a
-    failed test when more information that a simple PASS / FAIL messsage
+    failed test when more information than a simple PASS / FAIL messsage
     is desired i.e. - when running multiple test cases in a test runner.
     
     To illustrate, if the return value of the function does not equal
