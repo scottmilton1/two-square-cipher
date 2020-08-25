@@ -27,6 +27,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG, format = '%(message)s',)
 
 # globals
+VERBOSE = True
 global_passed: int = 0
 global_failed: int = 0
 
@@ -59,7 +60,7 @@ def run_test(assertion: str, verbose: bool = True) -> bool:
             
         return True
 
-def test_runner(tests: list) -> Tuple[int, int]:
+def test_runner(tests: list, verbose: bool = True) -> Tuple[int, int]:
     """Runs a list of tests using run_test function.
 
     Returns a tuple with the number of tests (passed, failed).
@@ -71,7 +72,7 @@ def test_runner(tests: list) -> Tuple[int, int]:
     
     for test in tests:
 
-        result: bool = run_test(test, verbose = True)
+        result: bool = run_test(test, verbose)
 
         if result == True:
             number_passed += 1
@@ -184,7 +185,7 @@ def test_create_table(verbose: bool = True) -> NoReturn:
         "assert not create_table(b'01') #bytes",
         ]
 
-    # test for correct return value types
+    # create tests for return value types
     tests_ret_val: list = [        
         "assert type(create_table('keyword')) in [list, bool]",
         "assert type(create_table('keyword')) not in [str, int, tuple, dict]",
@@ -196,13 +197,13 @@ def test_create_table(verbose: bool = True) -> NoReturn:
     Summary: List[Result, Result] = [ ]
 
     # run tests using the list of assertions
-    Summary.append(test_runner(tests_arg_types))
+    Summary.append(test_runner(tests_arg_types, verbose))
     
     if verbose:
         logging.debug('Testing return values...')
 
     # run second block of tests
-    Summary.append(test_runner(tests_ret_val))
+    Summary.append(test_runner(tests_ret_val, verbose))
 
     # unpack results and add to local counters
     for result in Summary:
@@ -236,54 +237,76 @@ def test_display_table(verbose: bool = True) -> NoReturn:
     result = assert_equal(True, display_table, 'string')
     if verbose:
         logging.debug(result)
-    assert not display_table(list)
-    assert not display_table(123)        
-    assert not display_table({'dict': 'ionary'})
+
+    # create tests against argument types
+    tests_arg_types: list = [
+        "assert not display_table(list)",
+        "assert not display_table(123)",      
+        "assert not display_table({'dict': 'ionary'})",
+        ]
+
+    # create tests for values
+    tests_values: list = [
+        "assert display_table([" +
+            "['A', 'B', 'C', 'D', 'E']," +
+            "['A', 'B', 'C', 'D', 'E']," +
+            "['A', 'B', 'C', 'D', 'E']," +
+            "['A', 'B', 'C', 'D', 'E']," +
+            "['A', 'B', 'C', 'D', 'E']," +
+            "])",
+        # bad table structure
+        "assert not display_table(['list'])",
+        # not enough rows in table
+        "assert not display_table([" +          
+            "['A', 'B', 'C', 'D', 'E']," +
+            "['A', 'B', 'C', 'D', 'E']," +
+            "])",
+        # too many items in row
+        "assert not display_table([" +
+            "['A', 'B', 'C', 'D', 'E', 'F']," +
+            "['A', 'B', 'C', 'D', 'E']," +
+            "['A', 'B', 'C', 'D', 'E']," +
+            "['A', 'B', 'C', 'D', 'E']," +
+            "['A', 'B', 'C', 'D', 'E']," +
+            "])",
+        # table data is not of type string
+        "assert not display_table([" +
+            "[1,2,3,4,5]," +
+            "[1,2,3,4,5]," +
+            "[1,2,3,4,5]," +
+            "[1,2,3,4,5]," +
+            "[1,2,3,4,5]," +
+            "])",
+        ]
+
+    # create tests for return value types
+    tests_ret_val: list = [        
+        "assert type(display_table([[1,2],[3,4]])) == " +
+            "display_table.__annotations__.get('return')", # bool
+        "assert type(display_table(123) == " +
+            "display_table.__annotations__.get('return'))", # bool
+        "assert type(display_table([[5,6],[7,8]])) is bool",
+        "assert type(display_table('false return')) is bool", 
+        ]
+
+    # aliases for type hints
+    Result: Tuple[str, str]
+    Summary: List[Result, Result, Result] = [ ]
+
+    # run tests using the list of assertions
+    Summary.append(test_runner(tests_arg_types, verbose))    
 
     if verbose:
         logging.debug('Testing more table values and structures...')
 
-    # test for values
-    assert display_table([
-        ['A', 'B', 'C', 'D', 'E'],
-        ['A', 'B', 'C', 'D', 'E'],
-        ['A', 'B', 'C', 'D', 'E'],
-        ['A', 'B', 'C', 'D', 'E'],
-        ['A', 'B', 'C', 'D', 'E'],
-        ])
-    assert not display_table(['list'])  # bad table structure
-    # not enough rows in table
-    assert not display_table([              
-        ['A', 'B', 'C', 'D', 'E'],
-        ['A', 'B', 'C', 'D', 'E'],
-        ])
-    # too many items in row
-    assert not display_table([
-        ['A', 'B', 'C', 'D', 'E', 'F'], 
-        ['A', 'B', 'C', 'D', 'E'],
-        ['A', 'B', 'C', 'D', 'E'],
-        ['A', 'B', 'C', 'D', 'E'],
-        ['A', 'B', 'C', 'D', 'E'],
-        ])
-    # table data is not of type string
-    assert not display_table([
-        [1,2,3,4,5],
-        [1,2,3,4,5],
-        [1,2,3,4,5],
-        [1,2,3,4,5],
-        [1,2,3,4,5],
-        ])
+    # run second block of tests
+    Summary.append(test_runner(tests_values, verbose))
 
     if verbose:
         logging.debug('Testing return values...')
 
-    # check that return value matches type hint in function annotation
-    dta = display_table.__annotations__
-    assert type(display_table([[1,2],[3,4]])) == dta.get('return') # bool
-    assert type(display_table(123) == dta.get('return')) # bool
-
-    assert type(display_table([[5,6],[7,8]])) is bool
-    assert type(display_table('false return')) is bool  
+    # run third block of tests
+    Summary.append(test_runner(tests_ret_val, verbose))
 
     if verbose:
         logging.debug(f'{local_passed} tests passed.')
@@ -330,36 +353,19 @@ def test_validate_key(verbose: bool = True) -> NoReturn:
     Summary: List[Result, Result] = [ ]
 
     # run tests using the list of assertions
-    Summary.append(test_runner(tests_arg_types))
+    Summary.append(test_runner(tests_arg_types, verbose))
     
     if verbose:
         logging.debug('Testing return values...')
 
     # run second block of tests
-    Summary.append(test_runner(tests_ret_val))
+    Summary.append(test_runner(tests_ret_val, verbose))
 
     # unpack results and add to local counters
     for result in Summary:
         passed, failed = result
         local_passed += passed
         local_failed += failed
-
-    # test against argument types
-##    assert validate_key('astring')
-##    assert not validate_key(['list', 2])
-##    assert not validate_key(123)
-##    assert not validate_key(True)
-##    assert not validate_key(None)
-##    assert not validate_key({})
-
-##    if verbose:
-##        logging.debug('Testing return values...')
-
-    # test for return types
-##    assert type(validate_key('foo')) is bool
-##    assert not type(validate_key('bar')) == None
-##    assert not type(validate_key('baz')) == str
-##    assert not type(validate_key('bah')) == int     
 
     if verbose:
         logging.debug(f'{local_passed} tests passed.')
@@ -369,7 +375,7 @@ def test_validate_key(verbose: bool = True) -> NoReturn:
     global_failed += local_failed
 
 
-def __main__():
+def __main__(verbose: bool = VERBOSE):
 
     # run unit tests if debugging is on
     if __debug__:
@@ -381,9 +387,9 @@ def __main__():
         # assert mode == 'encrypt' or mode == 'decrypt'
         # assert first_key
 
-        test_validate_key()
-        test_create_table()
-        test_display_table()
+        test_validate_key(verbose)
+        test_create_table(verbose)
+        test_display_table(verbose)
 
         logging.debug(f'TOTAL TESTS PASSED: {global_passed}')
         logging.debug(f'TOTAL TESTS FAILED: {global_failed}')
