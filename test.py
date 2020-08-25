@@ -37,6 +37,8 @@ def run_test(assertion: str, verbose: bool = True) -> bool:
 
     Returns True if assertion passes or False if fails.
     
+    If verbose is set to True, outputs a pass / fail message via logging.
+    
     """
 
     try:
@@ -64,11 +66,12 @@ def test_runner(tests: list) -> Tuple[int, int]:
 
     """
 
-    number_passed = number_failed = 0
+    number_passed: int = 0
+    number_failed: int = 0
     
     for test in tests:
 
-        result = run_test(test, verbose = True)
+        result: bool = run_test(test, verbose = True)
 
         if result == True:
             number_passed += 1
@@ -230,7 +233,7 @@ def test_display_table(verbose: bool = True) -> NoReturn:
         logging.debug('Testing different argument types...')
 
     # test against argument types
-    result = assert_equal(False, display_table, 'string')
+    result = assert_equal(True, display_table, 'string')
     if verbose:
         logging.debug(result)
     assert not display_table(list)
@@ -304,22 +307,59 @@ def test_validate_key(verbose: bool = True) -> NoReturn:
         logging.debug('\nRunning unit tests for validate_key() function.')
         logging.debug('Testing different argument types...')
 
-    # test against argument types
-    assert validate_key('astring')
-    assert not validate_key(['list', 2])
-    assert not validate_key(123)
-    assert not validate_key(True)
-    assert not validate_key(None)
-    assert not validate_key({})
+    # create tests against argument types
+    tests_arg_types: list = [
+        "assert validate_key('astring')",
+        "assert not validate_key(['list', 2])",
+        "assert not validate_key(123)",
+        "assert not validate_key(True)",
+        "assert not validate_key(None)",
+        "assert not validate_key({})",
+        ]
 
+    # create tests for correct return value types
+    tests_ret_val: list = [        
+        "assert type(validate_key('foo')) is bool",
+        "assert not type(validate_key('bar')) == None",
+        "assert not type(validate_key('baz')) == str",
+        "assert not type(validate_key('bah')) == int",
+        ]
+
+    # aliases for type hints
+    Result: Tuple[str, str]
+    Summary: List[Result, Result] = [ ]
+
+    # run tests using the list of assertions
+    Summary.append(test_runner(tests_arg_types))
+    
     if verbose:
         logging.debug('Testing return values...')
 
+    # run second block of tests
+    Summary.append(test_runner(tests_ret_val))
+
+    # unpack results and add to local counters
+    for result in Summary:
+        passed, failed = result
+        local_passed += passed
+        local_failed += failed
+
+    # test against argument types
+##    assert validate_key('astring')
+##    assert not validate_key(['list', 2])
+##    assert not validate_key(123)
+##    assert not validate_key(True)
+##    assert not validate_key(None)
+##    assert not validate_key({})
+
+##    if verbose:
+##        logging.debug('Testing return values...')
+
     # test for return types
-    assert type(validate_key('foo')) is bool
-    assert not type(validate_key('bar')) == None
-    assert not type(validate_key('baz')) == str
-    assert not type(validate_key('bah')) == int     
+##    assert type(validate_key('foo')) is bool
+##    assert not type(validate_key('bar')) == None
+##    assert not type(validate_key('baz')) == str
+##    assert not type(validate_key('bah')) == int     
 
     if verbose:
         logging.debug(f'{local_passed} tests passed.')
