@@ -84,6 +84,39 @@ def test_runner(tests: list) -> Tuple[int, int]:
 def assert_equal(expected_result, func, *args, **kwargs) -> str:
     """Tests that a function's return value equals an expected result.
 
+    This is a custom assertion designed to display improved output for a
+    failed test when more information that a simple PASS / FAIL messsage
+    is desired i.e. - when running multiple test cases in a test runner.
+    
+    To illustrate, if the return value of the function does not equal
+    the value of the expected_result, the failure message returned will
+    include the name of the function, the values of the args used in the
+    test, and the expected result.
+
+    Here is an example of output for a failed test case:
+
+    Assume we want to use assert_equal for a custom add function that
+    we know works correctly and as intended. We can test that our add
+    function fails when it should by plugging the test values into our
+    assert_equal function as follows...
+
+    assert_equal(expected_result, func, *args, **kwargs)
+    
+    assert_equal(2, add, 1, 2)
+
+    Doing this should produce the following failed test case output:
+
+    'FAIL: add(1,2) == 2'
+
+    Just to be crystal clear, the function add() when run with the
+    parameters provided for the *args, in this case 1 and 2, returned a
+    value that did not match the value of the parameter provided for the
+    arg expected_result, which was 2 in this case. Ergo, the test case
+    failed and the corresponding failure message was returned.
+
+    More coffee please...
+    
+
     """
 
     try:
@@ -197,7 +230,7 @@ def test_display_table(verbose: bool = True) -> NoReturn:
         logging.debug('Testing different argument types...')
 
     # test against argument types
-    result = assert_equal(True, display_table, 'string')
+    result = assert_equal(False, display_table, 'string')
     if verbose:
         logging.debug(result)
     assert not display_table(list)
