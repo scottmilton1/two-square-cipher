@@ -21,6 +21,33 @@ from typing import Union
 Row = List[str]
 Table = List[Row]
 
+class FooBarError(Exception):
+    """Raised when something really bad happens.
+
+    """
+    pass
+
+class TypeMismatchError(TypeError):
+    """Raised when someone tries to put a square peg in a round hole.
+
+    """
+
+    pass
+    
+class StakesTooHighError(IndexError):
+    """Raised when the stakes are just too dang high!
+
+    """
+
+    pass 
+
+class BadValueError(ValueError):
+    """Raised when the value is flagrantly and absolutely invalid.
+
+    """
+
+    pass
+
 def create_table(key: str) -> Union[Table, bool]: # return either Table or False
     """Create a Playfair table.
 
