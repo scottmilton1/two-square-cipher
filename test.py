@@ -335,6 +335,102 @@ def test_display_table(verbose: bool = True) -> NoReturn:
     global_passed += local_passed
     global_failed += local_failed
 
+def test_decrypt(verbose: bool = True) -> NoReturn:
+    """Test suite for encrypt() function.
+
+    """
+
+    global global_passed
+    global global_failed
+
+    local_passed: int = 0
+    local_failed: int = 0
+
+    if verbose:
+        logging.debug('\nRunning unit tests for encrypt() function.')
+        logging.debug('Testing different argument types...')
+
+    # create tests against argument types
+    tests_arg_types: list = [ ]
+
+    # create tests for correct return value types
+    tests_ret_val: list = [ ]
+
+    # aliases for type hints
+    Result: Tuple[str, str]
+    Summary: List[Result, Result] = [ ]
+
+    # run tests using the list of assertions
+    Summary.append(test_runner(tests_arg_types, verbose))
+    
+    if verbose:
+        logging.debug('Testing return values...')
+
+    # run second block of tests
+    Summary.append(test_runner(tests_ret_val, verbose))
+
+    # unpack results and add to local counters
+    for result in Summary:
+        passed, failed = result
+        local_passed += passed
+        local_failed += failed
+
+    if verbose:
+        logging.debug(f'{local_passed} tests passed.')
+        logging.debug(f'{local_failed} tests failed.')
+
+    global_passed += local_passed
+    global_failed += local_failed
+
+def test_encrypt(verbose: bool = True) -> NoReturn:
+    """Test suite for encrypt() function.
+
+    """
+
+    global global_passed
+    global global_failed
+
+    local_passed: int = 0
+    local_failed: int = 0
+
+    if verbose:
+        logging.debug('\nRunning unit tests for encrypt() function.')
+        logging.debug('Testing different argument types...')
+
+    # create tests against argument types
+    tests_arg_types: list = [ ]
+
+    # create tests for correct return value types
+    tests_ret_val: list = [ ]
+
+    # aliases for type hints
+    Result: Tuple[str, str]
+    Summary: List[Result, Result] = [ ]
+
+    # run tests using the list of assertions
+    Summary.append(test_runner(tests_arg_types, verbose))
+    
+    if verbose:
+        logging.debug('Testing return values...')
+
+    # run second block of tests
+    Summary.append(test_runner(tests_ret_val, verbose))
+
+    # unpack results and add to local counters
+    for result in Summary:
+        passed, failed = result
+        local_passed += passed
+        local_failed += failed
+
+    if verbose:
+        logging.debug(f'{local_passed} tests passed.')
+        logging.debug(f'{local_failed} tests failed.')
+
+    global_passed += local_passed
+    global_failed += local_failed
+
+
+
 def test_validate_key(verbose: bool = True) -> NoReturn:
     """Test suite for validate_key() function.
 
@@ -410,6 +506,8 @@ def __main__(verbose: bool = VERBOSE):
         test_validate_key(verbose)
         test_create_table(verbose)
         test_display_table(verbose)
+        test_encrypt(verbose)
+        # test_decrypt(verbose)
 
         logging.debug(f'TOTAL TESTS PASSED: {global_passed}')
         logging.debug(f'TOTAL TESTS FAILED: {global_failed}')
