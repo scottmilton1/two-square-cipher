@@ -118,6 +118,12 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
 
     return False
 
+def encrypt(plaintext: str, key1: str, key2: str) -> str:
+    return False
+
+def decrypt(ciphertext: str, key1: str, key2: str) -> str:
+    return False  
+
 def display_table(table: Table) -> bool:
     """Print a Playfair table to the screen.
 
@@ -347,12 +353,6 @@ def __main__():
 
     # perform encoding or decoding of message
     
-    def encrypt(plaintext: str, key1: str, key2: str) -> str:
-        return False
-
-    def decrypt(ciphertext: str, key1: str, key2: str) -> str:
-        return False  
-
     if mode == 'encrypt':
         message = encrypt(message, first_key, second_key)
 
@@ -361,9 +361,6 @@ def __main__():
 
     else:
         raise Exception('Error: Invalid Mode.')
-
-    # temporary test - move to test.py
-    assert(message)
 
     ##### Progress marker #####
 

@@ -338,6 +338,9 @@ def test_display_table(verbose: bool = True) -> NoReturn:
 def test_decrypt(verbose: bool = True) -> NoReturn:
     """Test suite for encrypt() function.
 
+    # USE THIS FORMAT TO CREATE GENERALIZED FUNCTION THAT CAN PASS
+    # TEST BANKS TO AS ARGUMENTS - REFACTOR FOR DRY PRINCIPLE
+
     """
 
     global global_passed
@@ -347,7 +350,7 @@ def test_decrypt(verbose: bool = True) -> NoReturn:
     local_failed: int = 0
 
     if verbose:
-        logging.debug('\nRunning unit tests for encrypt() function.')
+        logging.debug('\nRunning unit tests for decrypt() function.')
         logging.debug('Testing different argument types...')
 
     # create tests against argument types
