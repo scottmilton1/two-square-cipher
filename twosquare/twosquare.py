@@ -10,7 +10,7 @@ placed vertically.
 
 The functionality of this program can also be used as a module.
 
-"""
+""" 
 
 # globals
 from typing import List
@@ -208,6 +208,18 @@ def display_table(table: Table) -> bool:
 
     return False
 
+def encode() -> NoReturn:
+    """Encrypts or decrypts a message using the Twosquare cipher.
+
+    Helper function for encrypt and decrypt functions.
+    
+    Will move and place any shared code for both operations here
+    to avoid redundancy and to streamline the codebase.
+
+    """
+    
+    pass
+
 def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
     """Encrypts a message using the Twosquare cipher.
 
@@ -256,13 +268,21 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
     data security and integrity are essential. It is best used as a
     relatively simple means of sending simple letters-only messages and
     is perhaps valuable in real terms mainly for its historical
-    significance and for educational purposes.  
+    significance and for educational purposes.
+
+    Dependencies:
+    
+    from twosquare:
+        create_table()
+        # encode()
+        get_coordinates()        
+        Row
+        Table
+
+    from typing:
+        List
 
     """
-
-##    from twosquare import create_table
-##    from twosquare import Row
-##    from twosquare import Table
 
     MAX_COLUMNS: int = 5
     MAX_ROWS: int = 5

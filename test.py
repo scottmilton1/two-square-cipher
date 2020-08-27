@@ -11,6 +11,7 @@ abstract away the basic underlying processes involved.
 Feel free to replace this test suite with your test runner of choice.
 
 """
+
 from typing import List
 from typing import NoReturn
 from typing import Tuple
@@ -37,6 +38,8 @@ global_failed: int = 0
 
 def run_test(assertion: str, verbose: bool = True) -> bool:
     """Runs an assertion.
+
+    Executes a single assertion using builtin exec() function.
 
     Returns True if assertion passes or False if fails.
     
