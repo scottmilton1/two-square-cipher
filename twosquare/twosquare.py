@@ -292,17 +292,31 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
     letters_only: list = [ ]
 
     try:
+
+        # validate keys
+        if not (validate_key(key1) and validate_key(key2)):
+            raise BadValueError('Invalid key error. I am the gatekeeper. ' + \
+                                'Are you the keymaster?')
+
+        # validate type of message is str
+
+        # validate len of message not zero
+        
+
+        
         # capitalize all letters in plaintext
         capitalized: str = plaintext.upper()
 
         # filter to remove non-alpha characters
         for character in capitalized:
-            if character.isalpha():
+            if character.isalpha(): # CHECK FOR NON-ASCII (UNICODE) CHARS TOO
                 letters_only.append(character)
 
         # if length of odd add 'Z' to end to make it even
         if len(letters_only) % 2 != 0:
             letters_only.append('Z')
+
+##        print(letters_only)
 
         # get two letters at a time 
         for n in range(0, len(letters_only), 2):
@@ -318,6 +332,8 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
 
         # create second table with second key
         second_table: Table = create_table(key2)
+
+##        print(digraphs)
 
         # create ciphertext from plaintext using the tables
         for digraph in digraphs:
@@ -335,6 +351,15 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
             row2, column2 = get_coordinates(second_table, letter2)
 
             if min(row1, row2, column1, column2) < 0:
+
+##                print(letter1, letter2)
+##
+##                print("rows: ", row1, row2, "cols: ", column1, column2)
+##
+##                display_table(first_table)
+##
+##                display_table(second_table)
+                
                 raise FooBarError('Table mismatch error. Unable to find one' + \
                                   ' or more letters in the plaintext using' + \
                                   ' the tables provided. Either table data' + \
@@ -364,10 +389,14 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
 
         return ciphertext
 
+    except BadValueError as err:
+        print(err)
+        return False
+
     except FooBarError as err:
         print(err)
         return False
-  
+
     except Exception as err:
         from inspect import currentframe as cf
         print('Unexpected exception type raised during execution:')
@@ -380,6 +409,8 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
 
 def get_coordinates(table: Table, letter: str) -> Tuple[int, int]:
     """Gets a letters coordinates from a Playfair table.
+
+    Helper function for encrypt and decrypt functions.
 
     Letter should be a str containing a single ASCII letter character.
     Table must be prepopulated and have a valid format.

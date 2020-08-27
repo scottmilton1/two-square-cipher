@@ -30,9 +30,17 @@ import logging
 logging.basicConfig(level=logging.DEBUG, format = '%(message)s',)
 
 # globals
-VERBOSE = True
+VERBOSE: bool = True
 global_passed: int = 0
 global_failed: int = 0
+
+valid_table_example: Table = [
+     ['P', 'Y', 'T', 'H', 'O'],
+     ['N', 'A', 'B', 'C', 'D'],
+     ['E', 'F', 'G', 'IJ', 'K'],
+     ['L', 'M', 'Q', 'R', 'S'],
+     ['U', 'V', 'W', 'X', 'Z'],
+     ]
 
 ##### TEST RUNNERS #####
 
@@ -341,7 +349,7 @@ def test_display_table(verbose: bool = True) -> NoReturn:
     global_failed += local_failed
 
 def test_decrypt(verbose: bool = True) -> NoReturn:
-    """Test suite for encrypt() function.
+    """Test suite for decrypt() function.
 
     # USE THIS FORMAT TO CREATE GENERALIZED FUNCTION THAT CAN PASS
     # TEST BANKS TO AS ARGUMENTS - REFACTOR FOR DRY PRINCIPLE
@@ -407,7 +415,8 @@ def test_encrypt(verbose: bool = True) -> NoReturn:
 
     # create tests against argument types
     tests_arg_types: list = [
-        'assert encrypt("Test message.", "keyword", "pythonista")'
+        'assert encrypt("This should pass", "falcon", "osprey")',
+        'assert not encrypt("One invalid keyword", "keyword", "pythonista")',
         ]
 
     # create tests for correct return value types
