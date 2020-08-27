@@ -145,10 +145,65 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
 
     return False
 
-def encrypt(plaintext: str, key1: str, key2: str) -> str:
+def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
+    """Encrypts a message using the Twosquare cipher.
+
+    Encrypts a plaintext message using the two keys provided and returns
+    the encoded ciphertext as a str if successful or returns False if
+    operation is unsuccessful.
+
+    Each key must be a valid keyword or key phrase:
+    a non-empty string with no more than twenty-five letters
+    no white space,
+    no special characters,
+    no digits - numbers must be spelled out,
+    no duplicate letters (i.e. - the same letter cannot be used twice in
+        the same key)
+
+    The validate_key function can be used ahead of time to check the
+    validity of each key.
+
+    The value of plaintext must be a non-empty string. Please note the
+    following: All white space, special characters, and digits will be
+    removed from the plaintext during the encryption process. Basically,
+    all non-alpha characters, while allowed, will be ignored and thus
+    removed from the message. No data is stored about what was removed
+    and therefore, when the ciphertext is later decrypted, the white
+    space and punctuation will not be restored.
+
+    Another thing to keep in mind is that 'I' and 'J' characters are
+    combined into a single IJ letter by this cipher. While not ideal by
+    any means, that is the way the cipher was designed. Hence, there
+    can be some loss of information when the process is reversed and the
+    ciphertext is decrypted back to a plaintext. In practicality, this
+    makes little difference, as the decoded message is still typically
+    easy to read and understand.
+
+    If the number of characters in the plaintext is odd after removing
+    all white space, special characters, and digits a Z is added to the
+    end to make the number of characters even. This is necessary for
+    the cipher to function properly, as the text is broken into digraphs
+    (two-letter combinations) during the encoding or decoding process.
+    This trailing character is, of course, easy enough to remove or
+    simply to ignore when reading the decrypted message.
+
+    For these reasons, among others, the Twosquare cipher is not a tool
+    with practical use for encrypting and decrypting files and documents
+    where a loss of data would be unacceptable, or where high levels of
+    data security and integrity are essential. It is best used as a
+    relatively simple means of sending simple letters-only messages and
+    is perhaps valuable in real terms mainly for its historical
+    significance and for educational purposes.  
+
+    """
+    
     return False
 
 def decrypt(ciphertext: str, key1: str, key2: str) -> str:
+    """Decrypts a message using the Twosquare cipher.
+
+    """
+    
     return False  
 
 def display_table(table: Table) -> bool:
