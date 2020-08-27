@@ -15,6 +15,7 @@ The functionality of this program can also be used as a module.
 # globals
 from typing import List
 from typing import NoReturn
+from typing import Tuple
 from typing import Union
 
 # Use type aliases for type hints on complex types
@@ -259,9 +260,9 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
 
     """
 
-    from twosquare import create_table
-    from twosquare import Row
-    from twosquare import Table
+##    from twosquare import create_table
+##    from twosquare import Row
+##    from twosquare import Table
 
     MAX_COLUMNS: int = 5
     MAX_ROWS: int = 5
@@ -289,8 +290,8 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
             # create a digraph with the two letters
             current_digraph: list = [letters_only[n], letters_only[n+1]]
 
-        # store the current digraph in the list of all digraphs
-        digraphs.append(current_digraph)
+            # store the current digraph in the list of all digraphs
+            digraphs.append(current_digraph)
 
         # create first table with first key
         first_table: Table = create_table(key1) 
@@ -304,11 +305,23 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
             # unpack digraph
             letter1, letter2 = digraph
 
-            # get each letter's coordinates in the table (row, column)
-            row1: int, column1: int = get_coordinates(first_table, letter1)
-            row2: int, column2: int = get_coordinates(second_table, letter2)
+            column1: int = -1
+            column2: int = -1
+            row1: int = -1
+            row2: int = -1
 
-            # check to see which of two cases is true
+            # get each letter's coordinates in its table (row, column)
+            row1, column1 = get_coordinates(first_table, letter1)
+            row2, column2 = get_coordinates(second_table, letter2)
+
+            if min(row1, row2, column1, column2) < 0:
+                raise FooBarError('Table mismatch error. Unable to find one' + \
+                                  ' or more letters in the plaintext using' + \
+                                  ' the tables provided. Either table data' + \
+                                  ' is corrupt or message contains non-' + \
+                                  'ASCII characters, which are not-allowed.')
+
+            # check to see which of two cases is true:
             
             # case 1: letters are in different columns - swap column numbers
             if column1 != column2:
@@ -318,18 +331,22 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
                 column2 = temp
 
                 # fetch letters from table using new coordinates
-##                encrypted_letter1 = fetch_letter(table1, row1, column1)
-##                encrypted_letter2 = fetch_letter(table2, row2, column2)
+                encrypted_letter1 = first_table[row1][column1]
+                encrypted_letter2 = second_table[row2][column2]
 
             # case 2: letters are in same column - leave letters as is
             else: # nope, that's not lazy, that's what the cipher says to do
                 encrypted_letter1 = letter1
                 encrypted_letter2 = letter2
 
-        # add the two encrypted letters to the ciphertext body
-        ciphertext = ciphertext + encrypted_letter1 + encrypted_letter2
+            # add the two encrypted letters to the ciphertext body
+            ciphertext = ciphertext + encrypted_letter1 + encrypted_letter2
 
-        return ciphertext            
+        return ciphertext
+
+    except FooBarError as err:
+        print(err)
+        return False
   
     except Exception as err:
         from inspect import currentframe as cf
@@ -341,14 +358,15 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
     
     return False
 
-def get_coordinates(table: Table, letter: str) -> Union[Tuple[int, int], int]:
+def get_coordinates(table: Table, letter: str) -> Tuple[int, int]:
     """Gets a letters coordinates from a Playfair table.
 
     Letter should be a str containing a single ASCII letter character.
     Table must be prepopulated and have a valid format.
     
     Returns a tuple of two integers: (row_number, column_number) if
-    successful or returns an single interger value of -1 if unsuccessful.
+    successful or returns a a tuple of two integer values of (-1, -1)
+    if unsuccessful.
     
     """
 
@@ -373,8 +391,9 @@ def get_coordinates(table: Table, letter: str) -> Union[Tuple[int, int], int]:
         # if not found, increment the row counter for the next row
         row_number += 1
 
-    # if letter not found in table, return an index of -1 to reflect error
-    return -1
+    # if letter not found in table, return tuple with negative indices
+    # to indicate that a non-fatal error has occured
+    return (-1, -1)
 
 def get_key(ordinal: str = '') -> str:
     """Gets key from user and returns it.
