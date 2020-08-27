@@ -197,6 +197,10 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
 
     """
 
+    from twosquare import create_table
+    from twosquare import Row
+    from twosquare import Table
+
     MAX_COLUMNS: int = 5
     MAX_ROWS: int = 5
 
@@ -224,16 +228,25 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
             current_digraph: list = [letters_only[n], letters_only[n+1]]
 
         # store the current digraph in the list of all digraphs
-        digraphs.append(current_digraph) 
+        digraphs.append(current_digraph)
 
-    except ValueError as err:
-        print(err)
-        return False
+        # create first table with first key
+        first_table: Table = create_table(key1) 
 
-    except TypeError as err:
-        print(err)
-        return False
+        # create second table with second key
+        second_table: Table = create_table(key2)
 
+        # create ciphertext from plaintext using the tables
+        for digraph in digraphs:
+
+            # ONLY TWO CASES FOR TWOSQUARE:
+
+            # case 1: letters are in different columns - swap column numbers
+            pass
+
+            # case 2: letters are in same column - do nothing, leave as is
+            pass
+  
     except Exception as err:
         from inspect import currentframe as cf
         print('Unexpected exception type raised during execution:')
