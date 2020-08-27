@@ -145,6 +145,68 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
 
     return False
 
+def decrypt(ciphertext: str, key1: str, key2: str) -> str:
+    """Decrypts a message using the Twosquare cipher.
+
+    """
+    
+    return False  
+
+def display_table(table: Table) -> bool:
+    """Print a Playfair table to the screen.
+
+    Prints a Playfair table to the console for viewing purposes to
+    facilitate development and testing.
+    
+    """
+
+    try:
+        if type(table) is not list:
+            raise TypeError('Table must be a list.')
+
+        if len(table) != 5:
+            raise ValueError('Illegal number of rows in table.')
+
+        print()
+
+        # print each row of the table
+        for row in table:
+
+            if len(row) != 5:
+                raise ValueError('Illegal number of columns in table row.')
+
+            # print each cell in current row
+            for cell in row:
+
+                if type(cell) is not str or len(cell) > 2:
+                    raise(ValueError('Bad table data.'))
+                
+                print('%6s' % cell, end='')
+
+            # white space to separate rows
+            print('\n\n')
+
+    except ValueError as err:
+        print(err)
+        return False
+
+    except TypeError as err:
+        print(err)
+        return False
+
+    except Exception as err:
+        from inspect import currentframe as cf
+        print('Unexpected exception type raised during execution:')
+        print(f'In function: {cf().f_code.co_name}') # function name
+        print(type(err))
+        print(err)
+        raise
+
+    else:
+        return True
+
+    return False
+
 def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
     """Encrypts a message using the Twosquare cipher.
 
@@ -239,13 +301,35 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
         # create ciphertext from plaintext using the tables
         for digraph in digraphs:
 
-            # ONLY TWO CASES FOR TWOSQUARE:
+            # unpack digraph
+            letter1, letter2 = digraph
 
+            # get each letter's coordinates in the table (row, column)
+            row1: int, column1: int = get_coordinates(first_table, letter1)
+            row2: int, column2: int = get_coordinates(second_table, letter2)
+
+            # check to see which of two cases is true
+            
             # case 1: letters are in different columns - swap column numbers
-            pass
+            if column1 != column2:
 
-            # case 2: letters are in same column - do nothing, leave as is
-            pass
+                temp: int = column1
+                column1 = column2
+                column2 = temp
+
+                # fetch letters from table using new coordinates
+##                encrypted_letter1 = fetch_letter(table1, row1, column1)
+##                encrypted_letter2 = fetch_letter(table2, row2, column2)
+
+            # case 2: letters are in same column - leave letters as is
+            else: # nope, that's not lazy, that's what the cipher says to do
+                encrypted_letter1 = letter1
+                encrypted_letter2 = letter2
+
+        # add the two encrypted letters to the ciphertext body
+        ciphertext = ciphertext + encrypted_letter1 + encrypted_letter2
+
+        return ciphertext            
   
     except Exception as err:
         from inspect import currentframe as cf
@@ -257,67 +341,40 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
     
     return False
 
-def decrypt(ciphertext: str, key1: str, key2: str) -> str:
-    """Decrypts a message using the Twosquare cipher.
+def get_coordinates(table: Table, letter: str) -> Union[Tuple[int, int], int]:
+    """Gets a letters coordinates from a Playfair table.
 
-    """
+    Letter should be a str containing a single ASCII letter character.
+    Table must be prepopulated and have a valid format.
     
-    return False  
-
-def display_table(table: Table) -> bool:
-    """Print a Playfair table to the screen.
-
-    Prints a Playfair table to the console for viewing purposes to
-    facilitate development and testing.
+    Returns a tuple of two integers: (row_number, column_number) if
+    successful or returns an single interger value of -1 if unsuccessful.
     
     """
 
-    try:
-        if type(table) is not list:
-            raise TypeError('Table must be a list.')
+    # create row counter
+    row_number: int = 0
 
-        if len(table) != 5:
-            raise ValueError('Illegal number of rows in table.')
+    if letter == 'I' or letter == 'J':
+        letter = "IJ"
 
-        print()
+    # check each row of the table for the letter
+    for row in table:
+        
+        # if the letter is found in current row
+        if letter in row:
+            
+            # get the column number for the letter
+            column_number: int = row.index(letter)
 
-        # print each row of the table
-        for row in table:
+            # return the position of the letter in the table
+            return [row_number, column_number]
 
-            if len(row) != 5:
-                raise ValueError('Illegal number of columns in table row.')
+        # if not found, increment the row counter for the next row
+        row_number += 1
 
-            # print each cell in current row
-            for cell in row:
-
-                if type(cell) is not str or len(cell) > 2:
-                    raise(ValueError('Bad table data.'))
-                
-                print('%6s' % cell, end='')
-
-            # white space to separate rows
-            print('\n\n')
-
-    except ValueError as err:
-        print(err)
-        return False
-
-    except TypeError as err:
-        print(err)
-        return False
-
-    except Exception as err:
-        from inspect import currentframe as cf
-        print('Unexpected exception type raised during execution:')
-        print(f'In function: {cf().f_code.co_name}') # function name
-        print(type(err))
-        print(err)
-        raise
-
-    else:
-        return True
-
-    return False
+    # if letter not found in table, return an index of -1 to reflect error
+    return -1
 
 def get_key(ordinal: str = '') -> str:
     """Gets key from user and returns it.
