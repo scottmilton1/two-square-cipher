@@ -21,6 +21,8 @@ from twosquare.twosquare import Table
 from twosquare.twosquare import create_table
 from twosquare.twosquare import display_table
 from twosquare.twosquare import validate_key
+from twosquare.twosquare import encrypt
+from twosquare.twosquare import decrypt
 
 # use logging for test output   
 import logging
@@ -401,7 +403,9 @@ def test_encrypt(verbose: bool = True) -> NoReturn:
         logging.debug('Testing different argument types...')
 
     # create tests against argument types
-    tests_arg_types: list = [ ]
+    tests_arg_types: list = [
+        'assert encrypt("Test message.", "keyword", "pythonista")'
+        ]
 
     # create tests for correct return value types
     tests_ret_val: list = [ ]
