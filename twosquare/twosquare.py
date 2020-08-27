@@ -196,6 +196,51 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
     significance and for educational purposes.  
 
     """
+
+    MAX_COLUMNS: int = 5
+    MAX_ROWS: int = 5
+
+    ciphertext: str = ''
+    digraphs: list = [ ]
+    letters_only: list = [ ]
+
+    try:
+        # capitalize all letters in plaintext
+        capitalized: str = plaintext.upper()
+
+        # filter to remove non-alpha characters
+        for character in capitalized:
+            if character.isalpha():
+                letters_only.append(character)
+
+        # if length of odd add 'Z' to end to make it even
+        if len(letters_only) % 2 != 0:
+            letters_only.append('Z')
+
+        # get two letters at a time 
+        for n in range(0, len(letters_only), 2):
+
+            # create a digraph with the two letters
+            current_digraph: list = [letters_only[n], letters_only[n+1]]
+
+        # store the current digraph in the list of all digraphs
+        digraphs.append(current_digraph) 
+
+    except ValueError as err:
+        print(err)
+        return False
+
+    except TypeError as err:
+        print(err)
+        return False
+
+    except Exception as err:
+        from inspect import currentframe as cf
+        print('Unexpected exception type raised during execution:')
+        print(f'In function: {cf().f_code.co_name}') # function name
+        print(type(err))
+        print(err)
+        raise
     
     return False
 
@@ -448,8 +493,13 @@ def __main__():
 
     # display success / failure message to confirm operation status
 
-    # display (en/de)coded message    
+    if message:
+        print('Operation succcessful.')
 
+    # display (en/de)coded message
+
+    print(message)
+    
     # OPTIONAL FUNCTIONALITY TO POSSIBLY IMPLEMENT LATER:
 
     # command-line usage
