@@ -149,6 +149,8 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
 def decrypt(ciphertext: str, key1: str, key2: str) -> str:
     """Decrypts a message using the Twosquare cipher.
 
+    TO BE IMPLEMENTED.
+
     """
     
     return False  
@@ -215,6 +217,8 @@ def encode() -> NoReturn:
     
     Will move and place any shared code for both operations here
     to avoid redundancy and to streamline the codebase.
+
+    TO BE IMPLEMENTED...
 
     """
     
@@ -300,18 +304,19 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
 
         # validate type of message is str
         if type(plaintext) is not str:
-            raise TypeMismatchError('Error: plaintext must be a string.')
+            raise TypeMismatchError('Error: plaintext must be a string.\n' + \
+                                    'Are you trying to put a square peg in ' + \
+                                    'a round hole?')
 
-        # validate len of message not zero
+        # validate len of message is not zero
         if len(plaintext) == 0:
-            raise BadValueError('Error: Plaintext ' + \
-                                'is empty. Into the void we fall...')
+            raise BadValueError('Error: Plaintext is empty. ' + \
+                                'Into the void we fall...')
 
         # validate that message not merely white space or numeric
         if plaintext.isspace() or plaintext.isnumeric():
             raise BadValueError('Error: Plaintext must contain at least ' + \
-                                'some letters. \nWhite space just doesn\'t' + \
-                                ' do it for me.')
+                                'some letters. Tell me a joke or something.')
 
         # validate that message is only printable ASCII characters
         # or perhaps just ignore them instead???
@@ -338,8 +343,6 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
         if len(letters_only) % 2 != 0:
             letters_only.append('Z')
 
-##        print(letters_only)
-
         # get two letters at a time 
         for n in range(0, len(letters_only), 2):
 
@@ -354,8 +357,6 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
 
         # create second table with second key
         second_table: Table = create_table(key2)
-
-##        print(digraphs)
 
         # create ciphertext from plaintext using the tables
         for digraph in digraphs:
@@ -373,26 +374,14 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
             row2, column2 = get_coordinates(second_table, letter2)
 
             if min(row1, row2, column1, column2) < 0:
-
-##                print(letter1, letter2)
-##
-##                print("rows: ", row1, row2, "cols: ", column1, column2)
-##
-##                display_table(first_table)
-##
-##                display_table(second_table)
                 
                 raise FooBarError('Table mismatch error. Unable to find one' + \
-                                  ' or more letters in the plaintext using' + \
-                                  ' the tables provided. Either table data' + \
-                                  ' is corrupt or message contains non-' + \
-                                  'ASCII characters, which are not-allowed.')
+                                  ' or more letters of the plaintext using' + \
+                                  ' the tables generated during program .')
 
             # check to see which of two cases is true:
-            
             # case 1: letters are in different columns - swap column numbers
             if column1 != column2:
-
                 temp: int = column1
                 column1 = column2
                 column2 = temp
@@ -416,8 +405,13 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
         return False
 
     except FooBarError as err:
+        print('I do not like green eggs and ham.')
+        print('This should never happen, but if it does, ' +
+            'it is an unforeseen error.')
+        print("It's okay to panic!")
+        print(type(err))
         print(err)
-        return False
+        raise
     
     except TypeMismatchError as err:
         print(err)
@@ -583,6 +577,17 @@ def validate_key(key: str) -> bool:
 
     else:
         return True
+
+def validate_table(table: Table) -> bool:
+    """Validates a Playfair table.
+
+    Returns True if the table is valid or False otherwise.
+
+    TO BE IMPLEMENTED...
+
+    """
+    
+    pass
     
 def __main__():
     """This is the main program.
@@ -649,21 +654,19 @@ def __main__():
     if mode == 'encrypt':
         message = encrypt(message, first_key, second_key)
 
+    ##### Progress marker #####
+        
     elif mode == 'decrypt':
         message = decrypt(message, first_key, second_key)
 
     else:
         raise Exception('Error: Invalid Mode.')
 
-    ##### Progress marker #####
-
     # display success / failure message to confirm operation status
-
     if message:
         print('Operation succcessful.')
 
     # display (en/de)coded message
-
     print(message)
     
     # OPTIONAL FUNCTIONALITY TO POSSIBLY IMPLEMENT LATER:
