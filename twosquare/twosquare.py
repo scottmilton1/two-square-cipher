@@ -456,7 +456,7 @@ def get_coordinates(table: Table, letter: str) -> Tuple[int, int]:
             column_number: int = row.index(letter)
 
             # return the position of the letter in the table
-            return [row_number, column_number]
+            return (row_number, column_number)
 
         # if not found, increment the row counter for the next row
         row_number += 1
