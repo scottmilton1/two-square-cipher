@@ -398,8 +398,6 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
             # add the two encrypted letters to the ciphertext body
             ciphertext = ciphertext + encrypted_letter1 + encrypted_letter2
 
-        return ciphertext
-
     except BadValueError as err:
         print(err)
         return False
@@ -424,8 +422,9 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
         print(type(err))
         print(err)
         raise
-    
-    return False
+
+    else:
+        return ciphertext
 
 def get_coordinates(table: Table, letter: str) -> Tuple[int, int]:
     """Gets a letters coordinates from a Playfair table.
