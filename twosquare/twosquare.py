@@ -306,14 +306,33 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
         if len(plaintext) == 0:
             raise BadValueError('Error: Plaintext ' + \
                                 'is empty. Into the void we fall...')
+
+        # validate that message not merely white space or numeric
+        if plaintext.isspace() or plaintext.isnumeric():
+            raise BadValueError('Error: Plaintext must contain at least ' + \
+                                'some letters. \nWhite space just doesn\'t' + \
+                                ' do it for me.')
+
+        # validate that message is only printable ASCII characters
+        # or perhaps just ignore them instead???
+        if not (plaintext.isascii() and plaintext.isprintable()):
+            raise BadValueError('Error: Plaintext can consist of ' + \
+                                'printable ASCII characters only.\n' + \
+                                'Sorry, my friend. No unicorns allowed!')        
         
         # capitalize all letters in plaintext
         capitalized: str = plaintext.upper()
 
         # filter to remove non-alpha characters
         for character in capitalized:
-            if character.isalpha(): # CHECK FOR NON-ASCII (UNICODE) CHARS TOO
+            if character.isalpha():
                 letters_only.append(character)
+
+        if len(letters_only) == 0:
+            raise BadValueError('Error: No alpha characters in plaintext. ' + \
+                                'Alas, symbolism is sensational,\nand ' + \
+                                'punctuation is paramount, but letters ' + \
+                                'are legendary!')
 
         # if length of odd add 'Z' to end to make it even
         if len(letters_only) % 2 != 0:

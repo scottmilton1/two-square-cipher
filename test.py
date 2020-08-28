@@ -419,15 +419,20 @@ def test_encrypt(verbose: bool = True) -> NoReturn:
         'assert not encrypt("One invalid keyword", "keyword", "pythonista")',
         'assert not encrypt(123, "not", "string")',
         'assert not encrypt("", "empty", "plaintex")',
-        'assert encrypt("$^&@.", "only", "symbol")',
-        'assert encrypt("    ", "only", "whitespac")',
-        'assert encrypt("accént", "foreign", "chars")',
-        'assert encrypt("umläütö", "foreign", "chars")', 
-        'assert encrypt("文字", "foreign", "chars")',
+        'assert not encrypt("$^&@.", "only", "symbol")',
+        'assert not encrypt("1234", "only", "digts")', 
+        'assert not encrypt("1.234", "only", "numbers")',
+        'assert not encrypt("    ", "only", "whitespac")',
+        'assert not encrypt("accént", "foreign", "chars")',
+        'assert not encrypt("umläütö", "foreign", "chars")', 
+        'assert not encrypt("文字", "foreign", "chars")',
         ]
 
     # create tests for correct return value types
-    tests_ret_val: list = [ ]
+    tests_ret_val: list = [
+        'assert type(encrypt("This should pass", "falcon", "osprey")) == str',
+        'assert type(encrypt("Retürns Fälse", "python", "tricks")) is bool',        
+        ]
 
     # aliases for type hints
     Result: Tuple[str, str]
