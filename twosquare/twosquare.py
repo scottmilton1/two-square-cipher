@@ -299,10 +299,13 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
                                 'Are you the keymaster?')
 
         # validate type of message is str
+        if type(plaintext) is not str:
+            raise TypeMismatchError('Error: plaintext must be a string.')
 
         # validate len of message not zero
-        
-
+        if len(plaintext) == 0:
+            raise BadValueError('Error: Plaintext ' + \
+                                'is empty. Into the void we fall...')
         
         # capitalize all letters in plaintext
         capitalized: str = plaintext.upper()
@@ -394,6 +397,10 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
         return False
 
     except FooBarError as err:
+        print(err)
+        return False
+    
+    except TypeMismatchError as err:
         print(err)
         return False
 

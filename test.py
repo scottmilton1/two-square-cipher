@@ -417,6 +417,13 @@ def test_encrypt(verbose: bool = True) -> NoReturn:
     tests_arg_types: list = [
         'assert encrypt("This should pass", "falcon", "osprey")',
         'assert not encrypt("One invalid keyword", "keyword", "pythonista")',
+        'assert not encrypt(123, "not", "string")',
+        'assert not encrypt("", "empty", "plaintex")',
+        'assert encrypt("$^&@.", "only", "symbol")',
+        'assert encrypt("    ", "only", "whitespac")',
+        'assert encrypt("accént", "foreign", "chars")',
+        'assert encrypt("umläütö", "foreign", "chars")', 
+        'assert encrypt("文字", "foreign", "chars")',
         ]
 
     # create tests for correct return value types
