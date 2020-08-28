@@ -270,7 +270,7 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
     with practical use for encrypting and decrypting files and documents
     where a loss of data would be unacceptable, or where high levels of
     data security and integrity are essential. It is best used as a
-    relatively simple means of sending simple letters-only messages and
+    relatively simple means of sending English alphabetic messages and
     is perhaps valuable in real terms mainly for its historical
     significance and for educational purposes.
 
