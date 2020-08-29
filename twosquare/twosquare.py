@@ -63,6 +63,9 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
     Returns a valid populated table if successful or 
     prints a failure message and returns False if unsuccessful.
 
+    Dependencies:
+        None
+
     """
 
     # set table size
@@ -149,6 +152,9 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
 def decrypt(ciphertext: str, key1: str, key2: str) -> str:
     """Decrypts a message using the Twosquare cipher.
 
+    Dependencies:
+        None
+
     TO BE IMPLEMENTED.
 
     """
@@ -162,6 +168,11 @@ def display_table(table: Table) -> bool:
     facilitate development and testing.
 
     Returns True if successful or False if an error occurs.
+
+    Dependencies:
+
+    from twosquare:
+        validate_table()
     
     """
 
@@ -170,26 +181,14 @@ def display_table(table: Table) -> bool:
         if not validate_table(table):
             raise ValueError('Table is invalid.')
         
-##        if type(table) is not list:
-##            raise TypeError('Table must be a list.')
-##
-##        if len(table) != 5:
-##            raise ValueError('Illegal number of rows in table.')
-
         print()
 
         # print each row of the table
         for row in table:
 
-##            if len(row) != 5:
-##                raise ValueError('Illegal number of columns in table row.')
-
             # print each cell in current row
             for cell in row:
-
-##                if type(cell) is not str or len(cell) > 2:
-##                    raise(ValueError('Bad table data.'))
-                
+             
                 print('%6s' % cell, end='')
 
             # white space to separate rows
@@ -198,10 +197,6 @@ def display_table(table: Table) -> bool:
     except ValueError as err:
         print(err)
         return False
-
-##    except TypeError as err:
-##        print(err)
-##        return False
 
     except Exception as err:
         from inspect import currentframe as cf
@@ -214,8 +209,6 @@ def display_table(table: Table) -> bool:
     else:
         return True
 
-##    return False
-
 def encode() -> NoReturn:
     """Encrypts or decrypts a message using the Twosquare cipher.
 
@@ -223,6 +216,9 @@ def encode() -> NoReturn:
     
     Will move and place any shared code for both operations here
     to avoid redundancy and to streamline the codebase.
+
+    Dependencies:
+        None
 
     TO BE IMPLEMENTED...
 
@@ -308,6 +304,9 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
             raise BadValueError('Invalid key error. I am the gatekeeper. ' + \
                                 'Are you the keymaster?')
 
+        # MOVE THIS VALIDATION CODE TO VALIDATE_MESSAGE FUNCTION -
+        # SINGLE RESPONSIBILITY PRINCIPLE (SRP) 
+
         # validate type of message is str
         if type(plaintext) is not str:
             raise TypeMismatchError('Error: plaintext must be a string.\n' + \
@@ -329,8 +328,8 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
         if not (plaintext.isascii() and plaintext.isprintable()):
             raise BadValueError('Error: Plaintext can consist of ' + \
                                 'printable ASCII characters only.\n' + \
-                                'Sorry, my friend. No unicorns allowed!')        
-        
+                                'Sorry, my friend. No unicorns allowed!')
+       
         # capitalize all letters in plaintext
         capitalized: str = plaintext.upper()
 
@@ -443,6 +442,9 @@ def get_coordinates(table: Table, letter: str) -> Tuple[int, int]:
     Returns a tuple of two integers: (row_number, column_number) if
     successful or returns a a tuple of two integer values of (-1, -1)
     if unsuccessful.
+
+    Dependencies:
+        None
     
     """
 
@@ -483,6 +485,9 @@ def get_key(ordinal: str = '') -> str:
 
     Returns the string value entered by the user.
 
+    Dependencies:
+        None
+
     """
 
     if len(ordinal) > 0:
@@ -501,6 +506,10 @@ def get_mode() -> Union[str, bool]:
 
     Returns string value 'encrypt' or 'decrypt' based on user selection
     or returns False if user has made an invalid selection.
+
+    Dependencies:
+        None
+        
     """
 
     mode: str = input("Select mode: 1 for encrypt or 2 for decrypt >> ")
@@ -522,6 +531,9 @@ def validate_key(key: str) -> bool:
 
     Returns True if key passes all checks.
     Prints a failure message and returns False if key is invalid.
+
+    Dependencies:
+        None
 
     """
 
@@ -583,16 +595,27 @@ def validate_key(key: str) -> bool:
     else:
         return True
 
+def validate_message(message: str, mode: str = 'encrypt') -> bool:
+    """Validates a message for the Twosquare cipher.
+
+    Validates a plaintext or ciphertext message according to the requirements
+    and expected values of the Twosquare cipher.
+
+    Returns True if the message is valid or False otherwise.
+
+    TO BE IMPLEMENTED...
+
+    """
+   
 def validate_table(table: Table) -> bool:
     """Validates a Playfair table.
 
     Returns True if the table is valid or False otherwise.
 
-    """
+    Dependencies:
+        None
 
-##    from string import ascii_uppercase
-##
-##    letters = ascii_uppercase
+    """
 
     letters_in_table = [ ]
     letter_count = 0

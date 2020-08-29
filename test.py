@@ -280,10 +280,6 @@ def test_display_table(verbose: bool = True) -> NoReturn:
 
     global global_passed
     global global_failed
-##    global invalid_table_example_1
-##    global invalid_table_example_2
-##    global invalid_table_example_3
-##    global invalid_table_example_4
 
     local_passed: int = 0
     local_failed: int = 0
@@ -370,6 +366,15 @@ def test_display_table(verbose: bool = True) -> NoReturn:
 
     global_passed += local_passed
     global_failed += local_failed
+
+def test_decode(verbose: bool = True) -> NoReturn:
+    """Test suite for decode() function.
+
+    TO BE IMPLEMENTED...
+    
+    """
+
+    pass
 
 def test_decrypt(verbose: bool = True) -> NoReturn:
     """Test suite for decrypt() function.
@@ -542,13 +547,21 @@ def test_validate_key(verbose: bool = True) -> NoReturn:
     global_passed += local_passed
     global_failed += local_failed
 
+def test_validate_message(verbose: bool = True) -> NoReturn:
+    """Test suite for validate_message() function.
+
+    TO BE IMPLEMENTED...
+    
+    """
+
+    pass
+
 def test_validate_table(verbose: bool = True) -> NoReturn:
     """Test suite for validate_table() function.
 
     """
     global global_passed
     global global_failed
-    #global valid_table_example
 
     local_passed: int = 0
     local_failed: int = 0
@@ -628,6 +641,8 @@ def __main__(verbose: bool = VERBOSE):
         test_encrypt(verbose)
         test_validate_table(verbose)
         # test_decrypt(verbose)
+        # test_decode(verbose)
+        # test_validate_message(verbose)
 
         logging.debug(f'TOTAL TESTS PASSED: {global_passed}')
         logging.debug(f'TOTAL TESTS FAILED: {global_failed}')
