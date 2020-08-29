@@ -160,29 +160,35 @@ def display_table(table: Table) -> bool:
 
     Prints a Playfair table to the console for viewing purposes to
     facilitate development and testing.
+
+    Returns True if successful or False if an error occurs.
     
     """
 
     try:
-        if type(table) is not list:
-            raise TypeError('Table must be a list.')
 
-        if len(table) != 5:
-            raise ValueError('Illegal number of rows in table.')
+        if not validate_table(table):
+            raise ValueError('Table is invalid.')
+        
+##        if type(table) is not list:
+##            raise TypeError('Table must be a list.')
+##
+##        if len(table) != 5:
+##            raise ValueError('Illegal number of rows in table.')
 
         print()
 
         # print each row of the table
         for row in table:
 
-            if len(row) != 5:
-                raise ValueError('Illegal number of columns in table row.')
+##            if len(row) != 5:
+##                raise ValueError('Illegal number of columns in table row.')
 
             # print each cell in current row
             for cell in row:
 
-                if type(cell) is not str or len(cell) > 2:
-                    raise(ValueError('Bad table data.'))
+##                if type(cell) is not str or len(cell) > 2:
+##                    raise(ValueError('Bad table data.'))
                 
                 print('%6s' % cell, end='')
 
@@ -193,9 +199,9 @@ def display_table(table: Table) -> bool:
         print(err)
         return False
 
-    except TypeError as err:
-        print(err)
-        return False
+##    except TypeError as err:
+##        print(err)
+##        return False
 
     except Exception as err:
         from inspect import currentframe as cf
@@ -208,7 +214,7 @@ def display_table(table: Table) -> bool:
     else:
         return True
 
-    return False
+##    return False
 
 def encode() -> NoReturn:
     """Encrypts or decrypts a message using the Twosquare cipher.
@@ -584,9 +590,9 @@ def validate_table(table: Table) -> bool:
 
     """
 
-    from string import ascii_uppercase
-
-    letters = ascii_uppercase
+##    from string import ascii_uppercase
+##
+##    letters = ascii_uppercase
 
     letters_in_table = [ ]
     letter_count = 0
@@ -646,8 +652,6 @@ def validate_table(table: Table) -> bool:
 
     else:
         return True
-
-    return False
   
 def __main__():
     """This is the main program.
