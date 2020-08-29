@@ -308,61 +308,17 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
             raise BadValueError('Invalid key error. I am the gatekeeper. ' + \
                                 'Are you the keymaster?')
 
-##        # validate plaintext
-##        if not validate_message(message):
-##            raise BadValueError('Invalid plaintext error.')
-
-
-
-
-
-        # MOVE THIS VALIDATION CODE TO VALIDATE_MESSAGE FUNCTION -
-        # SINGLE RESPONSIBILITY PRINCIPLE (SRP) 
-
-        # validate type of message is str
-        if type(plaintext) is not str:
-            raise TypeMismatchError('Error: plaintext must be a string.\n' + \
-                                    'Are you trying to put a square peg in ' + \
-                                    'a round hole?')
-
-        # validate len of message is not zero
-        if len(plaintext) == 0:
-            raise BadValueError('Error: Plaintext is empty. ' + \
-                                'Into the void we fall...')
-
-        # validate that message not merely white space or numeric
-        if plaintext.isspace() or plaintext.isnumeric():
-            raise BadValueError('Error: Plaintext must contain at least ' + \
-                                'some letters. Tell me a joke or something.')
-
-        # validate that message is only printable ASCII characters
-        # or perhaps just ignore them instead???
-        if not (plaintext.isascii() and plaintext.isprintable()):
-            raise BadValueError('Error: Plaintext can consist of ' + \
-                                'printable ASCII characters only.\n' + \
-                                'Sorry, my friend. No unicorns allowed!')
-
-
-
-
+        # validate plaintext
+        if not validate_message(plaintext):
+            raise BadValueError('Invalid plaintext error.')
 
         # capitalize all letters in plaintext
         capitalized: str = plaintext.upper()
-
         
-
         # filter to remove non-alpha characters
         for character in capitalized:
             if character.isalpha():
                 letters_only.append(character)
-
-        if len(letters_only) == 0:
-            raise BadValueError('Error: No alpha characters in plaintext. ' + \
-                                'Alas, symbolism is sensational,\nand ' + \
-                                'punctuation is paramount, but letters ' + \
-                                'are legendary!')
-
-        
 
         # if length of odd add 'Z' to end to make it even
         if len(letters_only) % 2 != 0:
@@ -435,10 +391,6 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
         print(type(err))
         print(err)
         raise
-    
-    except TypeMismatchError as err:
-        print(err)
-        return False
 
     except Exception as err:
         from inspect import currentframe as cf
@@ -666,7 +618,7 @@ def validate_message(message: str, mode: str = 'encrypt') -> bool:
         # validate that message not merely white space or numeric
         if message.isspace() or message.isnumeric():
             raise BadValueError(f'Error: {message_type} must contain at ' + \
-                                'least some letters. Tell me a joke or ' + \
+                                'least some letters.\nTell me a joke or ' + \
                                 'something.')
 
         # validate that message is only printable ASCII characters
