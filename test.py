@@ -121,7 +121,7 @@ def test_runner(tests: list, verbose: bool = True) -> Tuple[int, int]:
 
     number_passed: int = 0
     number_failed: int = 0
-    
+   
     for test in tests:
 
         result: bool = run_test(test, verbose)
@@ -133,7 +133,6 @@ def test_runner(tests: list, verbose: bool = True) -> Tuple[int, int]:
             number_failed += 1
 
     return (number_passed, number_failed)
-
 
 ##### CUSTOM ASSERTIONS #####
 
@@ -713,8 +712,9 @@ def __main__(verbose: bool = VERBOSE):
     # run unit tests if debugging is on
     if __debug__:
 
-        # global global_passed
-        # global global_failed
+        from time import perf_counter as tpc
+    
+        start_time = tpc()
 
         # THESE TWO WON'T WORK HERE - CREATE NEW TESTS???        
         # assert mode == 'encrypt' or mode == 'decrypt'
@@ -731,10 +731,20 @@ def __main__(verbose: bool = VERBOSE):
         test_validate_message(verbose)
         # text validate_plaintext()
 
+        end_time = tpc()
+        total_time = end_time - start_time
+        total_tests = global_passed + global_failed
+
+        message = 'Completed %d tests in %.2f seconds:' % \
+                  (total_tests, total_time)
+        # message = f'Completed {total_tests} tests in {total_time} seconds:'
+        border = '-' * len(message)
+
+        logging.debug('') # white space before completion message
+        logging.debug(message)
+        logging.debug(border)
         logging.debug(f'TOTAL TESTS PASSED: {global_passed}')
         logging.debug(f'TOTAL TESTS FAILED: {global_failed}')
-
-        # perhaps create decorator for unit tests and wrap functions in it
 
 if __name__ == '__main__':
     __main__()

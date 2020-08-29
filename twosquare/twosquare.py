@@ -600,9 +600,9 @@ def validate_message(message: str, mode: str = 'encrypt') -> bool:
 
     """
 
-    message_type: str = 'Plaintext' if mode == 'encrypt' else 'Ciphertext'
-
     try:
+
+        message_type: str = 'Plaintext' if mode == 'encrypt' else 'Ciphertext'
 
         # validate type of message is str
         if type(message) is not str:
