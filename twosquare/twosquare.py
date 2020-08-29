@@ -279,11 +279,15 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
     Dependencies:
     
     from twosquare:
-        create_table()
-        # encode()
-        get_coordinates()        
+        create_table
+        # encode
+        get_coordinates        
         Row
         Table
+        validate_key
+        # validate_message
+        # validate_ciphertext
+        # validate_plaintext
 
     from typing:
         List
@@ -303,6 +307,14 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
         if not (validate_key(key1) and validate_key(key2)):
             raise BadValueError('Invalid key error. I am the gatekeeper. ' + \
                                 'Are you the keymaster?')
+
+##        # validate plaintext
+##        if not validate_message(message):
+##            raise BadValueError('Invalid plaintext error.')
+
+
+
+
 
         # MOVE THIS VALIDATION CODE TO VALIDATE_MESSAGE FUNCTION -
         # SINGLE RESPONSIBILITY PRINCIPLE (SRP) 
@@ -329,9 +341,15 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
             raise BadValueError('Error: Plaintext can consist of ' + \
                                 'printable ASCII characters only.\n' + \
                                 'Sorry, my friend. No unicorns allowed!')
-       
+
+
+
+
+
         # capitalize all letters in plaintext
         capitalized: str = plaintext.upper()
+
+        
 
         # filter to remove non-alpha characters
         for character in capitalized:
@@ -343,6 +361,8 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
                                 'Alas, symbolism is sensational,\nand ' + \
                                 'punctuation is paramount, but letters ' + \
                                 'are legendary!')
+
+        
 
         # if length of odd add 'Z' to end to make it even
         if len(letters_only) % 2 != 0:
@@ -529,6 +549,12 @@ def validate_ciphertext(message: bool) -> bool:
     Basically a thin wrapper that serves as syntactic sugar for the
     validate_message() function.
 
+    
+    Dependencies:
+
+    From twosquare:
+        validate_message
+
     TO BE IMPLEMENTED...
 
     """
@@ -617,15 +643,86 @@ def validate_message(message: str, mode: str = 'encrypt') -> bool:
 
     Returns True if the message is valid or False otherwise.
 
-    TO BE IMPLEMENTED...
+    Dependencies:
+        NONE
 
     """
+
+    message_type: str = 'Plaintext' if mode == 'encrypt' else 'Ciphertext'
+
+    try:
+
+        # validate type of message is str
+        if type(message) is not str:
+            raise TypeMismatchError(f'Error: {message_type} must be a ' + \
+                                    'string. \nAre you trying to put a ' + \
+                                    'square peg in a round hole?')
+
+        # validate len of message is not zero
+        if len(message) == 0:
+            raise BadValueError(f'Error: {message_type} is empty. ' + \
+                                'Into the void we fall...')
+
+        # validate that message not merely white space or numeric
+        if message.isspace() or message.isnumeric():
+            raise BadValueError(f'Error: {message_type} must contain at ' + \
+                                'least some letters. Tell me a joke or ' + \
+                                'something.')
+
+        # validate that message is only printable ASCII characters
+        # or perhaps just ignore them instead???
+        if not (message.isascii() and message.isprintable()):
+            raise BadValueError(f'Error: {message_type} can consist of ' + \
+                                'printable ASCII characters only.\n' + \
+                                'Sorry, my friend. No unicorns allowed!')
+
+        contains_a_letter: bool = False
+
+        # filter to remove non-alpha characters
+        for character in message:
+            if character.isalpha():
+                contains_a_letter = True
+                break      
+
+        if contains_a_letter == False:
+            raise BadValueError('Error: No alpha characters in plaintext. ' + \
+                                'Alas, symbolism is sensational,\nand ' + \
+                                'punctuation is paramount, but letters ' + \
+                                'are legendary!')        
+
+    except ValueError as err:
+        print(err)
+        print('You have attempted to exceed the limits of reality')
+        print('imposed by the Architect. Neo could bend the Matrix')
+        print('to his will, but can you?')
+        return False
+
+    except TypeError as err:
+        print(err)
+        return False
+
+    except Exception as err:
+        from inspect import currentframe as cf
+        print('Unexpected exception type raised during execution:')
+        print(f'In function: {cf().f_code.co_name}') # function name
+        print(type(err))
+        print(err)
+        raise
+
+    else:            
+        return True
+    
 
 def validate_plaintext(message: str) -> bool:
     """Validates a plaintext message for the Twosquare cipher.
 
     Basically a thin wrapper that serves as syntactic sugar for the
     validate_message() function.
+
+    Dependencies:
+
+    From twosquare:
+        validate_message
 
     TO BE IMPLEMENTED...
 

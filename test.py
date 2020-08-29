@@ -563,12 +563,62 @@ def test_validate_key(verbose: bool = True) -> NoReturn:
 
 def test_validate_message(verbose: bool = True) -> NoReturn:
     """Test suite for validate_message() function.
-
-    TO BE IMPLEMENTED...
-    
+   
     """
 
-    pass
+    global global_passed
+    global global_failed
+
+    local_passed: int = 0
+    local_failed: int = 0
+
+    if verbose:
+        logging.debug('\nRunning unit tests for validate_message() function.')
+        logging.debug('Testing different argument types...')
+
+    # create tests against argument types
+    tests_arg_types: list = [
+        "assert validate_message('astring')",
+        "assert not validate_message(['list', 2])",
+        "assert not validate_message(123)",
+        "assert not validate_message(True)",
+        "assert not validate_message(None)",
+        "assert not validate_message({})",
+        ]
+
+    # create tests for correct return value types
+    tests_ret_val: list = [        
+        "assert type(validate_message('foo')) is bool",
+        "assert not type(validate_message('bar')) == None",
+        "assert not type(validate_message('baz')) == str",
+        "assert not type(validate_message('bah')) == int",
+        ]
+
+    # aliases for type hints
+    Result: Tuple[str, str]
+    Summary: List[Result, Result] = [ ]
+
+    # run tests using the list of assertions
+    Summary.append(test_runner(tests_arg_types, verbose))
+    
+    if verbose:
+        logging.debug('Testing return values...')
+
+    # run second block of tests
+    Summary.append(test_runner(tests_ret_val, verbose))
+
+    # unpack results and add to local counters
+    for result in Summary:
+        passed, failed = result
+        local_passed += passed
+        local_failed += failed
+
+    if verbose:
+        logging.debug(f'{local_passed} tests passed.')
+        logging.debug(f'{local_failed} tests failed.')
+
+    global_passed += local_passed
+    global_failed += local_failed
 
 def test_validate_plaintext(verbose: bool = True) -> NoReturn:
     """Test suite for validate_plaintext() function.
@@ -666,7 +716,7 @@ def __main__(verbose: bool = VERBOSE):
         # test_decode(verbose)
         # test_decrypt(verbose)
         # test_validate_ciphertext()
-        # test_validate_message(verbose)
+        test_validate_message(verbose)
         # text validate_plaintext()
 
         logging.debug(f'TOTAL TESTS PASSED: {global_passed}')
