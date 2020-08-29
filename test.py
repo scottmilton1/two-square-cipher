@@ -24,6 +24,7 @@ from twosquare.twosquare import display_table
 from twosquare.twosquare import validate_key
 from twosquare.twosquare import encrypt
 from twosquare.twosquare import decrypt
+from twosquare.twosquare import validate_table
 
 # use logging for test output   
 import logging
@@ -41,6 +42,39 @@ valid_table_example: Table = [
      ['L', 'M', 'Q', 'R', 'S'],
      ['U', 'V', 'W', 'X', 'Z'],
      ]
+
+# table data is not of type string
+invalid_table_example_1: Table = [
+    [1,2,3,4,5],
+    [1,2,3,4,5],
+    [1,2,3,4,5],
+    [1,2,3,4,5],
+    [1,2,3,4,5],
+    ]
+
+# same letter more than once
+invalid_table_example_2: Table = [
+    ['A', 'B', 'C', 'D', 'E'],
+    ['A', 'B', 'C', 'D', 'E'],
+    ['A', 'B', 'C', 'D', 'E'],
+    ['A', 'B', 'C', 'D', 'E'],
+    ['A', 'B', 'C', 'D', 'E'],
+    ]        
+
+# not enough rows in table
+invalid_table_example_3: Table = [           
+    ['A', 'B', 'C', 'D', 'E'],
+    ['A', 'B', 'C', 'D', 'E'],
+    ]
+
+# too many items in row
+invalid_table_example_4: Table = [           
+    ['A', 'B', 'C', 'D', 'E', 'F'],
+    ['A', 'B', 'C', 'D', 'E'],
+    ['A', 'B', 'C', 'D', 'E'],
+    ['A', 'B', 'C', 'D', 'E'],
+    ['A', 'B', 'C', 'D', 'E'],
+    ]
 
 ##### TEST RUNNERS #####
 
@@ -246,6 +280,10 @@ def test_display_table(verbose: bool = True) -> NoReturn:
 
     global global_passed
     global global_failed
+    global invalid_table_example_1
+    global invalid_table_example_2
+    global invalid_table_example_3
+    global invalid_table_example_4
 
     local_passed: int = 0
     local_failed: int = 0
@@ -289,27 +327,12 @@ def test_display_table(verbose: bool = True) -> NoReturn:
             "])",
         # bad table structure
         "assert not display_table(['list'])",
-        # not enough rows in table
-        "assert not display_table([" +          
-            "['A', 'B', 'C', 'D', 'E']," +
-            "['A', 'B', 'C', 'D', 'E']," +
-            "])",
-        # too many items in row
-        "assert not display_table([" +
-            "['A', 'B', 'C', 'D', 'E', 'F']," +
-            "['A', 'B', 'C', 'D', 'E']," +
-            "['A', 'B', 'C', 'D', 'E']," +
-            "['A', 'B', 'C', 'D', 'E']," +
-            "['A', 'B', 'C', 'D', 'E']," +
-            "])",
         # table data is not of type string
-        "assert not display_table([" +
-            "[1,2,3,4,5]," +
-            "[1,2,3,4,5]," +
-            "[1,2,3,4,5]," +
-            "[1,2,3,4,5]," +
-            "[1,2,3,4,5]," +
-            "])",
+        "assert not display_table(invalid_table_example_1)",
+        # not enough rows in table
+        "assert not display_table(invalid_table_example_3)",
+        # too many items in row
+        "assert not display_table(invalid_table_example_4)",
         ]
 
     # create tests for return value types
@@ -460,8 +483,6 @@ def test_encrypt(verbose: bool = True) -> NoReturn:
     global_passed += local_passed
     global_failed += local_failed
 
-
-
 def test_validate_key(verbose: bool = True) -> NoReturn:
     """Test suite for validate_key() function.
 
@@ -521,6 +542,73 @@ def test_validate_key(verbose: bool = True) -> NoReturn:
     global_passed += local_passed
     global_failed += local_failed
 
+def test_validate_table(verbose: bool = True) -> NoReturn:
+    """Test suite for validate_table() function.
+
+    """
+    global global_passed
+    global global_failed
+    global valid_table_example
+
+    local_passed: int = 0
+    local_failed: int = 0
+
+    if verbose:
+        logging.debug('\nRunning unit tests for validate_table() function.')
+        logging.debug('Testing different argument types...')
+
+    # create tests against argument types
+    tests_arg_types: list = [
+        "assert validate_table(valid_table_example)",
+        # table data is not of type string
+        "assert not display_table(invalid_table_example_1)",
+        # same letter more than once
+        "assert display_table(invalid_table_example_2)",
+        # not enough rows in table
+        "assert not display_table(invalid_table_example_3)",
+        # too many items in row
+        "assert not display_table(invalid_table_example_4)",
+        # bad table structure
+        "assert not display_table(['list'])",
+        # wrong parameter type
+        "assert not validate_table('string')",
+        "assert not validate_table(123)",
+        "assert not validate_table(b'01') #bytes",
+        ]
+
+    # create tests for return value types
+    tests_ret_val: list = [        
+        "assert type(validate_table('keyword')) in [list, bool]",
+        "assert type(validate_table('keyword')) not in [str, int, tuple, dict]",
+        "assert type(validate_table('keyword')) not in [True, None, [ ], '']",
+        ]
+
+    # aliases for type hints
+    Result: Tuple[str, str]
+    Summary: List[Result, Result] = [ ]
+
+    # run tests using the list of assertions
+    Summary.append(test_runner(tests_arg_types, verbose))
+    
+    if verbose:
+        logging.debug('Testing return values...')
+
+    # run second block of tests
+    Summary.append(test_runner(tests_ret_val, verbose))
+
+    # unpack results and add to local counters
+    for result in Summary:
+        passed, failed = result
+        local_passed += passed
+        local_failed += failed
+
+    if verbose:
+        logging.debug(f'{local_passed} tests passed.')
+        logging.debug(f'{local_failed} tests failed.')
+
+    global_passed += local_passed
+    global_failed += local_failed
+
 
 def __main__(verbose: bool = VERBOSE):
 
@@ -538,6 +626,7 @@ def __main__(verbose: bool = VERBOSE):
         test_create_table(verbose)
         test_display_table(verbose)
         test_encrypt(verbose)
+        test_validate_table(verbose)
         # test_decrypt(verbose)
 
         logging.debug(f'TOTAL TESTS PASSED: {global_passed}')

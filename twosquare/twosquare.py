@@ -582,12 +582,50 @@ def validate_table(table: Table) -> bool:
 
     Returns True if the table is valid or False otherwise.
 
-    TO BE IMPLEMENTED...
-
     """
-    
-    pass
-    
+
+    try:
+        if type(table) is not list:
+            raise TypeError('Table must be a list.')
+
+        if len(table) != 5:
+            raise ValueError('Illegal number of rows in table.')
+
+        # check each row of the table
+        for row in table:
+
+            if len(row) != 5:
+                raise ValueError('Illegal number of columns in table row.')
+
+            # check each cell in current row
+            for cell in row:
+                if type(cell) is not str or len(cell) > 2:
+                    raise(ValueError('Bad table data.'))
+
+    except ValueError as err:
+        print(err)
+        print('You have attempted to exceed the limits of reality')
+        print('imposed by the Architect. Neo could bend the Matrix')
+        print('to his will, but can you?')
+        return False
+
+    except TypeError as err:
+        print(err)
+        return False
+
+    except Exception as err:
+        from inspect import currentframe as cf
+        print('Unexpected exception type raised during execution:')
+        print(f'In function: {cf().f_code.co_name}') # function name
+        print(type(err))
+        print(err)
+        raise
+
+    else:
+        return True
+
+    return False
+  
 def __main__():
     """This is the main program.
 
