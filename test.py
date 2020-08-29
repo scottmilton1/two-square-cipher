@@ -20,11 +20,16 @@ from typing import Union
 from twosquare.twosquare import Row
 from twosquare.twosquare import Table
 from twosquare.twosquare import create_table
-from twosquare.twosquare import display_table
-from twosquare.twosquare import validate_key
-from twosquare.twosquare import encrypt
 from twosquare.twosquare import decrypt
+from twosquare.twosquare import display_table
+from twosquare.twosquare import encode
+from twosquare.twosquare import encrypt
+from twosquare.twosquare import validate_ciphertext
+from twosquare.twosquare import validate_key
+from twosquare.twosquare import validate_message
+from twosquare.twosquare import validate_plaintext
 from twosquare.twosquare import validate_table
+
 
 # use logging for test output   
 import logging
@@ -488,6 +493,15 @@ def test_encrypt(verbose: bool = True) -> NoReturn:
     global_passed += local_passed
     global_failed += local_failed
 
+def test_validate_ciphertext(verbose: bool = True) -> NoReturn:
+    """Test suite for validate_ciphertext() function.
+
+    TO BE IMPLEMENTED...
+    
+    """
+
+    pass
+
 def test_validate_key(verbose: bool = True) -> NoReturn:
     """Test suite for validate_key() function.
 
@@ -549,6 +563,15 @@ def test_validate_key(verbose: bool = True) -> NoReturn:
 
 def test_validate_message(verbose: bool = True) -> NoReturn:
     """Test suite for validate_message() function.
+
+    TO BE IMPLEMENTED...
+    
+    """
+
+    pass
+
+def test_validate_plaintext(verbose: bool = True) -> NoReturn:
+    """Test suite for validate_plaintext() function.
 
     TO BE IMPLEMENTED...
     
@@ -628,21 +651,23 @@ def __main__(verbose: bool = VERBOSE):
     # run unit tests if debugging is on
     if __debug__:
 
-        global global_passed
-        global global_failed
+        # global global_passed
+        # global global_failed
 
-        # THESE TWO WON'T WORK HERE - CREATE NEW TESTS???
+        # THESE TWO WON'T WORK HERE - CREATE NEW TESTS???        
         # assert mode == 'encrypt' or mode == 'decrypt'
         # assert first_key
 
-        test_validate_key(verbose)
         test_create_table(verbose)
         test_display_table(verbose)
         test_encrypt(verbose)
         test_validate_table(verbose)
-        # test_decrypt(verbose)
+        test_validate_key(verbose)
         # test_decode(verbose)
+        # test_decrypt(verbose)
+        # test_validate_ciphertext()
         # test_validate_message(verbose)
+        # text validate_plaintext()
 
         logging.debug(f'TOTAL TESTS PASSED: {global_passed}')
         logging.debug(f'TOTAL TESTS FAILED: {global_failed}')

@@ -523,6 +523,18 @@ def get_mode() -> Union[str, bool]:
     else:
         return False
 
+def validate_ciphertext(message: bool) -> bool:
+    """Validates a ciphertext message for the Twosquare cipher.
+
+    Basically a thin wrapper that serves as syntactic sugar for the
+    validate_message() function.
+
+    TO BE IMPLEMENTED...
+
+    """
+
+    pass
+
 def validate_key(key: str) -> bool:
     """Validates a key for a Playfair table.
 
@@ -601,11 +613,26 @@ def validate_message(message: str, mode: str = 'encrypt') -> bool:
     Validates a plaintext or ciphertext message according to the requirements
     and expected values of the Twosquare cipher.
 
+    Helper function for encrypt and decrypt functions.
+
     Returns True if the message is valid or False otherwise.
 
     TO BE IMPLEMENTED...
 
     """
+
+def validate_plaintext(message: str) -> bool:
+    """Validates a plaintext message for the Twosquare cipher.
+
+    Basically a thin wrapper that serves as syntactic sugar for the
+    validate_message() function.
+
+    TO BE IMPLEMENTED...
+
+    """
+
+    pass
+
    
 def validate_table(table: Table) -> bool:
     """Validates a Playfair table.
