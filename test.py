@@ -280,10 +280,10 @@ def test_display_table(verbose: bool = True) -> NoReturn:
 
     global global_passed
     global global_failed
-    global invalid_table_example_1
-    global invalid_table_example_2
-    global invalid_table_example_3
-    global invalid_table_example_4
+##    global invalid_table_example_1
+##    global invalid_table_example_2
+##    global invalid_table_example_3
+##    global invalid_table_example_4
 
     local_passed: int = 0
     local_failed: int = 0
@@ -548,7 +548,7 @@ def test_validate_table(verbose: bool = True) -> NoReturn:
     """
     global global_passed
     global global_failed
-    global valid_table_example
+    #global valid_table_example
 
     local_passed: int = 0
     local_failed: int = 0
@@ -561,15 +561,15 @@ def test_validate_table(verbose: bool = True) -> NoReturn:
     tests_arg_types: list = [
         "assert validate_table(valid_table_example)",
         # table data is not of type string
-        "assert not display_table(invalid_table_example_1)",
+        "assert not validate_table(invalid_table_example_1)",        
         # same letter more than once
-        "assert display_table(invalid_table_example_2)",
+        "assert not validate_table(invalid_table_example_2)",        
         # not enough rows in table
-        "assert not display_table(invalid_table_example_3)",
+        "assert not validate_table(invalid_table_example_3)",
         # too many items in row
-        "assert not display_table(invalid_table_example_4)",
+        "assert not validate_table(invalid_table_example_4)",
         # bad table structure
-        "assert not display_table(['list'])",
+        "assert not validate_table(['list'])",
         # wrong parameter type
         "assert not validate_table('string')",
         "assert not validate_table(123)",

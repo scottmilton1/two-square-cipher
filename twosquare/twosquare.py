@@ -584,12 +584,19 @@ def validate_table(table: Table) -> bool:
 
     """
 
+    from string import ascii_uppercase
+
+    letters = ascii_uppercase
+
+    letters_in_table = [ ]
+    letter_count = 0
+
     try:
         if type(table) is not list:
             raise TypeError('Table must be a list.')
 
         if len(table) != 5:
-            raise ValueError('Illegal number of rows in table.')
+            raise ValueError('Illegal number of rows in table.')        
 
         # check each row of the table
         for row in table:
@@ -602,6 +609,22 @@ def validate_table(table: Table) -> bool:
                 if type(cell) is not str or len(cell) > 2:
                     raise(ValueError('Bad table data.'))
 
+                if not (cell.isascii() and cell.isprintable()):
+                    raise(ValueError('Table contains illegal characters.'))
+
+                if not (cell.isalpha() and cell.isupper()):
+                    raise(ValueError('Invalid characters in table.'))
+
+                if cell in letters_in_table:
+                    raise(ValueError('Table contains duplicate letters.'))
+
+                letters_in_table.append(cell)   
+
+                letter_count += len(cell)
+
+                if letter_count > 26:
+                    raise(ValueError('Table contains more than 26 letters.'))
+                
     except ValueError as err:
         print(err)
         print('You have attempted to exceed the limits of reality')
