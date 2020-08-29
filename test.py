@@ -576,14 +576,26 @@ def test_validate_message(verbose: bool = True) -> NoReturn:
         logging.debug('\nRunning unit tests for validate_message() function.')
         logging.debug('Testing different argument types...')
 
-    # create tests against argument types
+    # create tests against arguments
     tests_arg_types: list = [
         "assert validate_message('astring')",
+        "assert not validate_message('')",
+        "assert not validate_message('      ')",        
+        "assert not validate_message('    3   ')",     
+        "assert validate_message('  c     ')",        
+        "assert not validate_message('12345')",        
+        "assert not validate_message('!$%*')",
+        "assert not validate_message('    1   ')",
+        'assert validate_message("This should pass")',
+        'assert not validate_message("1.234")',
+        'assert not validate_message("accént")',
+        'assert not validate_message("umläütö")', 
+        'assert not validate_message("文字")',
         "assert not validate_message(['list', 2])",
         "assert not validate_message(123)",
         "assert not validate_message(True)",
         "assert not validate_message(None)",
-        "assert not validate_message({})",
+        "assert not validate_message({})",     
         ]
 
     # create tests for correct return value types
