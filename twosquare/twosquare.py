@@ -58,9 +58,7 @@ class TypeMismatchError(TypeError):
     def __init__(self, message):
         self.message = message if len(message) > 0 else \
             'Raised when someone tries to put a square peg in a round hole.'        
-##        self.message = \
-##            'Raised when someone tries to put a square peg in a round hole.'
-        
+       
         super().__init__(self.message)
 
     def __repr__(self):
@@ -77,7 +75,6 @@ class StakesTooHighError(IndexError):
     def __init__(self, message):
         self.message = message if len(message) > 0 else \
             'Raised when the stakes are just too dang high!'     
-##        self.message = 'Raised when the stakes are just too dang high!'
         
         super().__init__(self.message)
 
@@ -820,31 +817,6 @@ def __main__():
 
     The functionality of this implementation can also be used as a module.
     """
-
-##    # print(FooBarError())
-##
-##    try:
-##        raise FooBarError('Oh la la!')
-##
-##    except FooBarError as err:
-##        print(err)
-##
-##    print()
-##
-##    raise FooBarError()
-##    
-##
-##   # print(BadValueError())
-##
-##    try:
-##        raise BadValueError('Jeepers creepers, Batman!')
-##
-##    except BadValueError as err:
-##        print(err)
-##
-##    print()
-##
-##    raise BadValueError()
 
     # display program title and brief description
     name: str = "twosquare"
