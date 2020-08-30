@@ -18,96 +18,14 @@ from typing import NoReturn
 from typing import Tuple
 from typing import Union
 
+from exceptions import BadValueError
+from exceptions import FooBarError
+from exceptions import StakesTooHighError
+from exceptions import TypeMismatchError
+
 # Use type aliases for type hints on complex types
 Row = List[str]
 Table = List[Row]
-
-# move these to exceptions.py or errors.py
-class FooBarError(Exception):
-    """Raised when something really bad happens.
-
-    Attributes:
-        message -- explanation of the error
-        subtext -- humorous subtext message to accompany the error info
-
-    """
-
-    def __init__(self, message = 'Raised when something really bad happens.'):
-        self.message = message
-        
-        self.subtext = '\nI do not like green eggs and ham. ' + \
-                       'This should never happen, but if it does, ' + \
-                       'it is an unforeseen error. ' + \
-                       "It's okay to panic!"
-        
-        self.message += self.subtext
-        
-        super().__init__(self.message)
-
-    def __repr__(self):
-        return f'{self.message!r}'     
-
-class TypeMismatchError(TypeError):
-    """Raised when someone tries to put a square peg in a round hole.
-
-    Attributes:
-        message -- explanation of the error
-
-    """
-
-    def __init__(self, message):
-        self.message = message if len(message) > 0 else \
-            'Raised when someone tries to put a square peg in a round hole.'        
-       
-        super().__init__(self.message)
-
-    def __repr__(self):
-        return f'{self.message!r}'
-    
-class StakesTooHighError(IndexError):
-    """Raised when the stakes are just too dang high!
-
-    Attributes:
-        message -- explanation of the error
-
-    """
-
-    def __init__(self, message):
-        self.message = message if len(message) > 0 else \
-            'Raised when the stakes are just too dang high!'     
-        
-        super().__init__(self.message)
-
-    def __repr__(self):
-        return f'{self.message!r}'
-
-class BadValueError(ValueError):
-    """Raised when the value is flagrantly and absolutely invalid.
-
-    Attributes:
-        message -- explanation of the error
-        subtext -- humorous subtext message to accompany the error info
-
-    """
-
-    def __init__(self, message = ''):
-        self.message = message
-        
-        if len(message) == 0: # default message
-            self.message =  \
-                'Raised when the value is flagrantly and absolutely invalid.'
-            
-        self.subtext = '\nYou have attempted to exceed the limits ' + \
-                        'of reality imposed by the Architect. ' + \
-                        'Neo could bend the Matrix ' + \
-                        'to his will, but can you?'
-        
-        self.message += self.subtext
-        
-        super().__init__(self.message)
-
-    def __repr__(self):
-        return f'{self.message!r}'
 
 def create_table(key: str) -> Union[Table, bool]: # return either Table or False
     """Create a Playfair table.

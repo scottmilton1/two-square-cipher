@@ -12,10 +12,10 @@ Feel free to replace this test suite with your test runner of choice.
 
 """
 
-from typing import List
-from typing import NoReturn
-from typing import Tuple
-from typing import Union
+from twosquare.exceptions import BadValueError
+from twosquare.exceptions import FooBarError
+from twosquare.exceptions import StakesTooHighError
+from twosquare.exceptions import TypeMismatchError
 
 from twosquare.twosquare import Row
 from twosquare.twosquare import Table
@@ -30,6 +30,10 @@ from twosquare.twosquare import validate_message
 from twosquare.twosquare import validate_plaintext
 from twosquare.twosquare import validate_table
 
+from typing import List
+from typing import NoReturn
+from typing import Tuple
+from typing import Union
 
 # use logging for test output   
 import logging
