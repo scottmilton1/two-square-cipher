@@ -845,17 +845,7 @@ def __main__():
     for number, table in enumerate(tables, start=1):
         print(f'\nTABLE {number}:')        
         display_table(table)
-
-
-##    print('\nTABLE ONE:')
-##    display_table(first_table)
-##    
-##    print('TABLE TWO:')
-##    display_table(second_table)
-##
-
-
-        
+       
 ##    text_prefix: str = 'plain' if mode == 'encrypt' else 'cipher'
 ##
 ##    prompt: str = f'Enter {text_prefix}text to {mode}: '
