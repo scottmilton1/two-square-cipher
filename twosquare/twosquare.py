@@ -125,8 +125,6 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
             # append new row to table
             table.append(this_row)
 
-        return table
-
     except BadValueError as err:
         print(err)
         return False
@@ -139,7 +137,8 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
         print(err)
         raise
 
-    return False
+    else:
+        return table
 
 def decrypt(ciphertext: str, key1: str, key2: str) -> str:
     """Decrypts a message using the Twosquare cipher.
