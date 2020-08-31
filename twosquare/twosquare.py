@@ -821,15 +821,15 @@ def __main__():
 
     # get keys
     for key in keys:
-        ordinal = key
-        index = keys.index(ordinal)
+        ordinal: str = key
+        index: int = keys.index(ordinal)
 
         # prompt user for a key      
-        key = get_key(ordinal)
+        key: str = get_key(ordinal)
 
         # validate key and get again if not valid
         while not validate_key(key):
-            key = get_key()
+            key: str = get_key()
 
         # replace ordinal name in list with actual key value
         keys.pop(index)
@@ -842,22 +842,26 @@ def __main__():
     # display the tables to the console for viewing
     print('\nHere are the Playfair tables generated with your keys:')
 
-    for number, table in enumerate(tables, start=1):
+    for number, table in enumerate(tables, start = 1):
         print(f'\nTABLE {number}:')        
         display_table(table)
        
-##    text_prefix: str = 'plain' if mode == 'encrypt' else 'cipher'
-##
-##    prompt: str = f'Enter {text_prefix}text to {mode}: '
-##    
-##    # prompt the user for message to encrypt / decrypt
-##    message = input(prompt)
-##
-##    # perform encoding or decoding of message
-##    
-##    if mode == 'encrypt':
-##        message = encrypt(message, first_key, second_key)
-##
+    text_prefix: str = 'plain' if mode == 'encrypt' else 'cipher'
+
+    prompt: str = f'Enter {text_prefix}text to {mode}: '
+    
+    # prompt the user for message to encrypt / decrypt
+    message: str = input(prompt)
+
+    # validate message and repeat until valid
+    while not (message_is_valid := validate_message(message)):
+        print(' ')
+        message: str = input(prompt)     
+
+    # perform encoding or decoding of message    
+    if mode == 'encrypt':
+        message: str = encrypt(message, keys[0], keys[1])
+
 ##    ##### Progress marker #####
 ##        
 ##    elif mode == 'decrypt':
