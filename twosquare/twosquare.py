@@ -780,7 +780,7 @@ def validate_table(table: Table) -> bool:
 
     else:
         return True
-  
+
 def __main__():
     """This is the main program.
 
@@ -799,67 +799,101 @@ def __main__():
     print('{:^80}'.format(border))
     print()
 
-    # prompt user for mode - encrypt or decrypt
-    # get input until user chooses a valid selection
+    '''
+    Display menu:
+    Options:
+    Encrypt
+    Decrypt
+    Create Table
+    Display Table
+    Validate Key
+
+    what else???
+
+    '''
+
+    keys: Union[List[str], bool] = ['first', 'second']
+    tables: Union[Table, bool] = [ ]
+
+    # prompt user for mode - encrypt or decrypt and validate
     while not (mode := get_mode()):
         print('Invalid selection. Please try again!')
-      
-    # prompt user for first key
-    first_key: str = get_key('first')
 
-    # validate key
-    while not validate_key(first_key):
-        first_key: str = get_key()
+    # get keys
+    for key in keys:
+        ordinal = key
+        index = keys.index(ordinal)
 
-    # prompt user for second key
-    second_key: str = get_key('second')
+        # prompt user for a key      
+        key = get_key(ordinal)
 
-    # validate key
-    while not validate_key(second_key):
-        second_key: str = get_key()
+        # validate key and get again if not valid
+        while not validate_key(key):
+            key = get_key()
 
-    # create first table with first key
-    first_table: Table = create_table(first_key) 
+        # replace ordinal name in list with actual key value
+        keys.pop(index)
+        keys.insert(index, key)
 
-    # create second table with second key
-    second_table: Table = create_table(second_key)
+##    # prompt user for first key
+##    first_key: str = get_key('first')
+##
+##    # validate key
+##    while not validate_key(first_key):
+##        first_key: str = get_key()
+##
+##    # prompt user for second key
+##    second_key: str = get_key('second')
+##
+##    # validate key
+##    while not validate_key(second_key):
+##        second_key: str = get_key()
+
+    # create the tables with the keys
+    for key in keys:
+        tables.append(create_table(key))       
+
+##    # create first table with first key
+##    first_table: Table = create_table(first_key) 
+##
+##    # create second table with second key
+##    second_table: Table = create_table(second_key)
 
     # display the tables to the console for viewing - optional functionality
-
     print('\nHere are the Playfair tables generated with your keys:')
     
-    print('\nTABLE ONE:')
-    display_table(first_table)
-    
-    print('TABLE TWO:')
-    display_table(second_table)
-
-    text_prefix: str = 'plain' if mode == 'encrypt' else 'cipher'
-
-    prompt: str = f'Enter {text_prefix}text to {mode}: '
-    
-    # prompt the user for message to encrypt / decrypt
-    message = input(prompt)
-
-    # perform encoding or decoding of message
-    
-    if mode == 'encrypt':
-        message = encrypt(message, first_key, second_key)
-
-    ##### Progress marker #####
-        
-    elif mode == 'decrypt':
-        message = decrypt(message, first_key, second_key)
-
-    else:
-        raise Exception('Error: Invalid Mode.')
-
-    # display success / failure message to confirm operation status
-    if message:
-        print('Operation succcessful.')
-
-    # display (en/de)coded message
-    print(message)
+##    print('\nTABLE ONE:')
+##    display_table(first_table)
+##    
+##    print('TABLE TWO:')
+##    display_table(second_table)
+##
+##    text_prefix: str = 'plain' if mode == 'encrypt' else 'cipher'
+##
+##    prompt: str = f'Enter {text_prefix}text to {mode}: '
+##    
+##    # prompt the user for message to encrypt / decrypt
+##    message = input(prompt)
+##
+##    # perform encoding or decoding of message
+##    
+##    if mode == 'encrypt':
+##        message = encrypt(message, first_key, second_key)
+##
+##    ##### Progress marker #####
+##        
+##    elif mode == 'decrypt':
+##        message = decrypt(message, first_key, second_key)
+##
+##    else:
+##        raise Exception('Error: Invalid Mode.')
+##
+##    # display success / failure message to confirm operation status
+##    if message:
+##        print('Operation succcessful.')
+##
+##    # display (en/de)coded message
+##    print(message)
     
     # OPTIONAL FUNCTIONALITY TO POSSIBLY IMPLEMENT LATER:
 
