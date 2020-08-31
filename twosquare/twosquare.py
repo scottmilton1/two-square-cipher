@@ -462,14 +462,31 @@ def get_key(ordinal: str = '') -> str:
 
     """
 
-    if len(ordinal) > 0:
-        ordinal += " "
-        
-    while not (key := input("Enter %skeyword or key phrase >> " % ordinal)):
+    try:
+        if type(ordinal) is not str:
+            raise TypeMismatchError('ordinal must be a string')
 
-        print("Invalid entry. Please try again.")
+        if len(ordinal) > 0:
+            ordinal += " "
+            
+        while not (key := input("Enter %skeyword or key phrase >> " % ordinal)):
 
-    return key
+            print("Invalid entry. Please try again.")
+
+    except TypeMismatchError as err:
+        print(err)
+        return False
+
+    except Exception as err:
+        from inspect import currentframe as cf
+        print('Unexpected exception type raised during execution:')
+        print(f'In function: {cf().f_code.co_name}') # function name
+        print(type(err))
+        print(err)
+        raise
+
+    else:
+        return key
 
 def get_mode() -> Union[str, bool]:
     """Gets program mode from user.
