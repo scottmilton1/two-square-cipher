@@ -18,17 +18,34 @@ from typing import NoReturn
 from typing import Tuple
 from typing import Union
 
-if __name__ == '__main__':
-    from exceptions import BadValueError
-    from exceptions import FooBarError
-    from exceptions import StakesTooHighError
-    from exceptions import TypeMismatchError
-elif __name__ == 'twosquare.twosquare': # for test runner import path
-    print('__name__ = ', __name__)
-    from twosquare.exceptions import BadValueError
-    from twosquare.exceptions import FooBarError
-    from twosquare.exceptions import StakesTooHighError
-    from twosquare.exceptions import TypeMismatchError
+# path resolution for test runner in parent directory
+import_path = 'exceptions' if __name__ == '__main__' else 'twosquare.exceptions'
+
+# user defined error class names
+custom_error_classes = [
+    'BadValueError',
+    'FooBarError',
+    'StakesTooHighError',
+    'TypeMismatchError',
+    ]
+
+# import the custom error classes from resolved path
+for error_class_name in custom_error_classes:
+    exec(f'from {import_path} import {error_class_name}') 
+
+##from path import BadValueError, FooBarError, StakesTooHighError, TypeMismatchError
+
+##if __name__ == '__main__':
+##    from exceptions import BadValueError
+##    from exceptions import FooBarError
+##    from exceptions import StakesTooHighError
+##    from exceptions import TypeMismatchError
+##elif __name__ == 'twosquare.twosquare': # for test runner import path
+##    print('__name__ = ', __name__)
+##    from twosquare.exceptions import BadValueError
+##    from twosquare.exceptions import FooBarError
+##    from twosquare.exceptions import StakesTooHighError
+##    from twosquare.exceptions import TypeMismatchError
 
 # Use type aliases for type hints on complex types
 Row = List[str]
