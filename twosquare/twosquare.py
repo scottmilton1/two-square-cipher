@@ -130,7 +130,9 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
         return False
 
     except Exception as err:
-        print('Unexpected exception type raised during execution.')
+        from inspect import currentframe as cf
+        print('Unexpected exception type raised during execution:')
+        print(f'In function: {cf().f_code.co_name}') # function name
         print(type(err))
         print(err)
         raise
@@ -382,6 +384,7 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
         from inspect import currentframe as cf
         print('Unexpected exception type raised during execution:')
         print(f'In function: {cf().f_code.co_name}') # function name
+        print(type(err))
         print(err)
         raise
 
@@ -570,6 +573,8 @@ def validate_key(key: str) -> bool:
         from inspect import currentframe as cf
         print('Unexpected exception type raised during execution:')
         print(f'In function: {cf().f_code.co_name}') # function name
+        print(type(err))
+        print(err)
         raise
 
     else:
@@ -633,11 +638,11 @@ def validate_message(message: str, mode: str = 'encrypt') -> bool:
                                 'punctuation is paramount, but letters ' + \
                                 'are legendary!')        
 
-    except ValueError as err:
+    except BadValueError as err:
         print(err)
         return False
 
-    except TypeError as err:
+    except TypeMismatchError as err:
         print(err)
         return False
 
@@ -730,6 +735,7 @@ def validate_table(table: Table) -> bool:
         from inspect import currentframe as cf
         print('Unexpected exception type raised during execution:')
         print(f'In function: {cf().f_code.co_name}') # function name
+        print(type(err))
         print(err)
         raise
 
