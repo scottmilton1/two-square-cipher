@@ -18,9 +18,6 @@ from typing import NoReturn
 from typing import Tuple
 from typing import Union
 
-# path resolution for test runner in parent directory
-##import_path = 'exceptions' if __name__ == '__main__' else 'twosquare.exceptions'
-
 if __name__ == 'twosquare.twosquare':
     import_path = 'twosquare.exceptions'
 else:
