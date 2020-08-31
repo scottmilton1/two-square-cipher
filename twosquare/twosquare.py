@@ -409,30 +409,41 @@ def get_coordinates(table: Table, letter: str) -> Tuple[int, int]:
     
     """
 
-    # create row counter
-    row_number: int = 0
+    try:
 
-    if letter == 'I' or letter == 'J':
-        letter = "IJ"
+        # create row counter
+        row_number: int = 0
 
-    # check each row of the table for the letter
-    for row in table:
-        
-        # if the letter is found in current row
-        if letter in row:
+        if letter == 'I' or letter == 'J':
+            letter = "IJ"
+
+        # check each row of the table for the letter
+        for row in table:
             
-            # get the column number for the letter
-            column_number: int = row.index(letter)
+            # if the letter is found in current row
+            if letter in row:
+                
+                # get the column number for the letter
+                column_number: int = row.index(letter)
 
-            # return the position of the letter in the table
-            return (row_number, column_number)
+                # return the position of the letter in the table
+                return (row_number, column_number)
 
-        # if not found, increment the row counter for the next row
-        row_number += 1
+            # if not found, increment the row counter for the next row
+            row_number += 1
 
-    # if letter not found in table, return tuple with negative indices
-    # to indicate that a non-fatal error has occured
-    return (-1, -1)
+    except Exception as err:
+        from inspect import currentframe as cf
+        print('Unexpected exception type raised during execution:')
+        print(f'In function: {cf().f_code.co_name}') # function name
+        print(type(err))
+        print(err)
+        raise
+
+    else:
+        # if letter not found in table, return tuple with negative indices
+        # to indicate that a non-fatal error has occured
+        return (-1, -1)
 
 def get_key(ordinal: str = '') -> str:
     """Gets key from user and returns it.
