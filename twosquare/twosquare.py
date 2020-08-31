@@ -500,14 +500,24 @@ def get_mode() -> Union[str, bool]:
         None
         
     """
+    
+    try:
 
-    mode: str = input("Select mode: 1 for encrypt or 2 for decrypt >> ")
+        mode: str = input("Select mode: 1 for encrypt or 2 for decrypt >> ")
 
-    if mode == '1':
-        return 'encrypt'
+        if mode == '1':
+            return 'encrypt'
 
-    elif mode == '2':
-        return 'decrypt'
+        elif mode == '2':
+            return 'decrypt'
+
+    except Exception as err:
+        from inspect import currentframe as cf
+        print('Unexpected exception type raised during execution:')
+        print(f'In function: {cf().f_code.co_name}') # function name
+        print(type(err))
+        print(err)
+        raise
 
     else:
         return False
