@@ -812,84 +812,106 @@ def __main__():
 
     '''
 
-    keys: Union[List[str], bool] = ['first', 'second']
-    tables: Union[Table, bool] = [ ]
+    try:
 
-    # prompt user for mode - encrypt or decrypt and validate
-    while not (mode := get_mode()):
-        print('Invalid selection. Please try again!')
+        keys: Union[List[str], bool] = ['first', 'second']
+        tables: Union[Table, bool] = [ ]
 
-    # get keys
-    for key in keys:
-        ordinal: str = key
-        index: int = keys.index(ordinal)
+        # prompt user for mode - encrypt or decrypt and validate
+        while not (mode := get_mode()):
+            print('Invalid selection. Please try again!')
 
-        # prompt user for a key      
-        key: str = get_key(ordinal)
+        # get keys
+        for key in keys:
+            ordinal: str = key
+            index: int = keys.index(ordinal)
 
-        # validate key and get again if not valid
-        while not validate_key(key):
-            key: str = get_key()
+            # prompt user for a key      
+            key: str = get_key(ordinal)
 
-        # replace ordinal name in list with actual key value
-        keys.pop(index)
-        keys.insert(index, key)
+            # validate key and get again if not valid
+            while not validate_key(key):
+                key: str = get_key()
 
-    # create the tables with the keys
-    for key in keys:
-        tables.append(create_table(key))       
+            # replace ordinal name in list with actual key value
+            keys.pop(index)
+            keys.insert(index, key)
 
-    # display the tables to the console for viewing
-    print('\nHere are the Playfair tables generated with your keys:')
+        # create the tables with the keys
+        for key in keys:
+            tables.append(create_table(key))       
 
-    for number, table in enumerate(tables, start = 1):
-        print(f'\nTABLE {number}:')        
-        display_table(table)
-       
-    text_prefix: str = 'plain' if mode == 'encrypt' else 'cipher'
+        # display the tables to the console for viewing
+        print('\nHere are the Playfair tables generated with your keys:')
 
-    prompt: str = f'Enter {text_prefix}text to {mode}: '
-    
-    # prompt the user for message to encrypt / decrypt
-    message: str = input(prompt)
+        for number, table in enumerate(tables, start = 1):
+            print(f'\nTABLE {number}:')        
+            display_table(table)
+           
+        text_prefix: str = 'plain' if mode == 'encrypt' else 'cipher'
 
-    # validate message and repeat until valid
-    while not (message_is_valid := validate_message(message)):
-        print(' ')
-        message: str = input(prompt)     
+        prompt: str = f'Enter {text_prefix}text to {mode}: '
+        
+        # prompt the user for message to encrypt / decrypt
+        message: str = input(prompt)
 
-    # perform encoding or decoding of message    
-    if mode == 'encrypt':
-        message: str = encrypt(message, keys[0], keys[1])
+        # validate message format and get again until valid
+        while not (message_is_valid := validate_message(message)):
+            print(' ')
+            message: str = input(prompt)
 
-##    ##### Progress marker #####
-##        
-##    elif mode == 'decrypt':
-##        message = decrypt(message, first_key, second_key)
-##
-##    else:
-##        raise Exception('Error: Invalid Mode.')
-##
-##    # display success / failure message to confirm operation status
-##    if message:
-##        print('Operation succcessful.')
-##
-##    # display (en/de)coded message
-##    print(message)
+        # PERHAPS REPLACE THIS WITH EXEC STATEMENT
+        # SO CAN INJECT FUNCTION NAME AND KEY NUMBERS???
+        # perform encoding or decoding of message    
+        if mode == 'encrypt':
+            message: str = encrypt(message, keys[0], keys[1])
+        
+        elif mode == 'decrypt':
+            message: str = decrypt(message, keys[0], keys[1])
+
+        else:
+            raise Exception('Error: Invalid Mode.')
+
+        # display success / failure message to confirm operation status
+        if message:
+            print('\nOperation succcessful.')
+
+            code_prefix: str = 'en' if mode == 'encrypt' else 'de'
+
+            # display (en/de)coded message
+            print(f'Here is the {code_prefix}coded message:\n')
+            print(message)
+
+        else:
+            print('\nUnable to perform operation.')
+
+            # include information about why operation failed
+
+            # give option to retry or quit
+
+    except Exception as err:
+        print('Unexpected exception type raised during program execution:')
+        print(type(err))
+        print(err)
+        # add stack trace
+        # add error code and way to report it to me - email
+        raise
+
+    # TODOs - PLANNED FUNCTIONALITY TO IMPLEMENT:
+
+    # add main program menu with options for help and program exit
+
+    # prompt user to accept or redo keys after table display
+
+    # confirm message before (en/de)coding - e.g. - [P]roceed or [R]edo  
     
     # OPTIONAL FUNCTIONALITY TO POSSIBLY IMPLEMENT LATER:
 
     # command-line usage
 
-    # prompt user to accept or redo keys after table display
-
-    # confirm message before (en/de)coding - e.g. - [P]roceed or [R]edo
-
     # get message text from file instead of keyboard
 
-    # print out the modified text to the console 
-
-    # prompt user to continue or quit
+    # write message output to file
 
 if __name__ == '__main__':
     __main__()
