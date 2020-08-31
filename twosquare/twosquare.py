@@ -835,29 +835,9 @@ def __main__():
         keys.pop(index)
         keys.insert(index, key)
 
-##    # prompt user for first key
-##    first_key: str = get_key('first')
-##
-##    # validate key
-##    while not validate_key(first_key):
-##        first_key: str = get_key()
-##
-##    # prompt user for second key
-##    second_key: str = get_key('second')
-##
-##    # validate key
-##    while not validate_key(second_key):
-##        second_key: str = get_key()
-
     # create the tables with the keys
     for key in keys:
         tables.append(create_table(key))       
-
-##    # create first table with first key
-##    first_table: Table = create_table(first_key) 
-##
-##    # create second table with second key
-##    second_table: Table = create_table(second_key)
 
     # display the tables to the console for viewing - optional functionality
     print('\nHere are the Playfair tables generated with your keys:')
