@@ -33,20 +33,6 @@ custom_error_classes = [
 for error_class_name in custom_error_classes:
     exec(f'from {import_path} import {error_class_name}') 
 
-##from path import BadValueError, FooBarError, StakesTooHighError, TypeMismatchError
-
-##if __name__ == '__main__':
-##    from exceptions import BadValueError
-##    from exceptions import FooBarError
-##    from exceptions import StakesTooHighError
-##    from exceptions import TypeMismatchError
-##elif __name__ == 'twosquare.twosquare': # for test runner import path
-##    print('__name__ = ', __name__)
-##    from twosquare.exceptions import BadValueError
-##    from twosquare.exceptions import FooBarError
-##    from twosquare.exceptions import StakesTooHighError
-##    from twosquare.exceptions import TypeMismatchError
-
 # Use type aliases for type hints on complex types
 Row = List[str]
 Table = List[Row]
@@ -66,7 +52,7 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
     prints a failure message and returns False if unsuccessful.
 
     Dependencies:
-        None
+        BadValueError
 
     """
 
@@ -76,7 +62,7 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
 
     try:
         if type(key) is not str or key.isalpha() == False:
-            raise ValueError('Invalid key format.')
+            raise BadValueError('Invalid key format.')
 
         # capitalize all letters in the key
         key: str = key.upper()
@@ -139,7 +125,7 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
 
         return table
 
-    except ValueError as err:
+    except BadValueError as err:
         print(err)
         return False
 
@@ -174,14 +160,15 @@ def display_table(table: Table) -> bool:
     Dependencies:
 
     from twosquare:
-        validate_table()
+        BadValueError
+        validate_table
     
     """
 
     try:
 
         if not validate_table(table):
-            raise ValueError('Table is invalid.')
+            raise BadValueError('Table is invalid.')
         
         print()
 
@@ -196,7 +183,7 @@ def display_table(table: Table) -> bool:
             # white space to separate rows
             print('\n\n')
 
-    except ValueError as err:
+    except BadValueError as err:
         print(err)
         return False
 
@@ -281,8 +268,10 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
     Dependencies:
     
     from twosquare:
+        BadValueError
         create_table
         # encode
+        FooBarError
         get_coordinates        
         Row
         Table
@@ -386,11 +375,6 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
         return False
 
     except FooBarError as err:
-##        print('I do not like green eggs and ham.')
-##        print('This should never happen, but if it does, ' +
-##            'it is an unforeseen error.')
-##        print("It's okay to panic!")
-##        print(type(err))
         print(err)
         raise
 
@@ -398,7 +382,6 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
         from inspect import currentframe as cf
         print('Unexpected exception type raised during execution:')
         print(f'In function: {cf().f_code.co_name}') # function name
-        print(type(err))
         print(err)
         raise
 
@@ -525,19 +508,20 @@ def validate_key(key: str) -> bool:
     Prints a failure message and returns False if key is invalid.
 
     Dependencies:
-        None
+        BadValueError
+        TypeMismatchError
 
     """
 
     try:
         # check that key is a string
         if type(key) is not str:
-            raise ValueError('Key must be a string.')
+            raise TypeMismatchError('Key must be a string.')
 
         # make sure key not empty - added this for use at module
         # level as main program already will not allow this
         if len(key) < 1:
-            raise ValueError('Key must not be empty.')
+            raise BadValueError('Key must not be empty.')
                             
         key: str = key.upper()
 
@@ -548,22 +532,22 @@ def validate_key(key: str) -> bool:
 
             # check for white space
             if character.isspace():
-                raise ValueError('Key cannot contain white space. ' +
+                raise BadValueError('Key cannot contain white space. ' +
                     'Only letters are allowed.')
 
             # check for digits
             if character.isdigit():
-                raise ValueError('Key cannot contain digits. ' +
+                raise BadValueError('Key cannot contain digits. ' +
                     'Numbers must be spelled out.')
 
             # check for other forbidden characters
             if not character.isalpha():
-                raise ValueError('Key cannot contain punctuation ' +
+                raise BadValueError('Key cannot contain punctuation ' +
                     'or special characters.')
 
             # check for duplicate letters
             if character in letters_in_key:
-                raise ValueError('Key must not contain duplicate letters.')
+                raise BadValueError('Key must not contain duplicate letters.')
 
             # if character is a letter add it to the list to track it
             elif character.isalpha():
@@ -571,17 +555,21 @@ def validate_key(key: str) -> bool:
 
         # make sure key does not contain more than twenty five letters
         if len(key) > 25:
-            raise ValueError('Key cannot contain more than ' +
+            raise BadValueError('Key cannot contain more than ' +
                 'twenty-five characters.')
         
-    except ValueError as err:
+    except BadValueError as err:
+        print(err)
+        return False
+
+    except TypeMismatchError as err:
         print(err)
         return False
 
     except Exception as err:
-        print('Unexpected exception type raised during execution.')
-        print(type(err))
-        print(err)
+        from inspect import currentframe as cf
+        print('Unexpected exception type raised during execution:')
+        print(f'In function: {cf().f_code.co_name}') # function name
         raise
 
     else:
@@ -598,7 +586,8 @@ def validate_message(message: str, mode: str = 'encrypt') -> bool:
     Returns True if the message is valid or False otherwise.
 
     Dependencies:
-        NONE
+        BadValueError
+        TypeMismatchError
 
     """
 
@@ -646,9 +635,6 @@ def validate_message(message: str, mode: str = 'encrypt') -> bool:
 
     except ValueError as err:
         print(err)
-##        print('You have attempted to exceed the limits of reality')
-##        print('imposed by the Architect. Neo could bend the Matrix')
-##        print('to his will, but can you?')
         return False
 
     except TypeError as err:
@@ -700,30 +686,30 @@ def validate_table(table: Table) -> bool:
 
     try:
         if type(table) is not list:
-            raise TypeError('Table must be a list.')
+            raise TypeMismatchError('Table must be a list.')
 
         if len(table) != 5:
-            raise ValueError('Illegal number of rows in table.')        
+            raise BadValueError('Illegal number of rows in table.')        
 
         # check each row of the table
         for row in table:
 
             if len(row) != 5:
-                raise ValueError('Illegal number of columns in table row.')
+                raise BadValueError('Illegal number of columns in table row.')
 
             # check each cell in current row
             for cell in row:
                 if type(cell) is not str or len(cell) > 2:
-                    raise(ValueError('Bad table data.'))
+                    raise(BadValueError('Bad table data.'))
 
                 if not (cell.isascii() and cell.isprintable()):
-                    raise(ValueError('Table contains illegal characters.'))
+                    raise(BadValueError('Table contains illegal characters.'))
 
                 if not (cell.isalpha() and cell.isupper()):
-                    raise(ValueError('Invalid characters in table.'))
+                    raise(BadValueError('Invalid characters in table.'))
 
                 if cell in letters_in_table:
-                    raise(ValueError('Table contains duplicate letters.'))
+                    raise(BadValueError('Table contains duplicate letters.'))
 
                 letters_in_table.append(cell)   
 
@@ -732,14 +718,11 @@ def validate_table(table: Table) -> bool:
                 if letter_count > 26:
                     raise(ValueError('Table contains more than 26 letters.'))
                 
-    except ValueError as err:
+    except BadValueError as err:
         print(err)
-        print('You have attempted to exceed the limits of reality')
-        print('imposed by the Architect. Neo could bend the Matrix')
-        print('to his will, but can you?')
         return False
 
-    except TypeError as err:
+    except TypeMismatchError as err:
         print(err)
         return False
 
@@ -747,7 +730,6 @@ def validate_table(table: Table) -> bool:
         from inspect import currentframe as cf
         print('Unexpected exception type raised during execution:')
         print(f'In function: {cf().f_code.co_name}') # function name
-        print(type(err))
         print(err)
         raise
 
