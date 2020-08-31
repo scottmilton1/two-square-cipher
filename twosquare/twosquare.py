@@ -18,10 +18,17 @@ from typing import NoReturn
 from typing import Tuple
 from typing import Union
 
-from exceptions import BadValueError
-from exceptions import FooBarError
-from exceptions import StakesTooHighError
-from exceptions import TypeMismatchError
+if __name__ == '__main__':
+    from exceptions import BadValueError
+    from exceptions import FooBarError
+    from exceptions import StakesTooHighError
+    from exceptions import TypeMismatchError
+elif __name__ == 'twosquare.twosquare': # for test runner import path
+    print('__name__ = ', __name__)
+    from twosquare.exceptions import BadValueError
+    from twosquare.exceptions import FooBarError
+    from twosquare.exceptions import StakesTooHighError
+    from twosquare.exceptions import TypeMismatchError
 
 # Use type aliases for type hints on complex types
 Row = List[str]
