@@ -23,10 +23,11 @@ from typing import Union
 
 if __name__ == 'twosquare.twosquare':
     import_path = 'twosquare.exceptions'
+    
 else:
     import_path = 'exceptions' 
 
-# user defined error class names
+# user-defined error class names
 custom_error_classes = [
     'BadValueError',
     'FooBarError',
@@ -41,6 +42,15 @@ for error_class_name in custom_error_classes:
 # Use type aliases for type hints on complex types
 Row = List[str]
 Table = List[Row]
+
+def coming_soon():
+    """Prints a message indicating that a program's feature is coming soon.
+
+    """
+
+    print('\nThat feature is coming soon...\n')
+
+    return True
 
 def create_table(key: str) -> Union[Table, bool]: # return either Table or False
     """Create a Playfair table.
@@ -784,6 +794,31 @@ def validate_table(table: Table) -> bool:
     else:
         return True
 
+def display_menu(menu_options):
+    """Print a list of program options.
+
+    """
+
+    try:
+    
+        for number, option in enumerate(menu_options.keys(), start = 0):
+            print('{:68}'.format('\t    ::: ' + str(number) + ': ' \
+                                 + option.upper()))
+
+        print(' ')
+
+    except Exception as err:
+        print('Unable to print program menu. ' +
+              'An unexpected error has occured.')
+        print(err)
+        print(type(err))
+        
+        return False
+
+    else:
+
+        return number
+
 def __main__():
     """This is the main program.
 
@@ -802,18 +837,57 @@ def __main__():
     print('{:^80}'.format(border))
     print()
 
-    '''
-    Display menu:
-    Options:
-    Encrypt
-    Decrypt
-    Create Table
-    Display Table
-    Validate Key
+    # display menu of program options
 
-    what else???
+    menu_options = {
+        'Display options menu': display_menu,
+        'Encrypt a plaintext': coming_soon,
+        'Decrypt a ciphertext': coming_soon,
+        'Create a new key': coming_soon,
+        'Display current keys': coming_soon,
+        'Create a new table': coming_soon,
+        'Display current tables': coming_soon,
+        'Validate a key': coming_soon,
+        'Validate a message': coming_soon,
+        'Exit program': coming_soon,
+        }
 
-    '''
+    number = display_menu(menu_options)
+
+    loop: bool = True
+    
+    while loop:
+
+        selection: int = -1
+
+        while selection < 0 or selection > number:
+            try:
+                selection = int(input('Enter selection number >> '))
+                
+            except:
+                continue                
+
+        print(f'You selected option {selection}') # show the selection as well
+
+        # add validation for the above code and then appropriate user-friendly
+        # responses and corresponding actions for all menu options
+
+        # if selection is exit program
+        if selection == number:
+            
+            # confirm before exiting
+            while True:
+                confirm: str = input('Exit program? (Y/N)')
+                
+                if confirm.upper() == 'Y':
+                    loop = False
+                    break
+                
+                elif confirm.upper() == 'N':
+                    break
+
+    print('This is where the program will exit')
+    
 
     try:
 
