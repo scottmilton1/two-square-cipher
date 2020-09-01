@@ -858,19 +858,32 @@ def __main__():
     
     while loop:
 
-        selection: int = -1
+       # selection: int = -1
 
-        while selection < 0 or selection > number:
+        while True:
             try:
                 selection = int(input('Enter selection number >> '))
                 
-            except:
-                continue                
+                if selection < 0 or selection > number:
+                    raise ValueError
 
-        print(f'You selected option {selection}') # show the selection as well
+            except:
+                print('Invalid selection. Please try again.')
+
+            else:
+                break
+
+        print(f'You selected option {selection}')
+
+        # show what the user selected as well
+
+        # and call the appropriate function / block of code
 
         # add validation for the above code and then appropriate user-friendly
         # responses and corresponding actions for all menu options
+
+        if selection == 0:
+            number = display_menu(menu_options)
 
         # if selection is exit program
         if selection == number:
@@ -884,10 +897,13 @@ def __main__():
                     break
                 
                 elif confirm.upper() == 'N':
-                    break
+                    break        
 
-    print('This is where the program will exit')
-    
+    print('Thank you for using Twosquare.')
+
+    return
+
+    ######
 
     try:
 
