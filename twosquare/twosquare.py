@@ -13,6 +13,9 @@ The functionality of this program can also be used as a module.
 """ 
 
 # globals
+from functools import partial
+
+from typing import Callable
 from typing import List
 from typing import NoReturn
 from typing import Tuple
@@ -860,41 +863,16 @@ def __main__():
             print(' ')
             message: str = input(prompt)
 
-
-
-
-        from functools import partial
-        from typing import Callable
-
         # prepare to perform encoding or decoding of message  
         # choose function to call depending on selected mode
-        func = encrypt if mode == 'encrypt' else decrypt
+        func: Callable[[str, str, str], Union[str, bool]] = encrypt if \
+            mode == 'encrypt' else decrypt
 
         # plug appropriate function into callable partial with args
-        action = partial(func, message, keys[0], keys[1])
+        action: Callable[[ ], str] = partial(func, message, keys[0], keys[1])
 
         # call function and get [en/de]decoded processed_text
-        processed_text = action()
-
-
-        # SO CAN INJECT FUNCTION NAME AND KEY NUMBERS???
-
-        
-        # perform encoding or decoding of message    
-##        if mode == 'encrypt':
-##            processed_text: str = encrypt(message, keys[0], keys[1])
-##        
-##        elif mode == 'decrypt':
-##            processed_text: str = decrypt(message, keys[0], keys[1])
-##
-##        else:
-##            raise Exception('Error: Invalid Mode.')
-
-        # display success / failure message to confirm operation status
-
-##        if message:
-
-
+        processed_text: str = action()
         
         if processed_text:
             print('\nOperation succcessful.')
