@@ -43,15 +43,6 @@ for error_class_name in custom_error_classes:
 Row = List[str]
 Table = List[Row]
 
-##def coming_soon():
-##    """Prints a message indicating that a program's feature is coming soon.
-##
-##    """
-##
-##    print('\nThat feature is coming soon...\n')
-##
-##    return True
-
 def create_table(key: str) -> Union[Table, bool]: # return either Table or False
     """Create a Playfair table.
 
@@ -794,31 +785,6 @@ def validate_table(table: Table) -> bool:
     else:
         return True
 
-##def _display_menu(menu_options):
-##    """Print a list of program options.
-##
-##    """
-##
-##    try:
-##    
-##        for number, option in enumerate(menu_options.keys(), start = 0):
-##            print('{:68}'.format('\t    ::: ' + str(number) + ': ' \
-##                                 + option.upper()))
-##
-##        print(' ')
-##
-##    except Exception as err:
-##        print('Unable to print program menu. ' +
-##              'An unexpected error has occured.')
-##        print(err)
-##        print(type(err))
-##        
-##        return False
-##
-##    else:
-##
-##        return number
-
 def __main__():
     """This is the main program.
 
@@ -876,6 +842,7 @@ def __main__():
         print()
 
     loop: bool = True
+    keys: Union[List[str], bool] = ['', '']
     menu_options: list = [
         'Display options menu',
         'Encrypt a plaintext',
@@ -888,6 +855,7 @@ def __main__():
         'Validate a message',
         'Exit program',
         ]
+    tables: Union[Table, bool] = [ ]
 
     ##### PROGRAM START #####
 
@@ -913,7 +881,7 @@ def __main__():
             else:
                 break
 
-        print(f'\n{menu_options[selection].upper()}')
+        print(f'\n*** {menu_options[selection].upper()} ***')
 
         # handle the user's selection
         if selection == 0: # display options menu
@@ -975,28 +943,166 @@ def __main__():
             # same keys
 
         elif selection == 3: # create a new key
-            _coming_soon()
 
-            # display current keys, if any
+            # variables for loop control and early exit
+            abort: bool = False
+            loop_create_key: bool = True
 
-            # if 0 or 1 key exists
-                # create new key in first empty slot (1 or 2)
-                
-            # elif both slots already contain keys
-                # ask user which key they would like to replace (1 or 2)
-                # or give option to abort and keep current keys as is
+            while loop_create_key:
+            
+                print('\nThe Twosquare cipher uses two keys to encrypt and ' + \
+                      'decrypt messages.')
+                print('\n> Each key can be a key word or phrase:')
+                print('* Up to twenty-five letters in length')
+                print('* Each letter may not be used more than once in a key')
+                print('* Digits are not allowed so all numbers must be spelled out')
+                print('* No white space, punctuation, or special characters')
+                      
+                # display current keys, if any
+                # MAKE THIS INTO HELPER FUNCTION AS IS USED IN SEVERAL PLACES
+                print('\nHere are your current keys: \n')
+
+                for key_number, key in enumerate(keys, start = 1):
+
+                    if len(key) == 0:
+                        key = '[None]'
+                    
+                    print(f'\tKey {key_number}: {key}')
+                    
+                print('')
+
+                ordinal: List[str] = ['first', 'second']
+
+                # if 0 or 1 key exists
+                # create new key in first empty slot 
+                if len(keys[0]) == 0:
+                    print('Okay, create first key')
+
+                    # COMBINE THE CODE IN THESE SECTIONS OR MAKE AN INNER FUNCTION
+                    # TO CALL -> DRY PRINCIPLE
+                    index: int = 0
+
+                    # prompt user for a key      
+                    key: str = get_key(ordinal[index])
+
+                    # validate key and get again if not valid
+                    while not validate_key(key):
+                        key: str = get_key()
+
+                    # replace existing key with new key value
+                    keys.pop(index)
+                    keys.insert(index, key)
+
+                    # confirm that key was created successfully
+                    print('\nKey created successfully.')
+
+                # create second empty key
+                elif len(keys[1]) == 0:
+                    print('Okay, create second key')
+
+                    index: int = 1
+
+                    # prompt user for a key      
+                    key: str = get_key(ordinal[index])
+
+                    # validate key and get again if not valid
+                    while not validate_key(key):
+                        key: str = get_key()
+
+                    # replace existing key with new key value
+                    keys.pop(index)
+                    keys.insert(index, key)
+
+                    # confirm that key was created successfully
+                    print('\nKey created successfully.')
+
+                # if both slots already contain keys, ask user which key they would
+                # like to replace or give option to abort and keep current keys
+                else:  
+                    print('Which key would you like to replace: (1 or 2)?')
+                    print('Enter 0 to abort and return to main menu.')
+
+                    inner_loop: bool = True
+                    
+                    while inner_loop:
+                        selection = input('Select key >> ')
+
+                        if selection == '0':
+                            print('Okay, abort')
+
+                            abort = True                            
+                            break
                         
-            # after creating new key:
-            
-            # confirm that key was created successfully
-            
-            # display updated keys
-            
-            # ask user if they would like to create another key
+                        elif selection == '1' or selection == '2':
+                            print(f'Okay, replace key {selection}...')
 
-            # if so, continue
-            
-            # if not, break and return to main menu           
+                            # REPEAT OF ABOVE
+
+                            
+                            index: int = int(selection) - 1                        
+
+                            # prompt user for a key      
+                            key: str = get_key(ordinal[index])
+
+                            # validate key and get again if not valid
+                            while not validate_key(key):
+                                key: str = get_key()
+
+                            # replace existing key with new key value
+                            keys.pop(index)
+                            keys.insert(index, key)
+
+                            # confirm that key was created successfully
+                            print('\nKey replaced successfully.')
+
+                            inner_loop = False
+                           
+##                        elif selection == '2':
+##                            print('Okay, replace key 2...')
+
+                        else:
+                            print('Invalid selection. Please try again.')               
+
+                if abort:
+                    print('\nMain Menu\n'.upper())
+                    break
+                
+                # if unable to generate key, report that instead
+                # REPLACE THIS WITH TRY CATCH SO ERRORS WILL REPORT HERE TOO???
+##                else:
+##                    print('\nUnable to create / replace key.')
+
+
+                # REPEAT OF ABOVE
+                # display updated keys
+                    # call display keys function
+                print('\nHere are your current keys: \n')
+
+                for key_number, key in enumerate(keys, start = 1):
+
+                    if len(key) == 0:
+                        key = '[None]'
+                    
+                    print(f'\tKey {key_number}: {key}')
+                
+                # ask user if they would like to create another key
+                while True:
+                    response = input('\nCreate / update another key? (Y / N)? >> ')
+
+                    # if not, break and return to main menu          
+                    if response.upper() == 'N':
+                        loop_create_key = False
+
+                        print('\nMain Menu:\n'.upper())
+                        
+                        break
+
+                    # if so, continue outer loop               
+                    elif response.upper() == 'Y':
+                        break
+                    
+                    else:
+                        print('Invalid selection. Please try again.')
 
         elif selection == 4: # display current keys
             _coming_soon()
@@ -1083,8 +1189,8 @@ def __main__():
 
     try:
 
-        keys: Union[List[str], bool] = ['first', 'second']
-        tables: Union[Table, bool] = [ ]
+##        keys: Union[List[str], bool] = ['first', 'second']
+##        tables: Union[Table, bool] = [ ]
 
         # prompt user for mode - encrypt or decrypt and validate
         while not (mode := get_mode()):
