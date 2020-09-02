@@ -793,7 +793,7 @@ def __main__():
 
     # inner functions for main program only - not module
 
-    def _coming_soon():
+    def _coming_soon() -> NoReturn:
         """Prints a message indicating that a program's feature is coming soon.
 
         """
@@ -802,7 +802,23 @@ def __main__():
 
         return True
 
-    def _display_menu(menu_options):
+    def _display_keys() -> NoReturn:
+        """Displays the current keys, if any.
+
+        """
+    
+        print('\nHere are your current keys: \n')
+
+        for key_number, key in enumerate(keys, start = 1):
+
+            if len(key) == 0:
+                key = '[None]'
+            
+            print(f'\tKey {key_number}: {key}')
+
+        return
+
+    def _display_menu(menu_options: list) -> Union[int, bool]:
         """Print a list of program options.
 
         """
@@ -841,7 +857,8 @@ def __main__():
         print('{:^80}'.format(border))
         print()
 
-    loop: bool = True
+    exit_program: bool = False
+    loop_main: bool = True
     keys: Union[List[str], bool] = ['', '']
     menu_options: list = [
         'Display options menu',
@@ -849,12 +866,14 @@ def __main__():
         'Decrypt a ciphertext',
         'Create a new key',
         'Display current keys',
-        'Create a new table',
         'Display current tables',
         'Validate a key',
         'Validate a message',
+        'About this program',
         'Exit program',
         ]
+    ordinal: List[str] = ['first', 'second']
+    return_to_main_menu: bool = False
     tables: Union[Table, bool] = [ ]
 
     ##### PROGRAM START #####
@@ -866,7 +885,7 @@ def __main__():
     number = _display_menu(menu_options)
 
     # main program loop
-    while loop:
+    while loop_main:
 
         while True:
             try:
@@ -944,8 +963,6 @@ def __main__():
 
         elif selection == 3: # create a new key
 
-            # variables for loop control and early exit
-            abort: bool = False
             loop_create_key: bool = True
 
             while loop_create_key:
@@ -959,24 +976,15 @@ def __main__():
                 print('* No white space, punctuation, or special characters')
                       
                 # display current keys, if any
-                # MAKE THIS INTO HELPER FUNCTION AS IS USED IN SEVERAL PLACES
-                print('\nHere are your current keys: \n')
+                _display_keys()
 
-                for key_number, key in enumerate(keys, start = 1):
-
-                    if len(key) == 0:
-                        key = '[None]'
-                    
-                    print(f'\tKey {key_number}: {key}')
-                    
                 print('')
-
-                ordinal: List[str] = ['first', 'second']
-
+                
                 # if 0 or 1 key exists
                 # create new key in first empty slot 
                 if len(keys[0]) == 0:
-                    print('Okay, create first key')
+                    
+
 
                     # COMBINE THE CODE IN THESE SECTIONS OR MAKE AN INNER FUNCTION
                     # TO CALL -> DRY PRINCIPLE
@@ -998,8 +1006,12 @@ def __main__():
 
                 # create second empty key
                 elif len(keys[1]) == 0:
-                    print('Okay, create second key')
 
+
+
+                    # REPEAT OF ABOVE
+
+                    
                     index: int = 1
 
                     # prompt user for a key      
@@ -1022,24 +1034,28 @@ def __main__():
                     print('Which key would you like to replace: (1 or 2)?')
                     print('Enter 0 to abort and return to main menu.')
 
-                    inner_loop: bool = True
+                    loop_replace_key: bool = True
                     
-                    while inner_loop:
-                        selection = input('Select key >> ')
+                    while loop_replace_key:
+                        choice: str = input('Select key >> ')
 
-                        if selection == '0':
-                            print('Okay, abort')
+                        if choice == '0':
+                            print('\nKey replacement aborted. No changes made.')
 
-                            abort = True                            
-                            break
+                            # end current loop and return to main menu
+                            loop_replace_key = False   # up one level
+                            return_to_main_menu = True # up two levels
+                            # break
                         
-                        elif selection == '1' or selection == '2':
-                            print(f'Okay, replace key {selection}...')
+                        elif choice == '1' or choice == '2':
+                            print(f'\nOkay, replace key {choice}...')
 
                             # REPEAT OF ABOVE
 
                             
-                            index: int = int(selection) - 1                        
+
+                            
+                            index: int = int(choice) - 1                        
 
                             # prompt user for a key      
                             key: str = get_key(ordinal[index])
@@ -1055,16 +1071,16 @@ def __main__():
                             # confirm that key was created successfully
                             print('\nKey replaced successfully.')
 
-                            inner_loop = False
+                            loop_replace_key = False
                            
-##                        elif selection == '2':
-##                            print('Okay, replace key 2...')
-
                         else:
                             print('Invalid selection. Please try again.')               
 
-                if abort:
-                    print('\nMain Menu\n'.upper())
+                if return_to_main_menu:
+                    
+                    # set flag back to False and break to main menu loop
+                    return_to_main_menu = False
+                    
                     break
                 
                 # if unable to generate key, report that instead
@@ -1072,28 +1088,21 @@ def __main__():
 ##                else:
 ##                    print('\nUnable to create / replace key.')
 
-
-                # REPEAT OF ABOVE
                 # display updated keys
-                    # call display keys function
-                print('\nHere are your current keys: \n')
+                _display_keys()
 
-                for key_number, key in enumerate(keys, start = 1):
-
-                    if len(key) == 0:
-                        key = '[None]'
-                    
-                    print(f'\tKey {key_number}: {key}')
-                
+                action: str = 'Create' if min(len(keys[0]), len(keys[1])) == 0 \
+                    else 'Update'
+               
                 # ask user if they would like to create another key
                 while True:
-                    response = input('\nCreate / update another key? (Y / N)? >> ')
+                    response = input(f'\n{action} another key? (Y/N)? >> ')
 
                     # if not, break and return to main menu          
                     if response.upper() == 'N':
                         loop_create_key = False
 
-                        print('\nMain Menu:\n'.upper())
+##                        print('\nMain Menu:\n'.upper())
                         
                         break
 
@@ -1105,27 +1114,16 @@ def __main__():
                         print('Invalid selection. Please try again.')
 
         elif selection == 4: # display current keys
-            _coming_soon()
 
             # list all current keys or 'None' if none exist
+            _display_keys()
 
-            # return to main menu
-
-        elif selection == 5: # create a new table
-            _coming_soon()
-
-            # NOT SURE IF THIS IS A DESIRED OPTION -
-            # SINCE TABLES ARE MADE FROM KEYS -
-            # PERHAPS SCRAP THIS ONE AND ADD ANOTHER OPTION TO MENU
-
-        elif selection == 6: # display current tables
+        elif selection == 5: # display current tables
             _coming_soon()
 
             # display all current tables or 'None' if none exist
 
-            # return to main menu
-
-        elif selection == 7: # validate a key
+        elif selection == 6: # validate a key
             _coming_soon()
 
             # brief description of key requirements
@@ -1143,7 +1141,7 @@ def __main__():
 
             # if not break and return to main menu      
 
-        elif selection == 8: # validate a message
+        elif selection == 7: # validate a message
             _coming_soon()
 
             # prompt user for type of message to validate
@@ -1164,14 +1162,18 @@ def __main__():
 
             # if not break and return to main menu
 
+        elif selection == 8: # about program / help
+            _coming_soon()
+
         elif selection == 9: # exit program
             
             # confirm before exiting
             while True:
-                confirm: str = input('Confirm: exit program? (Y/N)')
+                confirm: str = input('\nConfirm: exit program? (Y/N)')
                 
                 if confirm.upper() == 'Y':
-                    loop = False
+                    exit_program = True
+                    loop_main = False
                     break
                 
                 elif confirm.upper() == 'N':
@@ -1179,6 +1181,9 @@ def __main__():
 
         else:
             print("Whoops! That's an invalid selection!")
+
+        if not exit_program and selection > 0 :
+            print('\nMain Menu:\n'.upper())
 
     print('Thank you for using Twosquare.')
 
