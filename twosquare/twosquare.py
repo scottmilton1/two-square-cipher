@@ -900,8 +900,6 @@ def __main__():
     # main program loop
     while loop:
 
-       # selection: int = -1
-
         while True:
             try:
                 selection = int(input('Enter selection number >> '))
@@ -915,11 +913,9 @@ def __main__():
             else:
                 break
 
-        # print(f'You selected option {selection}')
-
         print(f'\n{menu_options[selection].upper()}')
 
-        # and call the appropriate function / block of code
+        # handle the user's selection
         if selection == 0: # display options menu
             _display_title()
             _display_menu(menu_options)
@@ -927,26 +923,140 @@ def __main__():
         elif selection == 1: # encrypt a plaintext
             _coming_soon()
 
+            # if 0 or 1 keys exist, notify user
+                # (and ask if would like to create a key)
+                # (if so, take directly to create key operation)
+
+            # print a brief description of process and requirements
+            # give option for more detailed information
+
+            # get plaintext from user
+                # manual entry
+                # load from .txt file
+
+            # confirm plaintext / file name
+
+            # perform encryption
+
+            # report operation success / failure
+                # give reason / feedback for failure
+
+            # if successful, ask user if they would like to display the
+            # encrypted message (or save it as a .txt file)
+                # if so, display / save message
+                # print success / failure message
+
+            # ask user if they would like to encrypt another file using the
+            # same keys
+
         elif selection == 2: # decrypt a ciphertext
             _coming_soon()
-            
+
+            # print a brief description of process and requirements
+            # give option for more detailed information
+
+            # get ciphertext from user
+                # manual entry
+                # load from .txt file
+
+            # confirm ciphertext / file name
+
+            # perform decryption
+
+            # report operation success / failure
+                # give reason / feedback for failure
+
+            # if successful, ask user if they would like to display the
+            # decrypted message (or save it as a .txt file)
+                # if so, display / save message
+                # print success / failure message
+
+            # ask user if they would like to decrypt another file using the
+            # same keys
+
         elif selection == 3: # create a new key
             _coming_soon()
+
+            # display current keys, if any
+
+            # if 0 or 1 key exists
+                # create new key in first empty slot (1 or 2)
+                
+            # elif both slots already contain keys
+                # ask user which key they would like to replace (1 or 2)
+                # or give option to abort and keep current keys as is
+                        
+            # after creating new key:
+            
+            # confirm that key was created successfully
+            
+            # display updated keys
+            
+            # ask user if they would like to create another key
+
+            # if so, continue
+            
+            # if not, break and return to main menu           
 
         elif selection == 4: # display current keys
             _coming_soon()
 
+            # list all current keys or 'None' if none exist
+
+            # return to main menu
+
         elif selection == 5: # create a new table
             _coming_soon()
+
+            # NOT SURE IF THIS IS A DESIRED OPTION -
+            # SINCE TABLES ARE MADE FROM KEYS -
+            # PERHAPS SCRAP THIS ONE AND ADD ANOTHER OPTION TO MENU
 
         elif selection == 6: # display current tables
             _coming_soon()
 
+            # display all current tables or 'None' if none exist
+
+            # return to main menu
+
         elif selection == 7: # validate a key
             _coming_soon()
 
+            # brief description of key requirements
+            # option for more detailed information
+
+            # get key from user
+
+            # run validation check
+
+            # report results
+
+            # ask user if they would like to validate another key
+
+            # if so continue
+
+            # if not break and return to main menu      
+
         elif selection == 8: # validate a message
             _coming_soon()
+
+            # prompt user for type of message to validate
+            # plaintext or ciphertext
+
+            # print out brief description of message requirements
+            # with option for more detailed information
+
+            # get message from user
+
+            # run validation check
+
+            # report results
+
+            # ask user if they would like to validate another message
+
+            # if so continue
+
+            # if not break and return to main menu
 
         elif selection == 9: # exit program
             
