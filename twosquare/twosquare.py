@@ -43,14 +43,14 @@ for error_class_name in custom_error_classes:
 Row = List[str]
 Table = List[Row]
 
-def coming_soon():
-    """Prints a message indicating that a program's feature is coming soon.
-
-    """
-
-    print('\nThat feature is coming soon...\n')
-
-    return True
+##def coming_soon():
+##    """Prints a message indicating that a program's feature is coming soon.
+##
+##    """
+##
+##    print('\nThat feature is coming soon...\n')
+##
+##    return True
 
 def create_table(key: str) -> Union[Table, bool]: # return either Table or False
     """Create a Playfair table.
@@ -794,30 +794,30 @@ def validate_table(table: Table) -> bool:
     else:
         return True
 
-def display_menu(menu_options):
-    """Print a list of program options.
-
-    """
-
-    try:
-    
-        for number, option in enumerate(menu_options.keys(), start = 0):
-            print('{:68}'.format('\t    ::: ' + str(number) + ': ' \
-                                 + option.upper()))
-
-        print(' ')
-
-    except Exception as err:
-        print('Unable to print program menu. ' +
-              'An unexpected error has occured.')
-        print(err)
-        print(type(err))
-        
-        return False
-
-    else:
-
-        return number
+##def _display_menu(menu_options):
+##    """Print a list of program options.
+##
+##    """
+##
+##    try:
+##    
+##        for number, option in enumerate(menu_options.keys(), start = 0):
+##            print('{:68}'.format('\t    ::: ' + str(number) + ': ' \
+##                                 + option.upper()))
+##
+##        print(' ')
+##
+##    except Exception as err:
+##        print('Unable to print program menu. ' +
+##              'An unexpected error has occured.')
+##        print(err)
+##        print(type(err))
+##        
+##        return False
+##
+##    else:
+##
+##        return number
 
 def __main__():
     """This is the main program.
@@ -825,37 +825,79 @@ def __main__():
     The functionality of this implementation can also be used as a module.
     """
 
-    # display program title and brief description
-    name: str = "twosquare"
-    description: str = "encrypt and decrypt messages with the two-square cipher"
-    print('{:^80}'.format('>> ' + name.upper() + ' <<'))
-    print('{:^80}'.format(description.title()))
+    # inner functions for main program only - not module
 
-    # print bottom border that matches the length of the program description
-    border_character: str = '-'
-    border: str = border_character * len(description)
-    print('{:^80}'.format(border))
-    print()
+    def _coming_soon():
+        """Prints a message indicating that a program's feature is coming soon.
 
-    # display menu of program options
+        """
 
-    menu_options = {
-        'Display options menu': display_menu,
-        'Encrypt a plaintext': coming_soon,
-        'Decrypt a ciphertext': coming_soon,
-        'Create a new key': coming_soon,
-        'Display current keys': coming_soon,
-        'Create a new table': coming_soon,
-        'Display current tables': coming_soon,
-        'Validate a key': coming_soon,
-        'Validate a message': coming_soon,
-        'Exit program': coming_soon,
-        }
+        print('\nThat feature is coming soon...\n')
 
-    number = display_menu(menu_options)
+        return True
+
+    def _display_menu(menu_options):
+        """Print a list of program options.
+
+        """
+
+        try:   
+
+            for number, option in enumerate(menu_options, start = 0):
+                print('{:56}'.format('\t    ***            ' + str(number) + ': ' \
+                                     + option.upper()) + ' ***\t')
+                
+            print(' ')
+
+        except Exception as err:
+            print('Unable to print program menu. ' +
+                  'An unexpected error has occured.')
+            print(err)
+            print(type(err))
+            
+            return False
+
+        else:
+            return number # total number of items (also highest index)
+
+    def _display_title():
+        
+        # display program title and brief description
+        name: str = "twosquare"
+        description: str = \
+            "encrypt and decrypt messages with the two-square cipher"
+        print('{:^80}'.format('>> ' + name.upper() + ' <<'))
+        print('{:^80}'.format(description.title()))
+
+        # print bottom border that matches the length of the program description
+        border_character: str = '-'
+        border: str = border_character * len(description)
+        print('{:^80}'.format(border))
+        print()
 
     loop: bool = True
-    
+    menu_options: list = [
+        'Display options menu',
+        'Encrypt a plaintext',
+        'Decrypt a ciphertext',
+        'Create a new key',
+        'Display current keys',
+        'Create a new table',
+        'Display current tables',
+        'Validate a key',
+        'Validate a message',
+        'Exit program',
+        ]
+
+    ##### PROGRAM START #####
+
+    # display program title
+    _display_title()
+
+    # display menu of program options
+    number = _display_menu(menu_options)
+
+    # main program loop
     while loop:
 
        # selection: int = -1
@@ -873,34 +915,58 @@ def __main__():
             else:
                 break
 
-        print(f'You selected option {selection}')
+        # print(f'You selected option {selection}')
 
-        # show what the user selected as well
+        print(f'\n{menu_options[selection].upper()}')
 
         # and call the appropriate function / block of code
+        if selection == 0: # display options menu
+            _display_title()
+            _display_menu(menu_options)
 
-        # add validation for the above code and then appropriate user-friendly
-        # responses and corresponding actions for all menu options
+        elif selection == 1: # encrypt a plaintext
+            _coming_soon()
 
-        if selection == 0:
-            number = display_menu(menu_options)
+        elif selection == 2: # decrypt a ciphertext
+            _coming_soon()
+            
+        elif selection == 3: # create a new key
+            _coming_soon()
 
-        # if selection is exit program
-        if selection == number:
+        elif selection == 4: # display current keys
+            _coming_soon()
+
+        elif selection == 5: # create a new table
+            _coming_soon()
+
+        elif selection == 6: # display current tables
+            _coming_soon()
+
+        elif selection == 7: # validate a key
+            _coming_soon()
+
+        elif selection == 8: # validate a message
+            _coming_soon()
+
+        elif selection == 9: # exit program
             
             # confirm before exiting
             while True:
-                confirm: str = input('Exit program? (Y/N)')
+                confirm: str = input('Confirm: exit program? (Y/N)')
                 
                 if confirm.upper() == 'Y':
                     loop = False
                     break
                 
                 elif confirm.upper() == 'N':
-                    break        
+                    break
+
+        else:
+            print("Whoops! That's an invalid selection!")
 
     print('Thank you for using Twosquare.')
 
+    # exit program
     return
 
     ######
