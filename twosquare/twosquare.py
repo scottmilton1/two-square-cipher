@@ -8,7 +8,8 @@ and horizontal, depending on how the two Playfair tables are arranged.
 This implementation uses the first variation, so the two tables are
 placed vertically.
 
-The functionality of this program can also be used as a module.
+The functions in the global scope of this implementation can also be
+used as a module.
 
 """ 
 
@@ -159,9 +160,8 @@ def decrypt(ciphertext: str, key1: str, key2: str) -> str:
 def display_table(table: Table) -> bool:
     """Print a Playfair table to the screen.
 
-    Prints a Playfair table to the console for viewing purposes to
-    facilitate development and testing.
-
+    Prints a Playfair table to the console for viewing purposes.
+    
     Returns True if successful or False if an error occurs.
 
     Dependencies:
@@ -492,39 +492,39 @@ def get_key(ordinal: str = '') -> str:
     else:
         return key
 
-def get_mode() -> Union[str, bool]:
-    """Gets program mode from user.
-
-    Prompts user for program mode (encryption or decryption).
-
-    Returns string value 'encrypt' or 'decrypt' based on user selection
-    or returns False if user has made an invalid selection.
-
-    Dependencies:
-        None
-        
-    """
-    
-    try:
-
-        mode: str = input("Select mode: 1 for encrypt or 2 for decrypt >> ")
-
-        if mode == '1':
-            return 'encrypt'
-
-        elif mode == '2':
-            return 'decrypt'
-
-    except Exception as err:
-        from inspect import currentframe as cf
-        print('Unexpected exception type raised during execution:')
-        print(f'In function: {cf().f_code.co_name}') # function name
-        print(type(err))
-        print(err)
-        raise
-
-    else:
-        return False
+##def get_mode() -> Union[str, bool]:
+##    """Gets program mode from user.
+##
+##    Prompts user for program mode (encryption or decryption).
+##
+##    Returns string value 'encrypt' or 'decrypt' based on user selection
+##    or returns False if user has made an invalid selection.
+##
+##    Dependencies:
+##        None
+##        
+##    """
+##    
+##    try:
+##
+##        mode: str = input("Select mode: 1 for encrypt or 2 for decrypt >> ")
+##
+##        if mode == '1':
+##            return 'encrypt'
+##
+##        elif mode == '2':
+##            return 'decrypt'
+##
+##    except Exception as err:
+##        from inspect import currentframe as cf
+##        print('Unexpected exception type raised during execution:')
+##        print(f'In function: {cf().f_code.co_name}') # function name
+##        print(type(err))
+##        print(err)
+##        raise
+##
+##    else:
+##        return False
 
 def validate_ciphertext(message: bool) -> bool:
     """Validates a ciphertext message for the Twosquare cipher.
@@ -884,6 +884,12 @@ def __main__():
             -> NoReturn:
         """Displays a pretty formatted title and byline.
 
+        Inner helper function for the main twosquare program.
+
+        TODOs: Ideas for additional features:
+
+        Add keyword arg for text_alignment with default = 'center'
+
         """
         
         print('{:^80}'.format('>> ' + title.upper() + ' <<'))
@@ -899,15 +905,18 @@ def __main__():
     def _get_response(action: str) -> bool:
         """Gets a yes or no response from the user.
 
-        Prompts the user for an input response.
-        
-        Use case example: whether or not the user wants to
-        perform the same action again.
+        Inner helper function for the main twosquare program.
 
-        Only accepts [upper/lower]case variants of 'Y' and 'N'
+        Prompts the user for input.
+
+        The input validation only accepts [upper/lower]case variants of 'Y'
+        and 'N'.
 
         Returns True if user selects 'Y'
         Returns False if user selects 'N'
+        
+        Example use case: to check whether or not the user wants to perform
+        another action in a loop or exit (to main menu / quit program, etc.).
 
         """
     
@@ -931,7 +940,7 @@ def __main__():
     exit_program: bool = False
     loop_main: bool = True
     key_description: List[str] = [
-        '\nThe Twosquare cipher uses two keys to encrypt and decrypt messages.',
+        'The Twosquare cipher uses two keys to encrypt and decrypt messages.',
         '\n>Each key can be a key word or phrase:',
         '* Up to twenty-five letters in length',
         '* Each letter may not be used more than once in a key',
@@ -956,7 +965,12 @@ def __main__():
     program_description: str = \
         "encrypt and decrypt messages with the two-square cipher"
     return_to_main_menu: bool = False
-    tables: Union[Table, bool] = [[ ], [ ]] # CHANGE THIS TO LIST FOR HINT???
+    table_description: List[str] = [
+        'The Twosquare cipher uses two 5 x 5 Playfair tables to',
+        'encrypt and decrypt messages for you. These two tables',
+        'are each generated using one of the keys you create.',
+        ]
+    tables: Union[Table, bool] = [[ ], [ ]] # SET HINT AS TABLE OR LIST???
 
     ##### PROGRAM START #####
 
@@ -1010,6 +1024,7 @@ def __main__():
                 # load from .txt file
 
             # confirm plaintext / file name
+            # confirm message before (en/de)coding - e.g. - [P]roceed or [R]edo 
 
             # perform encryption
 
@@ -1023,6 +1038,7 @@ def __main__():
 
             # ask user if they would like to encrypt another file using the
             # same keys
+
 
 
 ##            text_prefix: str = 'plain' if mode == 'encrypt' else 'cipher'
@@ -1064,8 +1080,6 @@ def __main__():
 ##
 ##                # give option to retry or quit
 
-
-
         elif selection == 2: # decrypt a ciphertext
             _coming_soon()
 
@@ -1096,6 +1110,8 @@ def __main__():
             loop_create_key: bool = True
 
             while loop_create_key:
+
+                print(' ')
 
                 # print description of key requirements
                 for line in key_description:
@@ -1164,15 +1180,20 @@ def __main__():
                 loop_create_key: bool = _get_response(action)
 
         elif selection == 4: # display current keys
-
-            # list all current keys or 'None' if none exist
+            
+            # list all current keys or 'None' if none exist            
             _display_keys()
 
         elif selection == 5: # display current tables
 
-            print('\nThe Twosquare cipher uses two 5 x 5 Playfair tables to')
-            print('encrypt and decrypt messages for you. These two tables')
-            print('are each generated using one of the keys you create.')
+            print(' ')
+            
+            for line in table_description:
+                print(line)               
+
+##            print('\nThe Twosquare cipher uses two 5 x 5 Playfair tables to')
+##            print('encrypt and decrypt messages for you. These two tables')
+##            print('are each generated using one of the keys you create.')
 
             if len(keys[0]) == 0:
                 print('\nYou have not created any keys yet so')
@@ -1267,8 +1288,89 @@ def __main__():
 
             # if not break and return to main menu
 
-        elif selection == 8: # about program / help
-            _coming_soon()
+        elif selection == 8: # about program / help / credits
+
+            # print description of program
+            print(__doc__, end = '')
+
+            # print description of cipher
+            for line in key_description:
+                print(line)
+
+            print(' ')
+                
+            for line in table_description:
+                print(line)
+
+            print(' ')
+          
+            more_info: List[str] = [
+                'When encrypting a plaintext message, please note the ',
+                'following: All white space, punctuation, special characters,',
+                'and digits will be removed from the plaintext during the ',
+                'encryption process. In basic terms, all non-alpha characters,',
+                'while allowed, will be ignored and thus removed from the ',
+                'message. No data is stored about what was removed and ',
+                'therefore, when the ciphertext is later decrypted, the white',
+                'space, digits, and punctuation will not be restored.',
+                ' ',
+                "Another thing to keep in mind is that 'I' and 'J' characters ",
+                'are combined into a single IJ letter by this cipher. While ',
+                'not ideal by any means, that is the way the cipher was ',
+                'designed. Hence, there can be some loss of information when ',
+                'the process is reversed and the ciphertext is decrypted back ',
+                'to a plaintext. In practicality, this makes little ',
+                'difference, as the decoded message is still typically easy to ',
+                'read and understand.',
+                ' ',
+                'If the number of characters in the plaintext is odd after ',
+                'removing all white space, special characters, and digits, a ',
+                "'Z' character is added to the end to make the number of ",
+                'characters even. This is necessary for the cipher to function',
+                'properly, as the text is broken into digraphs (two-letter ',
+                'combinations) during the encoding or decoding process. This',
+                'trailing character is, of course, easy enough to remove or ',
+                'simply to ignore when reading the decrypted message.',
+                ' ',
+                'For these reasons, among others, the Twosquare cipher is not',
+                'a tool with practical use for encrypting and decrypting files',
+                'and documents where a loss of data would be unacceptable, or ',
+                'where high levels of data security and integrity are ',
+                'essential. It is best used as a relatively simple means of ',
+                'sending English alphabetic messages and is perhaps valuable ',
+                'in real terms mainly for its historical significance and for ',
+                'educational purposes.',
+                ]
+
+            for line in more_info:
+                print(line)
+
+            print(' ')
+
+            # print link to more info
+            print('For more information on the Twosquare cipher, check out')
+            print('the Wikipedia article at: \n')
+            print('https://en.wikipedia.org/wiki/Two-square_cipher')
+            
+            print(' ')
+
+            # print credits (author, contributors)
+            print('>>> Program Credits <<<')
+            print('* Creator: Scott Milton')
+            print('* Contributors: [None]')
+            print('* License: GPL-3.0')
+            print('\nIf you would like to contribute to this project,')
+            print('please feel free to visit the GitHub repo at: \n')
+            print('https://github.com/scottmilton1/two-square-cipher')
+
+            print(' ')
+
+            # print special thanks
+            print('This implementation is based on the description of the ')
+            print('Twosquare cipher provided in the book Modern Cryptography:')
+            print('Applied Mathematics for Encryption and Information Security')
+            print('(First Version) by Chuck Eastom, McGraw Hill Publishing.')
+            print('\nSpecial thanks to Chuck for writing this great book.')
 
         elif selection == 9: # exit program
             
@@ -1345,15 +1447,7 @@ def __main__():
 ##        # add stack trace
 ##        # add error code and way to report it to me - email
 ##        raise
-
-    # TODOs - PLANNED FUNCTIONALITY TO IMPLEMENT:
-
-    # add main program menu with options for help and program exit
-
-    # prompt user to accept or redo keys after table display
-
-    # confirm message before (en/de)coding - e.g. - [P]roceed or [R]edo  
-    
+  
     # OPTIONAL FUNCTIONALITY TO POSSIBLY IMPLEMENT LATER:
 
     # command-line usage
