@@ -798,6 +798,8 @@ def __main__():
     def _coming_soon() -> NoReturn:
         """Prints a message indicating that a program's feature is coming soon.
 
+        Inner helper function for the main twosquare program.
+
         """
 
         print('\nThat feature is coming soon...\n')
@@ -806,6 +808,8 @@ def __main__():
 
     def _display_keys() -> NoReturn:
         """Displays the current keys, if any.
+
+        Inner helper function for the main twosquare program.
 
         """
     
@@ -822,6 +826,8 @@ def __main__():
 
     def _display_menu(menu_options: list) -> Union[int, bool]:
         """Print a formatted list of program options.
+
+        Inner helper function for the main twosquare program.
 
         Returns number of menu_options in list if successful
         or returns False if an exception occurs. Keep this in mind,
@@ -848,23 +854,21 @@ def __main__():
         else:
             return number # total number of items (also highest index)
 
-    def _display_title(title: str, byline: str, border_char = '-') -> NoReturn:
+    def _display_title(title: str, byline: str, border_character: str = '-') \
+            -> NoReturn:
         """Displays a pretty formatted title and byline.
 
         """
         
-        # display program title and brief description
-##        name: str = "twosquare"
-##        description: str = \
-##            "encrypt and decrypt messages with the two-square cipher"
         print('{:^80}'.format('>> ' + title.upper() + ' <<'))
         print('{:^80}'.format(byline.title()))
 
         # print bottom border that matches the length of the byline
-##        border_character: str = '-'
-        border: str = border_char * len(byline)
+        border: str = border_character * len(byline)
         print('{:^80}'.format(border))
         print()
+
+        return
 
     exit_program: bool = False
     loop_main: bool = True
@@ -886,7 +890,7 @@ def __main__():
     program_description: str = \
         "encrypt and decrypt messages with the two-square cipher"
     return_to_main_menu: bool = False
-    tables: Union[Table, bool] = [ ]
+    tables: Union[Table, bool] = [[ ], [ ]] # CHANGE THIS TO LIST FOR HINT???
 
     ##### PROGRAM START #####
 
@@ -915,12 +919,18 @@ def __main__():
         print(f'\n*** {menu_options[selection].upper()} ***')
 
         # handle the user's selection
+      
         if selection == 0: # display options menu
+            print(' ')
+            
             _display_title(program_name, program_description)
+            
             _display_menu(menu_options)
 
         elif selection == 1: # encrypt a plaintext
             _coming_soon()
+
+##            if keys[0]
 
             # if 0 or 1 keys exist, notify user
                 # (and ask if would like to create a key)
@@ -1040,8 +1050,8 @@ def __main__():
                     # confirm that key was created successfully
                     print('\nKey created successfully.')
 
-                # if both slots already contain keys, ask user which key they would
-                # like to replace or give option to abort and keep current keys
+                # if both slots already contain keys, ask user which key they
+                # want to replace or give option to abort and keep current keys
                 else:  
                     print('Which key would you like to replace: (1 or 2)?')
                     print('Enter 0 to abort and return to main menu.')
@@ -1113,9 +1123,7 @@ def __main__():
                     # if not, break and return to main menu          
                     if response.upper() == 'N':
                         loop_create_key = False
-
-##                        print('\nMain Menu:\n'.upper())
-                        
+                     
                         break
 
                     # if so, continue outer loop               
@@ -1131,9 +1139,40 @@ def __main__():
             _display_keys()
 
         elif selection == 5: # display current tables
-            _coming_soon()
+
+            print('\nThe Twosquare cipher uses two 5 x 5 Playfair tables to')
+            print('encrypt and decrypt messages for you. These two tables')
+            print('are each generated using one of the keys you create.')
+
+            if len(keys[0]) == 0:
+                print('\nYou have not created any keys yet so')
+                print('no tables can be generated using them.\n')
+
+            else:
+                print('\nHere are the tables generated with your keys:\n')
 
             # display all current tables or 'None' if none exist
+            for table_number in range(1,3):
+                print(f'TABLE {table_number}: ', end = '')
+            
+                # adjust for target list index for keys and tables
+                index: int = table_number - 1
+
+                # check to see if key exists, and if so...
+                if len(keys[index]) > 0:
+
+                    print(' ')
+
+                    # create a table with existing key and
+                    # replace the current table at that index, if any
+                    tables.pop(index)
+                    tables.insert(index, create_table(key))
+
+                    # display the table
+                    display_table(tables[index])
+                    
+                else:
+                    print('[None]')
 
         elif selection == 6: # validate a key
             _coming_soon()
@@ -1210,24 +1249,24 @@ def __main__():
 ##        tables: Union[Table, bool] = [ ]
 
         # prompt user for mode - encrypt or decrypt and validate
-        while not (mode := get_mode()):
-            print('Invalid selection. Please try again!')
+##        while not (mode := get_mode()):
+##            print('Invalid selection. Please try again!')
 
-        # get keys
-        for key in keys:
-            ordinal: str = key
-            index: int = keys.index(ordinal)
-
-            # prompt user for a key      
-            key: str = get_key(ordinal)
-
-            # validate key and get again if not valid
-            while not validate_key(key):
-                key: str = get_key()
-
-            # replace ordinal name in list with actual key value
-            keys.pop(index)
-            keys.insert(index, key)
+##        # get keys
+##        for key in keys:
+##            ordinal: str = key
+##            index: int = keys.index(ordinal)
+##
+##            # prompt user for a key      
+##            key: str = get_key(ordinal)
+##
+##            # validate key and get again if not valid
+##            while not validate_key(key):
+##                key: str = get_key()
+##
+##            # replace ordinal name in list with actual key value
+##            keys.pop(index)
+##            keys.insert(index, key)
 
         # create the tables with the keys
         for key in keys:
