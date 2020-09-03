@@ -788,10 +788,12 @@ def validate_table(table: Table) -> bool:
 def __main__():
     """This is the main program.
 
-    The functionality of this implementation can also be used as a module.
+    The other functions in the global scope of this implementation can also
+    be imported and used as a module.
+    
     """
 
-    # inner functions for main program only - not module
+    # inner functions for main program only - not for use as module
 
     def _coming_soon() -> NoReturn:
         """Prints a message indicating that a program's feature is coming soon.
@@ -819,7 +821,11 @@ def __main__():
         return
 
     def _display_menu(menu_options: list) -> Union[int, bool]:
-        """Print a list of program options.
+        """Print a formatted list of program options.
+
+        Returns number of menu_options in list if successful
+        or returns False if an exception occurs. Keep this in mind,
+        and handle potential Exceptions accordingly.
 
         """
 
@@ -842,18 +848,21 @@ def __main__():
         else:
             return number # total number of items (also highest index)
 
-    def _display_title():
+    def _display_title(title: str, byline: str, border_char = '-') -> NoReturn:
+        """Displays a pretty formatted title and byline.
+
+        """
         
         # display program title and brief description
-        name: str = "twosquare"
-        description: str = \
-            "encrypt and decrypt messages with the two-square cipher"
-        print('{:^80}'.format('>> ' + name.upper() + ' <<'))
-        print('{:^80}'.format(description.title()))
+##        name: str = "twosquare"
+##        description: str = \
+##            "encrypt and decrypt messages with the two-square cipher"
+        print('{:^80}'.format('>> ' + title.upper() + ' <<'))
+        print('{:^80}'.format(byline.title()))
 
-        # print bottom border that matches the length of the program description
-        border_character: str = '-'
-        border: str = border_character * len(description)
+        # print bottom border that matches the length of the byline
+##        border_character: str = '-'
+        border: str = border_char * len(byline)
         print('{:^80}'.format(border))
         print()
 
@@ -873,13 +882,16 @@ def __main__():
         'Exit program',
         ]
     ordinal: List[str] = ['first', 'second']
+    program_name: str = "twosquare"
+    program_description: str = \
+        "encrypt and decrypt messages with the two-square cipher"
     return_to_main_menu: bool = False
     tables: Union[Table, bool] = [ ]
 
     ##### PROGRAM START #####
 
     # display program title
-    _display_title()
+    _display_title(program_name, program_description)
 
     # display menu of program options
     number = _display_menu(menu_options)
@@ -904,7 +916,7 @@ def __main__():
 
         # handle the user's selection
         if selection == 0: # display options menu
-            _display_title()
+            _display_title(program_name, program_description)
             _display_menu(menu_options)
 
         elif selection == 1: # encrypt a plaintext
