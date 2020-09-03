@@ -492,40 +492,6 @@ def get_key(ordinal: str = '') -> str:
     else:
         return key
 
-##def get_mode() -> Union[str, bool]:
-##    """Gets program mode from user.
-##
-##    Prompts user for program mode (encryption or decryption).
-##
-##    Returns string value 'encrypt' or 'decrypt' based on user selection
-##    or returns False if user has made an invalid selection.
-##
-##    Dependencies:
-##        None
-##        
-##    """
-##    
-##    try:
-##
-##        mode: str = input("Select mode: 1 for encrypt or 2 for decrypt >> ")
-##
-##        if mode == '1':
-##            return 'encrypt'
-##
-##        elif mode == '2':
-##            return 'decrypt'
-##
-##    except Exception as err:
-##        from inspect import currentframe as cf
-##        print('Unexpected exception type raised during execution:')
-##        print(f'In function: {cf().f_code.co_name}') # function name
-##        print(type(err))
-##        print(err)
-##        raise
-##
-##    else:
-##        return False
-
 def validate_ciphertext(message: bool) -> bool:
     """Validates a ciphertext message for the Twosquare cipher.
 
@@ -1190,10 +1156,6 @@ def __main__():
             
             for line in table_description:
                 print(line)               
-
-##            print('\nThe Twosquare cipher uses two 5 x 5 Playfair tables to')
-##            print('encrypt and decrypt messages for you. These two tables')
-##            print('are each generated using one of the keys you create.')
 
             if len(keys[0]) == 0:
                 print('\nYou have not created any keys yet so')
