@@ -820,7 +820,7 @@ def __main__():
             if len(key) == 0:
                 key = '[None]'
             
-            print(f'\tKey {key_number}: {key}')
+            print(f'KEY {key_number}: {key}')
 
         return
 
@@ -894,6 +894,8 @@ def __main__():
 
     ##### PROGRAM START #####
 
+    ##### ADD TRY EXCEPT BLOCKS TO MAIN PROGRAM TO HANDLE ERRORS GRACEFULLY ###
+
     # display program title
     _display_title(program_name, program_description)
 
@@ -930,8 +932,6 @@ def __main__():
         elif selection == 1: # encrypt a plaintext
             _coming_soon()
 
-##            if keys[0]
-
             # if 0 or 1 keys exist, notify user
                 # (and ask if would like to create a key)
                 # (if so, take directly to create key operation)
@@ -957,6 +957,48 @@ def __main__():
 
             # ask user if they would like to encrypt another file using the
             # same keys
+
+
+##            text_prefix: str = 'plain' if mode == 'encrypt' else 'cipher'
+##
+##            prompt: str = f'Enter {text_prefix}text to {mode}: '
+##            
+##            # prompt the user for message to encrypt / decrypt
+##            message: str = input(prompt)
+##
+##            # validate message format and get again until valid
+##            while not (message_is_valid := validate_message(message)):
+##                print(' ')
+##                message: str = input(prompt)
+##
+##            # prepare to perform encoding or decoding of message  
+##            # choose function to call depending on selected mode
+##            func: Callable[[str, str, str], Union[str, bool]] = encrypt if \
+##                mode == 'encrypt' else decrypt
+##
+##            # plug appropriate function into callable partial with args
+##            action: Callable[[ ], str] = partial(func, message, keys[0], keys[1])
+##
+##            # call function and get [en/de]decoded processed_text
+##            processed_text: str = action()
+##            
+##            if processed_text:
+##                print('\nOperation succcessful.')
+##
+##                code_prefix: str = 'en' if mode == 'encrypt' else 'de'
+##
+##                # display (en/de)coded message
+##                print(f'Here is the {code_prefix}coded message:\n')
+##                print(processed_text)
+##
+##            else:
+##                print('\nUnable to perform operation.')
+##
+##                # include information about why operation failed
+##
+##                # give option to retry or quit
+
+
 
         elif selection == 2: # decrypt a ciphertext
             _coming_soon()
@@ -1243,88 +1285,54 @@ def __main__():
 
     ######
 
-    try:
-
-##        keys: Union[List[str], bool] = ['first', 'second']
-##        tables: Union[Table, bool] = [ ]
-
-        # prompt user for mode - encrypt or decrypt and validate
-##        while not (mode := get_mode()):
-##            print('Invalid selection. Please try again!')
-
-##        # get keys
-##        for key in keys:
-##            ordinal: str = key
-##            index: int = keys.index(ordinal)
+##    try:
+##       
+##        text_prefix: str = 'plain' if mode == 'encrypt' else 'cipher'
 ##
-##            # prompt user for a key      
-##            key: str = get_key(ordinal)
+##        prompt: str = f'Enter {text_prefix}text to {mode}: '
+##        
+##        # prompt the user for message to encrypt / decrypt
+##        message: str = input(prompt)
 ##
-##            # validate key and get again if not valid
-##            while not validate_key(key):
-##                key: str = get_key()
+##        # validate message format and get again until valid
+##        while not (message_is_valid := validate_message(message)):
+##            print(' ')
+##            message: str = input(prompt)
 ##
-##            # replace ordinal name in list with actual key value
-##            keys.pop(index)
-##            keys.insert(index, key)
-
-        # create the tables with the keys
-        for key in keys:
-            tables.append(create_table(key))       
-
-        # display the tables to the console for viewing
-        print('\nHere are the Playfair tables generated with your keys:')
-
-        for number, table in enumerate(tables, start = 1):
-            print(f'\nTABLE {number}:')        
-            display_table(table)
-           
-        text_prefix: str = 'plain' if mode == 'encrypt' else 'cipher'
-
-        prompt: str = f'Enter {text_prefix}text to {mode}: '
-        
-        # prompt the user for message to encrypt / decrypt
-        message: str = input(prompt)
-
-        # validate message format and get again until valid
-        while not (message_is_valid := validate_message(message)):
-            print(' ')
-            message: str = input(prompt)
-
-        # prepare to perform encoding or decoding of message  
-        # choose function to call depending on selected mode
-        func: Callable[[str, str, str], Union[str, bool]] = encrypt if \
-            mode == 'encrypt' else decrypt
-
-        # plug appropriate function into callable partial with args
-        action: Callable[[ ], str] = partial(func, message, keys[0], keys[1])
-
-        # call function and get [en/de]decoded processed_text
-        processed_text: str = action()
-        
-        if processed_text:
-            print('\nOperation succcessful.')
-
-            code_prefix: str = 'en' if mode == 'encrypt' else 'de'
-
-            # display (en/de)coded message
-            print(f'Here is the {code_prefix}coded message:\n')
-            print(processed_text)
-
-        else:
-            print('\nUnable to perform operation.')
-
-            # include information about why operation failed
-
-            # give option to retry or quit
-
-    except Exception as err:
-        print('Unexpected exception type raised during program execution:')
-        print(type(err))
-        print(err)
-        # add stack trace
-        # add error code and way to report it to me - email
-        raise
+##        # prepare to perform encoding or decoding of message  
+##        # choose function to call depending on selected mode
+##        func: Callable[[str, str, str], Union[str, bool]] = encrypt if \
+##            mode == 'encrypt' else decrypt
+##
+##        # plug appropriate function into callable partial with args
+##        action: Callable[[ ], str] = partial(func, message, keys[0], keys[1])
+##
+##        # call function and get [en/de]decoded processed_text
+##        processed_text: str = action()
+##        
+##        if processed_text:
+##            print('\nOperation succcessful.')
+##
+##            code_prefix: str = 'en' if mode == 'encrypt' else 'de'
+##
+##            # display (en/de)coded message
+##            print(f'Here is the {code_prefix}coded message:\n')
+##            print(processed_text)
+##
+##        else:
+##            print('\nUnable to perform operation.')
+##
+##            # include information about why operation failed
+##
+##            # give option to retry or quit
+##
+##    except Exception as err:
+##        print('Unexpected exception type raised during program execution:')
+##        print(type(err))
+##        print(err)
+##        # add stack trace
+##        # add error code and way to report it to me - email
+##        raise
 
     # TODOs - PLANNED FUNCTIONALITY TO IMPLEMENT:
 
