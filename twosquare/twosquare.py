@@ -870,10 +870,50 @@ def __main__():
 
         return
 
+    def _get_response(action: str) -> bool:
+        """Gets a yes or no response from the user.
+
+        Prompts the user for an input response.
+        
+        Use case example: whether or not the user wants to
+        perform the same action again.
+
+        Only accepts [upper/lower]case variants of 'Y' and 'N'
+
+        Returns True if user selects 'Y'
+        Returns False if user selects 'N'
+
+        """
+    
+        while True:
+            
+            try:
+                response = input(f'\n{action}? (Y/N)? >> ').upper()
+
+                if response == 'Y':
+                    return True
+                
+                elif response == 'N':
+                    return False
+
+                else:
+                    raise
+            
+            except:
+                print('Invalid selection. Please try again.')
+
     exit_program: bool = False
     loop_main: bool = True
+    key_description: List[str] = [
+        '\nThe Twosquare cipher uses two keys to encrypt and decrypt messages.',
+        '\n>Each key can be a key word or phrase:',
+        '* Up to twenty-five letters in length',
+        '* Each letter may not be used more than once in a key',
+        '* Digits are not allowed so all numbers must be spelled out',
+        '* No white space, punctuation, or special characters',
+        ]
     keys: Union[List[str], bool] = ['', '']
-    menu_options: list = [
+    menu_options: List[str] = [
         'Display options menu',
         'Encrypt a plaintext',
         'Decrypt a ciphertext',
@@ -1031,14 +1071,17 @@ def __main__():
 
             while loop_create_key:
             
-                print('\nThe Twosquare cipher uses two keys to encrypt and ' + \
-                      'decrypt messages.')
-                print('\n> Each key can be a key word or phrase:')
-                print('* Up to twenty-five letters in length')
-                print('* Each letter may not be used more than once in a key')
-                print('* Digits are not allowed so all numbers must be spelled out')
-                print('* No white space, punctuation, or special characters')
-                      
+##                print('\nThe Twosquare cipher uses two keys to encrypt and ' + \
+##                      'decrypt messages.')
+##                print('\n> Each key can be a key word or phrase:')
+##                print('* Up to twenty-five letters in length')
+##                print('* Each letter may not be used more than once in a key')
+##                print('* Digits are not allowed so all numbers must be spelled out')
+##                print('* No white space, punctuation, or special characters')
+
+                for line in key_description:
+                    print(line)
+  
                 # display current keys, if any
                 _display_keys()
 
@@ -1217,22 +1260,62 @@ def __main__():
                     print('[None]')
 
         elif selection == 6: # validate a key
-            _coming_soon()
 
-            # brief description of key requirements
-            # option for more detailed information
+            loop_validate_key: bool = True
 
-            # get key from user
+            while loop_validate_key:
 
-            # run validation check
+                # print description of key requirements
+                for line in key_description:
+                    print(line)
 
-            # report results
+                print('\nIf you want to check to see if a key meets ' + \
+                      'these requirements,')
+                print('you may enter it below. Empty <enter> to abort.\n')
 
-            # ask user if they would like to validate another key
+                # get key from user
+                test_key: str = input('Enter key >> ')
+                
+                # run validation check on key
+                if len(test_key) > 0:
 
-            # if so continue
+                    print(' ')
+                    
+                    key_is_valid: bool = validate_key(test_key)
 
-            # if not break and return to main menu      
+                    # report test results
+                    if key_is_valid:
+                        print('Key passes validation check.')
+
+                    else:
+                        print('Key fails validation check.')
+
+               # abort if user left field blank and hit enter
+                else:
+                    
+                    break
+               
+                # ask user if they would like to validate another key
+                validate_another: bool = _get_response('Validate another key')
+
+                # if not, break and return to main menu
+                if not validate_another:
+                    loop_validate_key = False
+                    break
+
+##                # if so, continue outer loop
+##
+##                # IS THIS NEEDED HERE???
+##                else:
+##                    break
+
+
+                
+                # if so continue
+                # PRINT DESCRIPTION AGAIN???
+
+                # if not break and return to main menu
+                # use break or loop_validate_key or return_to_main_menu
 
         elif selection == 7: # validate a message
             _coming_soon()
