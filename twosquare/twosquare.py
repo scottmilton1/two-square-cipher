@@ -1108,51 +1108,25 @@ def __main__():
                 
                 # if 0 or 1 key exists
                 # create new key in first empty slot 
-                if len(keys[0]) == 0:
-                    
-                    _create_key(keys, ordinal, 0)
+##                if len(keys[0]) == 0:
+##                    
+##                    _create_key(keys, ordinal, 0)
+##
+##                # create second empty key
+##                elif len(keys[1]) == 0:
+##
+##                    _create_key(keys, ordinal, 1)
+##
+##                target: int = 0 if len(keys[0]) == 0 elif \
+##                              1 if len(keys[1]) == 0 else \
+##                              2
 
-##                    # COMBINE THE CODE IN THESE SECTIONS OR MAKE AN INNER FUNCTION
-##                    # TO CALL -> DRY PRINCIPLE
-##                    index: int = 0
-##
-##                    # prompt user for a key      
-##                    key: str = get_key(ordinal[index])
-##
-##                    # validate key and get again if not valid
-##                    while not validate_key(key):
-##                        key: str = get_key()
-##
-##                    # replace existing key with new key value
-##                    keys.pop(index)
-##                    keys.insert(index, key)
-##
-##                    # confirm that key was created successfully
-##                    print('\nKey created successfully.')
+                # check for empty key slot to set as target for new key
+                target: int = 0 if len(keys[0]) <= len(keys[1]) else 1
 
-                # create second empty key
-                elif len(keys[1]) == 0:
+                if len(keys[target]) == 0:
 
-                    _create_key(keys, ordinal, 1)
-
-                    # REPEAT OF ABOVE
-
-                    
-##                    index: int = 1
-##
-##                    # prompt user for a key      
-##                    key: str = get_key(ordinal[index])
-##
-##                    # validate key and get again if not valid
-##                    while not validate_key(key):
-##                        key: str = get_key()
-##
-##                    # replace existing key with new key value
-##                    keys.pop(index)
-##                    keys.insert(index, key)
-##
-##                    # confirm that key was created successfully
-##                    print('\nKey created successfully.')
+                    _create_key(keys, ordinal, target)
 
                 # if both slots already contain keys, ask user which key they
                 # want to replace or give option to abort and keep current keys
@@ -1183,22 +1157,6 @@ def __main__():
                             
                             _create_key(keys, ordinal, index, 'replace')
                             
-##                            index: int = int(choice) - 1                        
-##
-##                            # prompt user for a key      
-##                            key: str = get_key(ordinal[index])
-##
-##                            # validate key and get again if not valid
-##                            while not validate_key(key):
-##                                key: str = get_key()
-##
-##                            # replace existing key with new key value
-##                            keys.pop(index)
-##                            keys.insert(index, key)
-##
-##                            # confirm that key was created successfully
-##                            print('\nKey replaced successfully.')
-
                             loop_replace_key = False
                            
                         else:
@@ -1211,11 +1169,6 @@ def __main__():
                     
                     break
                 
-                # if unable to generate key, report that instead
-                # REPLACE THIS WITH TRY CATCH SO ERRORS WILL REPORT HERE TOO???
-##                else:
-##                    print('\nUnable to create / replace key.')
-
                 # display updated keys
                 _display_keys()
 
