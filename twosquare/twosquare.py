@@ -37,8 +37,8 @@ custom_error_classes = [
     ]
 
 # import the custom error classes from resolved path
-for error_class_name in custom_error_classes:
-    exec(f'from {import_path} import {error_class_name}') 
+for error_class in custom_error_classes:
+    exec(f'from {import_path} import {error_class}') 
 
 # Use type aliases for type hints on complex types
 Row = List[str]
@@ -177,18 +177,17 @@ def display_table(table: Table) -> bool:
         if not validate_table(table):
             raise BadValueError('Table is invalid.')
         
-        print()
-
         # print each row of the table
         for row in table:
+
+            print(' ')
 
             # print each cell in current row
             for cell in row:
              
                 print('%6s' % cell, end='')
 
-            # white space to separate rows
-            print('\n\n')
+            print('\n')
 
     except BadValueError as err:
         print(err)
@@ -768,7 +767,7 @@ def __main__():
 
         """
 
-        print('\nThat feature is coming soon...\n')
+        print('\nThat feature is coming soon...')
 
         return True
 
@@ -907,7 +906,8 @@ def __main__():
     loop_main: bool = True
     key_description: List[str] = [
         'The Twosquare cipher uses two keys to encrypt and decrypt messages.',
-        '\n>Each key can be a key word or phrase:',
+        ' ',
+        '>Each key can be a key word or phrase:',
         '* Up to twenty-five letters in length',
         '* Each letter may not be used more than once in a key',
         '* Digits are not allowed so all numbers must be spelled out',
@@ -936,7 +936,7 @@ def __main__():
         'encrypt and decrypt messages for you. These two tables',
         'are each generated using one of the keys you create.',
         ]
-    tables: Union[Table, bool] = [[ ], [ ]] # SET HINT AS TABLE OR LIST???
+    tables: Union[Table, bool] = [[''], ['']] # SET HINT AS TABLE OR LIST???
 
     ##### PROGRAM START #####
 
@@ -1161,12 +1161,16 @@ def __main__():
                 print('\nYou have not created any keys yet so')
                 print('no tables can be generated using them.\n')
 
+                fill_type: str = ''
+
             else:
-                print('\nHere are the tables generated with your keys:\n')
+                print('\nHere are the tables generated with your keys:')
+                
+                fill_type: str = '\n'
 
             # display all current tables or 'None' if none exist
             for table_number in range(1,3):
-                print(f'TABLE {table_number}: ', end = '')
+                print(f'{fill_type}TABLE {table_number}: ', end = '')
             
                 # adjust for target list index for keys and tables
                 index: int = table_number - 1
@@ -1174,7 +1178,7 @@ def __main__():
                 # check to see if key exists, and if so...
                 if len(keys[index]) > 0:
 
-                    print(' ')
+                    print('\n')
 
                     # create a table with existing key and
                     # replace the current table at that index, if any
@@ -1351,7 +1355,9 @@ def __main__():
         else:
             print("Whoops! That's an invalid selection!")
 
+        # display Main Menu caption for new loop
         if not exit_program and selection > 0 :
+              
             print('\nMain Menu:\n'.upper())
 
     print('Thank you for using Twosquare.')
