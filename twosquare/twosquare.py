@@ -1261,9 +1261,7 @@ def __main__():
 
         elif selection == 6: # validate a key
 
-            loop_validate_key: bool = True
-
-            while loop_validate_key:
+            while True:
 
                 # print description of key requirements
                 for line in key_description:
@@ -1300,22 +1298,8 @@ def __main__():
 
                 # if not, break and return to main menu
                 if not validate_another:
-                    loop_validate_key = False
+
                     break
-
-##                # if so, continue outer loop
-##
-##                # IS THIS NEEDED HERE???
-##                else:
-##                    break
-
-
-                
-                # if so continue
-                # PRINT DESCRIPTION AGAIN???
-
-                # if not break and return to main menu
-                # use break or loop_validate_key or return_to_main_menu
 
         elif selection == 7: # validate a message
             _coming_soon()
