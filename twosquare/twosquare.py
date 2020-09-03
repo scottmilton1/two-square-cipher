@@ -1106,21 +1106,6 @@ def __main__():
 
                 print('')
                 
-                # if 0 or 1 key exists
-                # create new key in first empty slot 
-##                if len(keys[0]) == 0:
-##                    
-##                    _create_key(keys, ordinal, 0)
-##
-##                # create second empty key
-##                elif len(keys[1]) == 0:
-##
-##                    _create_key(keys, ordinal, 1)
-##
-##                target: int = 0 if len(keys[0]) == 0 elif \
-##                              1 if len(keys[1]) == 0 else \
-##                              2
-
                 # check for empty key slot to set as target for new key
                 target: int = 0 if len(keys[0]) <= len(keys[1]) else 1
 
@@ -1145,12 +1130,9 @@ def __main__():
                             # end current loop and return to main menu
                             loop_replace_key = False   # up one level
                             return_to_main_menu = True # up two levels
-                            # break
                         
                         elif choice == '1' or choice == '2':
                             print(f'\nOkay, replace key {choice}...')
-
-                            # REPEAT OF ABOVE
 
                             # adjust for target list index for keys and ordinal
                             index: int = int(choice) - 1
