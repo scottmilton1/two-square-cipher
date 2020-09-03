@@ -806,6 +806,32 @@ def __main__():
 
         return True
 
+    def _create_key(key_list: List[str], ordinal: List[str], \
+         index: int, action: str = 'create') -> NoReturn:
+
+        try:
+
+            # prompt user for a key      
+            key: str = get_key(ordinal[index])
+
+            # validate key and get again if not valid
+            while not validate_key(key):
+                key: str = get_key()
+
+            # replace existing key with new key value
+            key_list.pop(index)
+            key_list.insert(index, key)
+
+        except Exception as err:
+            print(f'An error occurred. Unable to {action} key.')
+            print(err)
+
+        else:
+            # confirm that key was created successfully
+            print(f'\nKey {action}d successfully.')
+
+        return
+
     def _display_keys() -> NoReturn:
         """Displays the current keys, if any.
 
@@ -1070,15 +1096,8 @@ def __main__():
             loop_create_key: bool = True
 
             while loop_create_key:
-            
-##                print('\nThe Twosquare cipher uses two keys to encrypt and ' + \
-##                      'decrypt messages.')
-##                print('\n> Each key can be a key word or phrase:')
-##                print('* Up to twenty-five letters in length')
-##                print('* Each letter may not be used more than once in a key')
-##                print('* Digits are not allowed so all numbers must be spelled out')
-##                print('* No white space, punctuation, or special characters')
 
+                # print description of key requirements
                 for line in key_description:
                     print(line)
   
@@ -1091,49 +1110,49 @@ def __main__():
                 # create new key in first empty slot 
                 if len(keys[0]) == 0:
                     
+                    _create_key(keys, ordinal, 0)
 
-
-                    # COMBINE THE CODE IN THESE SECTIONS OR MAKE AN INNER FUNCTION
-                    # TO CALL -> DRY PRINCIPLE
-                    index: int = 0
-
-                    # prompt user for a key      
-                    key: str = get_key(ordinal[index])
-
-                    # validate key and get again if not valid
-                    while not validate_key(key):
-                        key: str = get_key()
-
-                    # replace existing key with new key value
-                    keys.pop(index)
-                    keys.insert(index, key)
-
-                    # confirm that key was created successfully
-                    print('\nKey created successfully.')
+##                    # COMBINE THE CODE IN THESE SECTIONS OR MAKE AN INNER FUNCTION
+##                    # TO CALL -> DRY PRINCIPLE
+##                    index: int = 0
+##
+##                    # prompt user for a key      
+##                    key: str = get_key(ordinal[index])
+##
+##                    # validate key and get again if not valid
+##                    while not validate_key(key):
+##                        key: str = get_key()
+##
+##                    # replace existing key with new key value
+##                    keys.pop(index)
+##                    keys.insert(index, key)
+##
+##                    # confirm that key was created successfully
+##                    print('\nKey created successfully.')
 
                 # create second empty key
                 elif len(keys[1]) == 0:
 
-
+                    _create_key(keys, ordinal, 1)
 
                     # REPEAT OF ABOVE
 
                     
-                    index: int = 1
-
-                    # prompt user for a key      
-                    key: str = get_key(ordinal[index])
-
-                    # validate key and get again if not valid
-                    while not validate_key(key):
-                        key: str = get_key()
-
-                    # replace existing key with new key value
-                    keys.pop(index)
-                    keys.insert(index, key)
-
-                    # confirm that key was created successfully
-                    print('\nKey created successfully.')
+##                    index: int = 1
+##
+##                    # prompt user for a key      
+##                    key: str = get_key(ordinal[index])
+##
+##                    # validate key and get again if not valid
+##                    while not validate_key(key):
+##                        key: str = get_key()
+##
+##                    # replace existing key with new key value
+##                    keys.pop(index)
+##                    keys.insert(index, key)
+##
+##                    # confirm that key was created successfully
+##                    print('\nKey created successfully.')
 
                 # if both slots already contain keys, ask user which key they
                 # want to replace or give option to abort and keep current keys
@@ -1159,24 +1178,26 @@ def __main__():
 
                             # REPEAT OF ABOVE
 
+                            # adjust for target list index for keys and ordinal
+                            index: int = int(choice) - 1
                             
-
+                            _create_key(keys, ordinal, index, 'replace')
                             
-                            index: int = int(choice) - 1                        
-
-                            # prompt user for a key      
-                            key: str = get_key(ordinal[index])
-
-                            # validate key and get again if not valid
-                            while not validate_key(key):
-                                key: str = get_key()
-
-                            # replace existing key with new key value
-                            keys.pop(index)
-                            keys.insert(index, key)
-
-                            # confirm that key was created successfully
-                            print('\nKey replaced successfully.')
+##                            index: int = int(choice) - 1                        
+##
+##                            # prompt user for a key      
+##                            key: str = get_key(ordinal[index])
+##
+##                            # validate key and get again if not valid
+##                            while not validate_key(key):
+##                                key: str = get_key()
+##
+##                            # replace existing key with new key value
+##                            keys.pop(index)
+##                            keys.insert(index, key)
+##
+##                            # confirm that key was created successfully
+##                            print('\nKey replaced successfully.')
 
                             loop_replace_key = False
                            
@@ -1198,25 +1219,14 @@ def __main__():
                 # display updated keys
                 _display_keys()
 
+                # build prompt string with appropriate type of action
                 action: str = 'Create' if min(len(keys[0]), len(keys[1])) == 0 \
                     else 'Update'
-               
+
+                action += ' another key'
+
                 # ask user if they would like to create another key
-                while True:
-                    response = input(f'\n{action} another key? (Y/N)? >> ')
-
-                    # if not, break and return to main menu          
-                    if response.upper() == 'N':
-                        loop_create_key = False
-                     
-                        break
-
-                    # if so, continue outer loop               
-                    elif response.upper() == 'Y':
-                        break
-                    
-                    else:
-                        print('Invalid selection. Please try again.')
+                loop_create_key: bool = _get_response(action)
 
         elif selection == 4: # display current keys
 
@@ -1251,7 +1261,7 @@ def __main__():
                     # create a table with existing key and
                     # replace the current table at that index, if any
                     tables.pop(index)
-                    tables.insert(index, create_table(key))
+                    tables.insert(index, create_table(keys[index]))
 
                     # display the table
                     display_table(tables[index])
