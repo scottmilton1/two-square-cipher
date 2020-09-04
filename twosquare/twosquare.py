@@ -787,7 +787,7 @@ def __main__():
 
             # replace existing key with new key value
             key_list.pop(index)
-            key_list.insert(index, key)
+            key_list.insert(index, key.lower())
 
         except Exception as err:
             print(f'An error occurred. Unable to {action} key.')
@@ -1070,6 +1070,37 @@ def __main__():
                         print('Invalid method selection. Please try again.')
 
                 print(' ')
+
+                # option 1: manual entry: see below
+
+                # option 2: from file
+
+                    # SAME AS BELOW (SAVE FILE) EXCEPT FOR OPERATION ITSELF
+                    # SO MAKE HELPER FUNCTION AND USE IN BOTH PLACES
+
+                    # display info about file types
+                        # .txt files only
+                        # (files will not be overwritten - explain why)
+                    
+                    # get file name
+
+                    # confirm file name - [P]roceed [R]etype or [A]bort
+
+                        # if proceed
+                        
+                            # perform file operation
+
+                            # notify user of success / failure
+
+                            # exit to previous menu
+
+                        # if retype
+
+                            # return to get file name
+
+                        # if abort
+
+                            # exit to previous menu
                 
                 # prompt the user for message to encrypt / decrypt
                 prompt: str = f'Enter {text_prefix}text to {mode}: '
@@ -1116,6 +1147,10 @@ def __main__():
 
 
                     # 2 save message
+
+                    # SAME AS ABOVE (LOAD FILE) EXCEPT FOR OPERATION ITSELF
+                    # SO MAKE HELPER FUNCTION AND USE IN BOTH PLACES
+
                         # display info about file saving
                             # .txt files only
                             # files will not be overwritten - explain why
