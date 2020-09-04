@@ -975,79 +975,113 @@ def __main__():
             
             _display_menu(menu_options)
 
-        elif selection == 1: # encrypt a plaintext
-            _coming_soon()
+        elif selection == 1 or selection == 2: # [en/de]crypt a text
 
-            # if 0 or 1 keys exist, notify user
-                # (and ask if would like to create a key)
-                # (if so, take directly to create key operation)
+            code_prefix: str = 'en' if selection == 1 else 'de'
+            loop_encode: bool = True
+            mode: str = 'encrypt' if selection == 1 else 'decrypt'
+            text_prefix: str = 'plain' if selection == 1 else 'cipher'
 
-            # print a brief description of process and requirements
-            # give option for more detailed information
+            while loop_encode:
 
-            # get plaintext from user
-                # manual entry
-                # load from .txt file
+                print(' ')           
 
-            # confirm plaintext / file name
-            # confirm message before (en/de)coding - e.g. - [P]roceed or [R]edo 
+                # if not enough keys exist, notify user
+                if min(len(keys[0]), len(keys[1])) == 0:
+                    ending = 'your keys' if keys[0] == '' else 'another key'
 
-            # perform encryption
+                    print(f'{mode.title()}ion requires two keys. Please ' + \
+                          f'create {ending} first.')
 
-            # report operation success / failure
-                # give reason / feedback for failure
-
-            # if successful, ask user if they would like to display the
-            # encrypted message (or save it as a .txt file)
-                # if so, display / save message
-                # print success / failure message
-
-            # ask user if they would like to encrypt another file using the
-            # same keys
+                    # return to main menu
+                    break
 
 
 
-##            text_prefix: str = 'plain' if mode == 'encrypt' else 'cipher'
-##
-##            prompt: str = f'Enter {text_prefix}text to {mode}: '
-##            
-##            # prompt the user for message to encrypt / decrypt
-##            message: str = input(prompt)
-##
-##            # validate message format and get again until valid
-##            while not (message_is_valid := validate_message(message)):
-##                print(' ')
-##                message: str = input(prompt)
-##
-##            # prepare to perform encoding or decoding of message  
-##            # choose function to call depending on selected mode
-##            func: Callable[[str, str, str], Union[str, bool]] = encrypt if \
-##                mode == 'encrypt' else decrypt
-##
-##            # plug appropriate function into callable partial with args
-##            action: Callable[[ ], str] = partial(func, message, keys[0], keys[1])
-##
-##            # call function and get [en/de]decoded processed_text
-##            processed_text: str = action()
-##            
-##            if processed_text:
-##                print('\nOperation succcessful.')
-##
-##                code_prefix: str = 'en' if mode == 'encrypt' else 'de'
-##
-##                # display (en/de)coded message
-##                print(f'Here is the {code_prefix}coded message:\n')
-##                print(processed_text)
-##
-##            else:
-##                print('\nUnable to perform operation.')
-##
-##                # include information about why operation failed
-##
-##                # give option to retry or quit
 
-        elif selection == 2: # decrypt a ciphertext
-            _coming_soon()
+                # PROMPT USER FOR INPUT METHOD (MANUAL / FILE)
+                
+                
+                
+                # prompt the user for message to encrypt / decrypt
+                prompt: str = f'Enter {text_prefix}text to {mode}: '
+                message: str = input(prompt)
+
+                # validate message format and get again until valid
+                while not (message_is_valid := validate_message(message)):
+                    print(' ')
+                    message: str = input(prompt)
+
+                # prepare to perform encoding or decoding of message  
+                # choose function to call depending on selected mode
+                func: Callable[[str, str, str], Union[str, bool]] = encrypt if \
+                    mode == 'encrypt' else decrypt
+
+                # plug appropriate function into callable partial with args
+                action: Callable[[ ], str] = partial(func, message, keys[0], keys[1])
+
+                # call function and get [en/de]decoded processed_text
+                processed_text: str = action()
+
+
+
+                # ASK USER IF THEY WANT TO VIEW THE ENCODED TEXT
+                # OR SAVE IT INSTEAD
+                # OR EXIT (WITHOUT VIEWING OR SAVING)
+
+                
+
+                if processed_text:
+                    print('\nOperation succcessful.')
+
+                    # display (en/de)coded message
+                    print(f'\nHere is the {code_prefix}coded message:\n')
+                    print(processed_text)
+
+                else:
+                    print('\nUnable to complete operation.')
+
+                    # include information about why operation failed
+
+
+
+                    # HANDLE EXCEPTIONS FOR MORE INFO ON FAILURES
+
+
+            
+                # build prompt string with appropriate type of action
+                prompt: str = f'{mode.title()} another {text_prefix}text'
+
+                # ask user if they would like to continue or exit
+                loop_encode: bool = _get_response(prompt)
+
+                ##########
+
+                # print a brief description of process and requirements
+                # give option for more detailed information
+
+                # get plaintext from user
+                    # manual entry
+                    # load from .txt file
+
+                # confirm plaintext / file name
+                # confirm message before (en/de)coding - e.g. - [P]roceed or [R]edo 
+
+                # perform encryption
+
+                # report operation success / failure
+                    # give reason / feedback for failure
+
+                # if successful, ask user if they would like to display the
+                # encrypted message (or save it as a .txt file)
+                    # if so, display / save message
+                    # print success / failure message
+
+                # ask user if they would like to encrypt another file using the
+                # same keys
+
+##        elif selection == 2: # decrypt a ciphertext
+##            _coming_soon()
 
             # print a brief description of process and requirements
             # give option for more detailed information
