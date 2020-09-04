@@ -382,6 +382,7 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
 
     except FooBarError as err:
         print(err)
+        print(err.subtext)
         raise
 
     except Exception as err:
@@ -733,6 +734,7 @@ def validate_table(table: Table) -> bool:
                 
     except BadValueError as err:
         print(err)
+        print(err.subtext)
         return False
 
     except TypeMismatchError as err:

@@ -20,13 +20,11 @@ class BadValueError(ValueError):
             self.message =  \
                 'Raised when the value is flagrantly and absolutely invalid.'
             
-        self.subtext = '\nYou have attempted to exceed the limits ' + \
-                        'of reality imposed by the Architect. ' + \
+        self.subtext = 'You have attempted to exceed the limits ' + \
+                        'of reality imposed by the Architect.\n' + \
                         'Neo could bend the Matrix ' + \
-                        'to his will, but can you?'
-        
-        self.message += self.subtext
-        
+                        'to his will, but can you?'     
+     
         super().__init__(self.message)
 
     def __repr__(self):
@@ -48,8 +46,6 @@ class FooBarError(Exception):
                        'This should never happen, but if it does, ' + \
                        'it is an unforeseen error. ' + \
                        "It's okay to panic!"
-        
-        self.message += self.subtext
         
         super().__init__(self.message)
 
