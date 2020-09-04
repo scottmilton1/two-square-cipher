@@ -1043,11 +1043,6 @@ def __main__():
                     # return to main menu
                     break
 
-
-
-                # KEEP THIS MESSAGE HERE OR REMOVE???
-
-
                 # print a brief description of process and requirements
                 # give option for more detailed information
                 for index in range(3):
@@ -1067,7 +1062,7 @@ def __main__():
                         break                        
 
                     elif method == '2':
-                        _coming_soon()
+                        _coming_soon() # implement after finish save feature
 
                         print(' ')
 
@@ -1093,27 +1088,74 @@ def __main__():
                 # plug appropriate function into callable partial with args
                 action: Callable[[ ], str] = partial(func, message, keys[0], keys[1])
 
-                # call function and get [en/de]decoded processed_text
-                processed_text: str = action()
+                # call function to perform [en/de]cryption and get processed_text
+                processed_text: str = action()            
 
-
-
-                # ASK USER IF THEY WANT TO VIEW THE ENCODED TEXT
-                # OR SAVE IT INSTEAD
-                # OR EXIT (WITHOUT VIEWING OR SAVING)
-
-                
-
+                # report operation success / failure
                 if processed_text:
                     print('\nOperation succcessful.')
 
-                    # display (en/de)coded message
+                # if successful, ask user if they would like to display the
+                # encrypted message (or save it as a .txt file)
+                    # if so, display / save message
+                    # print success / failure message
+
+
+
+                    # options:
+                    # 1 view message
+                    # 2 save message
+                    # 3 [en/de]crypt another message
+                    # exit to main menu
+
+                    # get selection
+
+                    # 1: view message - display (en/de)coded message
                     print(f'\nHere is the {code_prefix}coded message:\n')
                     print(processed_text)
+
+
+                    # 2 save message
+                        # display info about file saving
+                            # .txt files only
+                            # files will not be overwritten - explain why
+                        
+                        # get file name
+
+                        # confirm file name - [P]roceed [R]etype or [A]bort
+
+                            # if proceed
+                            
+                                # perform file operation
+
+                                # notify user of success / failure
+
+                                # exit to previous menu
+
+                            # if retype
+
+                                # return to get file name
+
+                            # if abort
+
+                                # exit to previous menu
+
+                    # 3 another message
+                        # continue??? or use exit loop method
+
+                    # 4 exit to main menu
+                        # break??? or use exit loop methods
+
+                        
+                        
+
+
+                # REVERSE THE ORDER OF THESE???
 
                 else:
                     print('\nUnable to complete operation.')
 
+                    # give reason / feedback for failure
                     # include information about why operation failed
 
 
@@ -1127,53 +1169,6 @@ def __main__():
 
                 # ask user if they would like to continue or exit
                 loop_encode: bool = _get_response(prompt)
-
-                ##########
-
-                # get plaintext from user
-                    # manual entry
-                    # load from .txt file
-
-                # confirm plaintext / file name
-                # confirm message before (en/de)coding - e.g. - [P]roceed or [R]edo 
-
-                # perform encryption
-
-                # report operation success / failure
-                    # give reason / feedback for failure
-
-                # if successful, ask user if they would like to display the
-                # encrypted message (or save it as a .txt file)
-                    # if so, display / save message
-                    # print success / failure message
-
-                # ask user if they would like to encrypt another file using the
-                # same keys
-
-##        elif selection == 2: # decrypt a ciphertext
-##            _coming_soon()
-
-            # print a brief description of process and requirements
-            # give option for more detailed information
-
-            # get ciphertext from user
-                # manual entry
-                # load from .txt file
-
-            # confirm ciphertext / file name
-
-            # perform decryption
-
-            # report operation success / failure
-                # give reason / feedback for failure
-
-            # if successful, ask user if they would like to display the
-            # decrypted message (or save it as a .txt file)
-                # if so, display / save message
-                # print success / failure message
-
-            # ask user if they would like to decrypt another file using the
-            # same keys
 
         elif selection == 3: # create a new key
 
