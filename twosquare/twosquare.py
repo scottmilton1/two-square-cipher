@@ -926,6 +926,51 @@ def __main__():
         'About this program',
         'Exit program',
         ]
+    more_info: List[List[str]] = [
+        [
+        'When encrypting a plaintext message, please note the ',
+        'following: All white space, punctuation, special characters,',
+        'and digits will be removed from the plaintext during the ',
+        'encryption process. In basic terms, all non-alpha characters,',
+        'while allowed, will be ignored and thus removed from the ',
+        'message. No data is stored about what was removed and ',
+        'therefore, when the ciphertext is later decrypted, the white',
+        'space, digits, and punctuation will not be restored.',
+        ' ',
+        ],
+        [
+        "Another thing to keep in mind is that 'I' and 'J' characters ",
+        'are combined into a single IJ letter by this cipher. While ',
+        'not ideal by any means, that is the way the cipher was ',
+        'designed. Hence, there can be some loss of information when ',
+        'the process is reversed and the ciphertext is decrypted back ',
+        'to a plaintext. In practicality, this makes little ',
+        'difference, as the decoded message is still typically easy to ',
+        'read and understand.',
+        ' ',
+        ],
+        [
+        'If the number of characters in the plaintext is odd after ',
+        'removing all white space, special characters, and digits, a ',
+        "'Z' character is added to the end to make the number of ",
+        'characters even. This is necessary for the cipher to function',
+        'properly, as the text is broken into digraphs (two-letter ',
+        'combinations) during the encoding or decoding process. This',
+        'trailing character is, of course, easy enough to remove or ',
+        'simply to ignore when reading the decrypted message.',
+        ' ',
+        ],
+        [
+        'For these reasons, among others, the Twosquare cipher is not',
+        'a tool with practical use for encrypting and decrypting files',
+        'and documents where a loss of data would be unacceptable, or ',
+        'where high levels of data security and integrity are ',
+        'essential. It is best used as a relatively simple means of ',
+        'sending English alphabetic messages and is perhaps valuable ',
+        'in real terms mainly for its historical significance and for ',
+        'educational purposes.',
+        ],
+        ]
     ordinal: List[str] = ['first', 'second']
     program_name: str = "twosquare"
     program_description: str = \
@@ -984,7 +1029,7 @@ def __main__():
 
             while loop_encode:
 
-                print(' ')           
+                print(' ')
 
                 # if not enough keys exist, notify user
                 if min(len(keys[0]), len(keys[1])) == 0:
@@ -998,10 +1043,36 @@ def __main__():
 
 
 
+                # KEEP THIS MESSAGE HERE OR REMOVE???
 
-                # PROMPT USER FOR INPUT METHOD (MANUAL / FILE)
-                
-                
+
+                # print a brief description of process and requirements
+                # give option for more detailed information
+                for index in range(3):
+                    for line in more_info[index]:
+                        print(line)
+
+                # prompt user for input method (manual / file)
+                print(f'Select {text_prefix}text source:\n')
+                print('1: Manual entry')
+                print('2: From file\n')
+
+                while True:
+                    
+                    method: str = input('Enter selection: ')
+
+                    if method == '1':
+                        break                        
+
+                    elif method == '2':
+                        _coming_soon()
+
+                        print(' ')
+
+                    else:
+                        print('Invalid method selection. Please try again.')
+
+                print(' ')
                 
                 # prompt the user for message to encrypt / decrypt
                 prompt: str = f'Enter {text_prefix}text to {mode}: '
@@ -1056,9 +1127,6 @@ def __main__():
                 loop_encode: bool = _get_response(prompt)
 
                 ##########
-
-                # print a brief description of process and requirements
-                # give option for more detailed information
 
                 # get plaintext from user
                     # manual entry
@@ -1303,47 +1371,11 @@ def __main__():
                 print(line)
 
             print(' ')
-          
-            more_info: List[str] = [
-                'When encrypting a plaintext message, please note the ',
-                'following: All white space, punctuation, special characters,',
-                'and digits will be removed from the plaintext during the ',
-                'encryption process. In basic terms, all non-alpha characters,',
-                'while allowed, will be ignored and thus removed from the ',
-                'message. No data is stored about what was removed and ',
-                'therefore, when the ciphertext is later decrypted, the white',
-                'space, digits, and punctuation will not be restored.',
-                ' ',
-                "Another thing to keep in mind is that 'I' and 'J' characters ",
-                'are combined into a single IJ letter by this cipher. While ',
-                'not ideal by any means, that is the way the cipher was ',
-                'designed. Hence, there can be some loss of information when ',
-                'the process is reversed and the ciphertext is decrypted back ',
-                'to a plaintext. In practicality, this makes little ',
-                'difference, as the decoded message is still typically easy to ',
-                'read and understand.',
-                ' ',
-                'If the number of characters in the plaintext is odd after ',
-                'removing all white space, special characters, and digits, a ',
-                "'Z' character is added to the end to make the number of ",
-                'characters even. This is necessary for the cipher to function',
-                'properly, as the text is broken into digraphs (two-letter ',
-                'combinations) during the encoding or decoding process. This',
-                'trailing character is, of course, easy enough to remove or ',
-                'simply to ignore when reading the decrypted message.',
-                ' ',
-                'For these reasons, among others, the Twosquare cipher is not',
-                'a tool with practical use for encrypting and decrypting files',
-                'and documents where a loss of data would be unacceptable, or ',
-                'where high levels of data security and integrity are ',
-                'essential. It is best used as a relatively simple means of ',
-                'sending English alphabetic messages and is perhaps valuable ',
-                'in real terms mainly for its historical significance and for ',
-                'educational purposes.',
-                ]
 
-            for line in more_info:
-                print(line)
+            # print all lines in each part of more_info
+            for index in range(4):
+                for line in more_info[index]:
+                    print(line)
 
             print(' ')
 
@@ -1394,62 +1426,11 @@ def __main__():
               
             print('\nMain Menu:\n'.upper())
 
-    print('Thank you for using Twosquare.')
+    print('\nThank you for using Twosquare.\n')
 
     # exit program
     return
 
-    ######
-
-##    try:
-##       
-##        text_prefix: str = 'plain' if mode == 'encrypt' else 'cipher'
-##
-##        prompt: str = f'Enter {text_prefix}text to {mode}: '
-##        
-##        # prompt the user for message to encrypt / decrypt
-##        message: str = input(prompt)
-##
-##        # validate message format and get again until valid
-##        while not (message_is_valid := validate_message(message)):
-##            print(' ')
-##            message: str = input(prompt)
-##
-##        # prepare to perform encoding or decoding of message  
-##        # choose function to call depending on selected mode
-##        func: Callable[[str, str, str], Union[str, bool]] = encrypt if \
-##            mode == 'encrypt' else decrypt
-##
-##        # plug appropriate function into callable partial with args
-##        action: Callable[[ ], str] = partial(func, message, keys[0], keys[1])
-##
-##        # call function and get [en/de]decoded processed_text
-##        processed_text: str = action()
-##        
-##        if processed_text:
-##            print('\nOperation succcessful.')
-##
-##            code_prefix: str = 'en' if mode == 'encrypt' else 'de'
-##
-##            # display (en/de)coded message
-##            print(f'Here is the {code_prefix}coded message:\n')
-##            print(processed_text)
-##
-##        else:
-##            print('\nUnable to perform operation.')
-##
-##            # include information about why operation failed
-##
-##            # give option to retry or quit
-##
-##    except Exception as err:
-##        print('Unexpected exception type raised during program execution:')
-##        print(type(err))
-##        print(err)
-##        # add stack trace
-##        # add error code and way to report it to me - email
-##        raise
-  
     # OPTIONAL FUNCTIONALITY TO POSSIBLY IMPLEMENT LATER:
 
     # command-line usage
