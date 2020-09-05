@@ -907,6 +907,15 @@ def __main__():
     def _load_file(filename: str = '') -> Union[str, bool]:
         """Loads a message from a .txt file.
 
+        Loads a plaintext or ciphertext message. Only .txt files are supported.
+
+        Parameter for filename, if included, must be a string representing a  
+        valid filename for a file in the current directory, and must include
+        the .txt file type extension in the name. If a filename is not
+        included, this function will prompt the user for a filename.
+
+        No validation is made for the contents of the file loaded. That is left
+        to the validate_message function.
 
         Returns the message if successful.
         Returns false if an error occurs.
