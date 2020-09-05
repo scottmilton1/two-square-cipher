@@ -929,25 +929,25 @@ def __main__():
                 raise BadValueError('File must be a .txt file.')
 
             if filename == '':
-                # prompt user for filename
-                pass                
-            
+                
+                # prompt user for filename  
+                print('Enter filename below and include the .txt extension.' + \
+                      '\nThe file must be in the current directory.\n' + \
+                      'Leave the field blank and ' + \
+                      'hit <enter> to abort.\n')
+                
+                while not (file := input('Enter filename >> ')):
+
+                    # if user leaves blank return abort code
+                    if file == '':
+                        return '`->!ABORT!<-`'
+                        
+                    print('Invalid filename. Please try again.')
+
             print('loading file...')
 
             return 'This is a test message.'
 
-##            # get file name -
-##            # LEAVE BLANK TO ABORT???
-##            print('Enter .txt file name below. The file must be' + \
-##                  ' in the current directory.\nLeave blank and ' + \
-##                  'hit <enter> to abort.\n')
-##            
-##            while not file := input('Enter filename >> '):
-##                if file = '':
-##                    break # to loop 
-##                    
-##                print('Invalid filename. Please try again.')
-##
 ##            # confirm file name - [P]roceed [R]etype or [A]bort
 ##            print(f'\nConfirm filename: {file}')
 ##
@@ -1005,6 +1005,7 @@ def __main__():
 ##
 ##            break
 ##
+
 
 
         # 2 save message
@@ -1223,9 +1224,12 @@ def __main__():
                     # prompt user for input method (manual / file)
                     print(f'Select {text_prefix}text source:\n')
                     print('1: Manual entry')
-                    print('2: From file\n')
+                    print('2: From file')
+                    print('3: Main menu\n')
 
-                    while True:
+                    loop_get_message: bool = True
+                    
+                    while loop_get_message:
                         
                         method: str = input('Enter selection: ')
 
@@ -1258,7 +1262,14 @@ def __main__():
                             print(' ')
 
                             if not (message := _load_file()):
+                                
                                 break # raise error here or return to menu???
+
+                            if message == '`->!ABORT!<-`': # abort code
+
+                                # return to [en/de]crypt menu
+                                loop_get_message = False
+                                break
 
                             if not (message_is_valid := \
                                     validate_message(message)):
@@ -1271,8 +1282,25 @@ def __main__():
                             # if message loaded and validated, break and proceed
                             break
 
+
+                        elif method == '3': # return to main menu
+                            
+                            return_to_main_menu = True
+                            break
+
                         else:
                             print('Invalid method selection. Please try again.')
+
+                    if return_to_main_menu:
+
+                        # loop_encode = False                        
+                        return_to_main_menu = False
+                        break
+
+                    if message == '`->!ABORT!<-`': # abort code
+
+                            # return to [en/de]crypt menu
+                            continue
               
                     # prepare to perform encoding or decoding of message  
                     # choose function to call depending on selected mode
