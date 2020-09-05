@@ -904,7 +904,167 @@ def __main__():
             except:
                 print('Invalid selection. Please try again.')
 
+    def _load_file(filename: str = '') -> Union[str, bool]:
+        """Loads a message from a .txt file.
+
+
+        Returns the message if successful.
+        Returns false if an error occurs.
+
+        """
+        try:
+            if type(filename) is not str:
+                raise TypeMismatchError('Filename must be a string.')
+
+            if len(filename) > 0 and filename.endswith('.txt') is False:
+                raise BadValueError('File must be a .txt file.')
+
+            if filename == '':
+                # prompt user for filename
+                pass                
+            
+            print('loading file...')
+
+            return 'This is a test message.'
+
+##            # get file name -
+##            # LEAVE BLANK TO ABORT???
+##            print('Enter .txt file name below. The file must be' + \
+##                  ' in the current directory.\nLeave blank and ' + \
+##                  'hit <enter> to abort.\n')
+##            
+##            while not file := input('Enter filename >> '):
+##                if file = '':
+##                    break # to loop 
+##                    
+##                print('Invalid filename. Please try again.')
+##
+##            # confirm file name - [P]roceed [R]etype or [A]bort
+##            print(f'\nConfirm filename: {file}')
+##
+##            print('1: Proceed')
+##            print('2: Redo')
+##            print('3: Abort')
+##
+##            choice: str = input('\nEnter selection >> ')
+##
+##                if choice = '1': # proceed
+##
+##                    print('\nproceeding...')
+##
+##                    # perform file operation
+##
+##                        # if file not found, notify user
+##                        # OR
+##                        # if file exists, notify user
+##                         # 1: Redo
+##                         # 2: Abort
+##                         
+##
+##                    # notify user of success / failure
+##                        # if failure prompt user
+##                        # ask if would like to
+##                        # repeat same
+##                        # update same
+##                        # try another
+##                        # exit
+##
+##                    message: str =_load_file
+##
+##                    # exit to previous menu
+##                    break
+##
+##                elif choice == '2': # redo
+##                    
+##                    print('\nredoing...')
+##
+##                    # go up one level to get file name again
+##
+##                    continue
+##                    
+##                elif choice == '3': # abort
+##
+##                    print('\naborting...')
+##                    
+##                    # exit to previous menu (loop encode)
+##                    break
+##
+##                else:
+##                    print('Invalid response. Please try again.')                                    
+##
+##            print(' ')
+##
+##            break
+##
+
+
+        # 2 save message
+
+        # SAME AS ABOVE (LOAD FILE) EXCEPT FOR OPERATION ITSELF
+        # SO MAKE HELPER FUNCTION AND USE IN BOTH PLACES
+
+            # display info about file saving
+                # .txt files only
+                # files will not be overwritten - explain why
+            
+            # get file name
+
+            # confirm file name - [P]roceed [R]etype or [A]bort
+
+                # if proceed
+                
+                    # perform file operation
+
+                    # notify user of success / failure
+
+                    # exit to previous menu
+
+                # if retype
+
+                    # return to get file name
+
+                # if abort
+
+                    # exit to previous menu
+
+        # 3 another message
+            # continue??? or use exit loop method
+
+        # 4 exit to main menu
+            # break??? or use exit loop methods
+
+        except BadValueError as err:
+            print(err)
+            return False
+
+        except TypeMismatchError as err:
+            print(err)
+            return False
+
+        except Exception as err:
+            print('Unable to load from file. ' +
+                  'An unexpected error has occured.')
+            print(err)
+            print(type(err))
+            
+            return False
+
     exit_program: bool = False
+    info_file_types: List[str] = [
+        'This implementation enables loading and saving messages as .txt ',
+        'files. This is the only file type supported and files will not be',
+        'encrypted in place, that is to say, they will not be overwritten.',
+        'The reason for these restrictions is that the Twosquare cipher is',
+        'not suitable for encrypting all types of data or file, but rather ',
+        'only works with alphabetic ASCII character sets. The encoding ',
+        'process omits white space, digits, punctuation, special characters,',
+        'and other valuable data and thus is not suitable for general usage.',
+        'The file capabilities are provided merely to facilitate the storage',
+        'and transfer of messages at the personal discretion of the user.',
+        'Professional use is discouraged. No guarantee is made that the data',
+        'will be secure, and no warranty is made against the possibility of ',
+        'data loss or corruption. Use at your own risk.',
+        ]
     loop_main: bool = True
     key_description: List[str] = [
         'The Twosquare cipher uses two keys to encrypt and decrypt messages.',
@@ -1033,171 +1193,130 @@ def __main__():
 
                 print(' ')
 
-                # if not enough keys exist, notify user
-                if min(len(keys[0]), len(keys[1])) == 0:
-                    ending = 'your keys' if keys[0] == '' else 'another key'
+                try:
 
-                    print(f'{mode.title()}ion requires two keys. Please ' + \
-                          f'create {ending} first.')
+                    # if not enough keys exist, notify user
+                    if min(len(keys[0]), len(keys[1])) == 0:
+                        ending = 'your keys' if keys[0] == '' else 'another key'
 
-                    # return to main menu
-                    break
+                        print(f'{mode.title()}ion requires two keys. Please ' + \
+                              f'create {ending} first.')
 
-                # print a brief description of process and requirements
-                # give option for more detailed information
-                for index in range(3):
-                    for line in more_info[index]:
-                        print(line)
+                        # return to main menu
+                        break
 
-                # prompt user for input method (manual / file)
-                print(f'Select {text_prefix}text source:\n')
-                print('1: Manual entry')
-                print('2: From file\n')
+                    # print a brief description of process and requirements
+                    # give option for more detailed information
+                    for index in range(3):
+                        for line in more_info[index]:
+                            print(line)
 
-                while True:
-                    
-                    method: str = input('Enter selection: ')
+                    # prompt user for input method (manual / file)
+                    print(f'Select {text_prefix}text source:\n')
+                    print('1: Manual entry')
+                    print('2: From file\n')
 
-                    if method == '1':
-                        break                        
+                    while True:
+                        
+                        method: str = input('Enter selection: ')
 
-                    elif method == '2':
-                        _coming_soon() # implement after finish save feature
+                        if method == '1': # manual entry
 
-                        print(' ')
+                            print(' ')
+                            
+                            # prompt the user for message to encrypt / decrypt
+                            prompt: str = f'Enter {text_prefix}text to {mode}: '
+                            message: str = input(prompt)
+
+                            # validate message format and get again until valid
+                            while not (message_is_valid := \
+                                       validate_message(message)):
+                                
+                                print(' ')
+                                
+                                message: str = input(prompt)
+                            
+                            break                        
+
+                        elif method == '2': # from file
+
+                            print(' ')
+
+                            # display info about file types                      
+                            for line in info_file_types:
+                                print(line)
+
+                            print(' ')
+
+                            if not (message := _load_file()):
+                                break # raise error here or return to menu???
+
+                            if not (message_is_valid := \
+                                    validate_message(message)):
+                                
+                                print(' ')
+                                
+                                raise BadValueError('Loaded message fails ' + \
+                                                    'validation check.')
+                            
+                            # if message loaded and validated, break and proceed
+                            break
+
+                        else:
+                            print('Invalid method selection. Please try again.')
+              
+                    # prepare to perform encoding or decoding of message  
+                    # choose function to call depending on selected mode
+                    func: Callable[[str, str, str], Union[str, bool]] = encrypt if \
+                        mode == 'encrypt' else decrypt
+
+                    # plug appropriate function into callable partial with args
+                    action: Callable[[ ], str] = partial(func, message, keys[0], keys[1])
+
+                    # call function to perform [en/de]cryption and get processed_text
+                    processed_text: str = action()            
+
+                    # report operation success / failure
+                    if processed_text:
+                        print('\nOperation succcessful.')
+
+                    # if successful, ask user if they would like to display the
+                    # encrypted message (or save it as a .txt file)
+                        # if so, display / save message
+                        # print success / failure message
+
+                        # options:
+                        # 1 view message
+                        # 2 save message
+                        # 3 [en/de]crypt another message
+                        # exit to main menu
+
+                        # get selection
+
+                        # 1: view message - display (en/de)coded message
+                        print(f'\nHere is the {code_prefix}coded message:\n')
+                        print(processed_text)
 
                     else:
-                        print('Invalid method selection. Please try again.')
+                        raise FooBarError(f'\n{code_prefix}coding ' + \
+                                          'unsuccessful.')
 
-                print(' ')
-
-                # option 1: manual entry: see below
-
-                # option 2: from file
-
-                    # SAME AS BELOW (SAVE FILE) EXCEPT FOR OPERATION ITSELF
-                    # SO MAKE HELPER FUNCTION AND USE IN BOTH PLACES
-
-                    # display info about file types
-                        # .txt files only
-                        # (files will not be overwritten - explain why)
-                    
-                    # get file name
-
-                    # confirm file name - [P]roceed [R]etype or [A]bort
-
-                        # if proceed
-                        
-                            # perform file operation
-
-                            # notify user of success / failure
-
-                            # exit to previous menu
-
-                        # if retype
-
-                            # return to get file name
-
-                        # if abort
-
-                            # exit to previous menu
-                
-                # prompt the user for message to encrypt / decrypt
-                prompt: str = f'Enter {text_prefix}text to {mode}: '
-                message: str = input(prompt)
-
-                # validate message format and get again until valid
-                while not (message_is_valid := validate_message(message)):
-                    print(' ')
-                    message: str = input(prompt)
-
-                # prepare to perform encoding or decoding of message  
-                # choose function to call depending on selected mode
-                func: Callable[[str, str, str], Union[str, bool]] = encrypt if \
-                    mode == 'encrypt' else decrypt
-
-                # plug appropriate function into callable partial with args
-                action: Callable[[ ], str] = partial(func, message, keys[0], keys[1])
-
-                # call function to perform [en/de]cryption and get processed_text
-                processed_text: str = action()            
-
-                # report operation success / failure
-                if processed_text:
-                    print('\nOperation succcessful.')
-
-                # if successful, ask user if they would like to display the
-                # encrypted message (or save it as a .txt file)
-                    # if so, display / save message
-                    # print success / failure message
-
-
-
-                    # options:
-                    # 1 view message
-                    # 2 save message
-                    # 3 [en/de]crypt another message
-                    # exit to main menu
-
-                    # get selection
-
-                    # 1: view message - display (en/de)coded message
-                    print(f'\nHere is the {code_prefix}coded message:\n')
-                    print(processed_text)
-
-
-                    # 2 save message
-
-                    # SAME AS ABOVE (LOAD FILE) EXCEPT FOR OPERATION ITSELF
-                    # SO MAKE HELPER FUNCTION AND USE IN BOTH PLACES
-
-                        # display info about file saving
-                            # .txt files only
-                            # files will not be overwritten - explain why
-                        
-                        # get file name
-
-                        # confirm file name - [P]roceed [R]etype or [A]bort
-
-                            # if proceed
-                            
-                                # perform file operation
-
-                                # notify user of success / failure
-
-                                # exit to previous menu
-
-                            # if retype
-
-                                # return to get file name
-
-                            # if abort
-
-                                # exit to previous menu
-
-                    # 3 another message
-                        # continue??? or use exit loop method
-
-                    # 4 exit to main menu
-                        # break??? or use exit loop methods
-
-                        
-                        
-
-
-                # REVERSE THE ORDER OF THESE???
-
-                else:
+                except BadValueError as err:
                     print('\nUnable to complete operation.')
+                    print(err)
 
-                    # give reason / feedback for failure
-                    # include information about why operation failed
-
-
-
-                    # HANDLE EXCEPTIONS FOR MORE INFO ON FAILURES
-
-
+                except FooBarError as err:
+                    print('\nUnable to complete operation.')
+                    print(err)
+                    print(type(err))
+                    print(err.subtext)
+                    
+                except Exception as err:
+                    print('\nUnable to complete operation.')
+                    print('\nAn unexpected error occurred.')
+                    print(err)
+                    print(type(err))
+                    raise
             
                 # build prompt string with appropriate type of action
                 prompt: str = f'{mode.title()} another {text_prefix}text'
