@@ -1418,6 +1418,7 @@ def __main__():
             code_prefix: str = 'en' if selection == 1 else 'de'
             loop_encode: bool = True
             mode: str = 'encrypt' if selection == 1 else 'decrypt'
+            return_to_loop_encode: bool = False
             text_prefix: str = 'plain' if selection == 1 else 'cipher'
 
             while loop_encode:
@@ -1549,7 +1550,7 @@ def __main__():
                         print('What would you like to do?\n')
                         print('1: View message')
                         print('2: Save message')
-                        print(f'3: {text_prefix.title()}crypt another message.') 
+                        print(f'3: {code_prefix.title()}crypt another message.') 
                         print('4: Exit to main menu\n')
 
                         # get selection for message action
@@ -1575,23 +1576,24 @@ def __main__():
 
                             elif method == '2': # save file
 
-                                _coming_soon()
+                                # MOVE THESE MESSAGES TO FUNCTION
 
-                                print(' ')
+                                print('\nSaving file...')
 
-                                # break from loop_get_message_action
-                                # and print actions menu again
+                                save_successful: bool = \
+                                    _save_file(processed_text)
+
+                                if save_successful:
+                                    print('\nFile write successful. ' + \
+                                          'Message saved.')
+
+                                else:
+                                    print('\nFile write failed / aborted.\n')
+
+                                # break and return to message actions menu
                                 break
-                                                            
+                            
 
-##                                print(' ')
-##
-##                                # display info about file types                      
-##                                for line in info_file_types:
-##                                    print(line)
-##
-##                                print(' ')
-##
 ##                                if not (message := _load_file()):
 ##                                    
 ##                                    break # raise error here or return to menu???
@@ -1601,74 +1603,36 @@ def __main__():
 ##                                    # return to [en/de]crypt menu
 ##                                    loop_message_actions = False
 ##                                    break
-##
-##                                if not (message_is_valid := \
-##                                        validate_message(message)):
-##                                    
-##                                    print(' ')
-##                                    
-##                                    raise BadValueError('Loaded message fails ' + \
-##                                                        'validation check.')
-##                                
-##                                # if message loaded and validated, break and proceed
-##                                break
-
-
 
                             elif method == '3': # [en/de]crypt another message
 
-                                _coming_soon()
-
-                                print(' ')
-
-                                break
-
-                                # up two levels:
-                                # break from loop_get_message_action
-                                # break from display_message_actions
+                                # break and return to encode menu:
+                                return_to_loop_encode = True
+                                break 
 
                             elif method == '4': # return to main menu
 
-                                _coming_soon()
-
-                                print(' ')
-
-                                break
-
                                 # up three levels:
-                                # break from loop_get_message_action
-                                # break from display_message_actions
-                                # break from loop_encode                                
-
-                                
-                                # return_to_main_menu = True
-                                # break
+                                return_to_main_menu = True
+                                return_to_loop_encode = True
+                                break                               
 
                             else:
-                                print('Invalid method selection. Please try again.')
+                                print('Invalid method selection. Please try ' +  \
+                                      'again.')
 
-                        if return_to_main_menu:
+                        if return_to_loop_encode:
+                            break
 
-                            pass
+                    if return_to_main_menu:
+                        
+                        break
 
-##                            # loop_encode = False                        
-##                            return_to_main_menu = False
-##                            break
-##
-##                        if message == '`->!ABORT!<-`': # abort code
-##
-##                                # return to [en/de]crypt menu
-##                                continue
+                    if return_to_loop_encode:
+                        
+                        return_to_loop_encode = False
 
-
-
-##
-##                    else:
-##                        raise FooBarError(f'\n{code_prefix}coding ' + \
-##                                          'unsuccessful.')
-
-
-                    
+                        continue
 
                 except BadValueError as err:
                     print('\nUnable to complete operation.')
@@ -1686,6 +1650,12 @@ def __main__():
                     print(err)
                     print(type(err))
                     raise
+
+                if return_to_main_menu:
+                    
+                    return_to_main_menu = False
+                    
+                    break  
             
                 # build prompt string with appropriate type of action
                 prompt: str = f'{mode.title()} another {text_prefix}text'
@@ -1961,3 +1931,24 @@ def __main__():
 
 if __name__ == '__main__':
     __main__()
+
+
+
+
+
+##                            # loop_encode = False                        
+##                            return_to_main_menu = False
+##                            break
+##
+##                        if message == '`->!ABORT!<-`': # abort code
+##
+##                                # return to [en/de]crypt menu
+##                                continue
+
+
+
+##
+##                    else:
+##                        raise FooBarError(f'\n{code_prefix}coding ' + \
+##                                          'unsuccessful.')
+
