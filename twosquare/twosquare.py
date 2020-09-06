@@ -1185,18 +1185,11 @@ def __main__():
                                                         'name already exists.')
 
                                 # proceed with operation
-
-##                                save_successful: bool = False
-
-                                file = open(filename, mode = 'w')
-
                                 with open(filename, mode = 'w') as file:
                                     chars_written: int = file.write(message)
 
                                 if chars_written == len(message):
-##                                    save_successful = True
-                                
-##                                if save_successful:
+                                    
                                     print('Completed.')
                                     
                                     return 1
@@ -1595,8 +1588,6 @@ def __main__():
                                 save_status: int = \
                                     _save_file(filename, processed_text)
 
-                                # MOVE THESE MESSAGES TO FUNCTION???
-
                                 if save_status == 1:
                                     print('File write successful. ' + \
                                           'Message saved.')
@@ -1606,9 +1597,6 @@ def __main__():
                                     
                                 elif save_status == -1:
                                     print('File write aborted.\n')
-                                    
-                                    # return to [en/de]crypt menu
-                                    # loop_get_message_action = False
                                     
                                 else:
                                     raise('File write error.\n')
