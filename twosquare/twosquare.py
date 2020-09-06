@@ -990,21 +990,19 @@ def __main__():
                             # perform file operation
                             try:
 
-                                file = open(filename, mode = 'r')
-                                
-                                while line := file.readline():
-                                  
-                                    for  char in line:
-                                        if char.isascii() and char.isalpha():
-                                            message += char.upper()
+                                with open(filename, mode = 'r') as file:
+                             
+                                    while line := file.readline():
+                                      
+                                        for  char in line:
+                                            if char.isascii() and \
+                                               char.isalpha():
+                                                message += char.upper()
 
                                 if message:
 
                                     print('Completed.')
                                     
-##                                    # display message that was loaded from file
-##                                    print(f'\nMessage loaded:\n\n{message}')
-
                                     return message
 
                                 else:
