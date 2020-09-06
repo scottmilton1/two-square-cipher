@@ -1095,8 +1095,12 @@ def __main__():
             return False
 
 
-    def _save_file(filename: str = '') -> bool:
+    def _save_file(filename: str = '', message: str = '') -> int:
         """Saves a message as a .txt file.
+
+        Returns an int value of 1 if message saved as file successfully.
+        Returns an int value of 0 if unsuccessful.
+        Returns an int value of -1 if user aborts operation.
 
         """
 
@@ -1104,198 +1108,185 @@ def __main__():
             if type(filename) is not str:
                 raise TypeMismatchError('Filename must be a string.')
 
+            if type(message) is not str:
+                raise TypeMismatchError('Message must be a string.')            
+
             if len(filename) > 0 and filename.endswith('.txt') is False:
                 raise BadValueError('File must be a .txt file.')
 
-            print('Saving file...', end = '')
+            if len(message) == 0:
+                raise BadValueError('Message cannot be empty.')
+            
 
-            print('Completed.\n')
+            # PRINT MESSAGE ABOUT SUPPORTED FILE TYPES AND RESTRICTIONS
+            
 
-            return False
+            # SKIP THIS FILENAME ENTRY FOR FILENAME INCLUDED
 
-##            # SKIP THIS FILENAME ENTRY FOR FILENAME INCLUDED
+            while filename == '':
+                
+                # prompt user for filename  
+                print('Enter filename below and include the .txt extension.' + \
+                      '\nThe file will be saved in the current directory ' + \
+                      'and cannot already exist.\nLeave the field blank and ' + \
+                      'hit <enter> to abort.\n')
+                
+                while not (filename := input('Enter filename >> ')):
+
+                    # if user leaves blank return abort code
+                    if filename == '':
+                        return -1
+                      
+                    print('Invalid filename. Please try again.')
+
+                if not filename.endswith('.txt'):
+                    
+                    print('\nOnly .txt file types are supported. Please ' + \
+                          'try again.\n')
+
+                    # reset filename 
+                    filename = ''
+
+                    # go back and get it again
+                    continue
+
+                # confirm file name - [P]roceed [R]etype or [A]bort
+                print(f'\nConfirm filename: {filename}')
+
+                print('1: Proceed')
+                print('2: Redo')
+                print('3: Abort')
+
+                loop_get_choice: bool = True
+
+                while loop_get_choice:
+
+                    choice: str = input('\nEnter selection >> ')
+
+                    if choice == '1': # proceed
+
+                        print('Saving file...', end = '')
+
+                        print('Completed.\n')
+
+                        return 1
+
+##                        # ENTRY POINT FOR COMMAND LINE WHEN FILENAME INCLUDED
 ##
-##            while filename == '':
-##                
-##                # prompt user for filename  
-##                print('Enter filename below and include the .txt extension.' + \
-##                      '\nThe file must be in the current directory.\n' + \
-##                      'Leave the field blank and ' + \
-##                      'hit <enter> to abort.\n')
-##                
-##                while not (filename := input('Enter filename >> ')):
+##                        loop_load_file: bool = True
 ##
-##                    # if user leaves blank return abort code
-##                    if filename == '':
-##                        return '`->!ABORT!<-`'
-##                      
-##                    print('Invalid filename. Please try again.')
+##                        while loop_load_file:
 ##
-##                if not filename.endswith('.txt'):
-##                    
-##                    print('\nOnly .txt file types are supported. Please ' + \
-##                          'try again.\n')
+##                            print('\nLoading file...', end = '')
 ##
-##                    # reset filename 
-##                    filename = ''
+##                            message: str = ''
 ##
-##                    # go back and get it again
-##                    continue
+##                            # perform file operation
+##                            try:
 ##
-##                # confirm file name - [P]roceed [R]etype or [A]bort
-##                print(f'\nConfirm filename: {filename}')
+##                                file = open(filename, mode = 'r')
+##                                
+##                                while line := file.readline():
+##                                  
+##                                    for  char in line:
+##                                        if char.isascii() and char.isalpha():
+##                                            message += char.upper()
 ##
-##                print('1: Proceed')
-##                print('2: Redo')
-##                print('3: Abort')
+##                                if message:
 ##
-##                choice: str = input('\nEnter selection >> ')
+##                                    print('Completed.')
+##                                    
+####                                    # display message that was loaded from file
+####                                    print(f'\nMessage loaded:\n\n{message}')
 ##
-##                if choice == '1': # proceed
-##
-##                    # ENTRY POINT FOR COMMAND LINE WHEN FILENAME INCLUDED
-##
-##                    loop_load_file: bool = True
-##
-##                    while loop_load_file:
-##
-##                        print('\Loading file...\n')
-##
-##                        message: str = ''
-##
-##                        # perform file operation
-##                        try:
-##
-##                            file = open(filename, mode = 'r')
-##                            
-##                            while line := file.readline():
-##                              
-##                                for  char in line:
-##                                    if char.isascii() and char.isalpha():
-##                                        message += char.upper()
-##
-##                            if message:
-##                                # display message that was loaded from file
-##                                print(f'Message loaded:\n\n{message}')
-##
-##                                return message
-##
-##                            else:
-##                                raise Exception(f'\Could not load {filename}')
-##
-##                        except Exception as err:
-##
-##                            # if file not found or other problem, notify user
-##                            print(err)
-##                            print(type(err))
-##
-##                            print(' ')
-##                            print('What would you like to do?\n')
-##                            print('1: Retry filename')
-##                            print('2: Re-enter filename')
-##                            print('3: Abort')
-##
-##                            while True:
-##
-##                                recourse: str = input('\nEnter selection >> ')
-##
-##                                if recourse == '1': # retry same filename
-##
-##                                    print(' ')
-##
-##                                    # return to beginning of file operation
-##                                    break
-##
-##                                elif recourse == '2': # re-enter filename
-##
-##                                    print(' ')
-##
-##                                    # reset filename
-##                                    filename = ''
-##
-##                                    # return to beginning of filename entry
-##                                    loop_load_file = False
-##                                    break
-##
-##                                elif recourse == '3': # abort
-##
-##                                    return '`->!ABORT!<-`' # UNLESS COMMAND LINE
+##                                    return message
 ##
 ##                                else:
-##                                    print('Invalid selection. Please try again.')
-##                                
-##                elif choice == '2': # redo
-##                    
-##                    print('\nRedoing...\n')
+##                                    print('Failed.\n')
+##                                          
+##                                    raise Exception(f'\nCould not load ' + \
+##                                                    f'{filename}')
 ##
-##                    # reset filename as blank
-##                    filename = ''
+##                            except Exception as err:
 ##
-##                    # go up one level to get file name again
-##                    continue
-##                    
-##                elif choice == '3': # abort
+##                                # if file not found or other problem notify user
+##                                print(' ')
+##                                print(err)
+##                                print(type(err))
 ##
-##                    print('\nAborting...\n')
-##                    
-##                    return '`->!ABORT!<-`' # UNLESS COMMAND LINE
+##                                print(' ')
+##                                print('What would you like to do?\n')
+##                                print('1: Retry filename')
+##                                print('2: Re-enter filename')
+##                                print('3: Abort')
 ##
-##                else:
-##                    print('Invalid response. Please try again.')
+##                                while True:
+##
+##                                    recourse: str = input('\nEnter ' + \
+##                                                          'selection >> ')
+##
+##                                    if recourse == '1': # retry same filename
+##
+##                                        print(' ')
+##
+##                                        # return to beginning of file operation
+##                                        loop_get_choice = False
+##                                        break
+##
+##                                    elif recourse == '2': # re-enter filename
+##
+##                                        print(' ')
+##
+##                                        # reset filename
+##                                        filename = ''
+##
+##                                        # return to beginning of filename entry
+##                                        loop_get_choice = False
+##                                        loop_load_file = False
+##                                        break
+##
+##                                    elif recourse == '3': # abort
+##
+##                                        return '`->!ABORT!<-`' # UNLESS COMMAND LINE
+##
+##                                    else:
+##                                        print('Invalid selection. Please ' + \
+##                                              'try again.')
+                                    
+                    elif choice == '2': # redo
+                        
+                        print('\nRedoing...\n')
 
+                        # reset filename as blank
+                        filename = ''
+
+                        # go up one level to get file name again
+                        break
+                        
+                    elif choice == '3': # abort
+
+                        print('\nAborting...\n')
+                        
+                        return -1
+
+                    else:
+                        print('Invalid response. Please try again.')
+        
         except BadValueError as err:
             print(err)
-            return False
+            return 0
 
         except TypeMismatchError as err:
             print(err)
-            return False
+            return 0
 
         except Exception as err:
-            print('Unable to load from file. ' +
+            print('Unable to save file. ' +
                   'An unexpected error has occured.')
             print(err)
             print(type(err))
             
-            return False
-
-
-        # 2 save message - separate function or generalize this one for both
-
-        # SAME AS ABOVE (LOAD FILE) EXCEPT FOR OPERATION ITSELF
-        # SO MAKE HELPER FUNCTION AND USE IN BOTH PLACES
-
-            # display info about file saving
-                # .txt files only
-                # files will not be overwritten - explain why
-            
-            # get file name
-
-            # confirm file name - [P]roceed [R]etype or [A]bort
-
-                # if proceed
-                
-                    # perform file operation
-
-                    # notify user of success / failure
-
-                    # exit to previous menu
-
-                # if retype
-
-                    # return to get file name
-
-                # if abort
-
-                    # exit to previous menu
-
-        # 3 another message
-            # continue??? or use exit loop method
-
-        # 4 exit to main menu
-            # break??? or use exit loop methods
-
-            
+            return 0            
 
     exit_program: bool = False
     info_file_types: List[str] = [
@@ -1593,33 +1584,39 @@ def __main__():
 
                             elif method == '2': # save file
 
-                                # MOVE THESE MESSAGES TO FUNCTION
+                                print(' ')
 
-                                print('\nSaving file...')
+                                # display info about file types                      
+                                for line in info_file_types:
+                                    print(line)
 
-                                save_successful: bool = \
-                                    _save_file(processed_text)
+                                print(' ')
 
-                                if save_successful:
-                                    print('\nFile write successful. ' + \
+                                filename: str = ''
+
+                                save_status: int = \
+                                    _save_file(filename, processed_text)
+
+                                # MOVE THESE MESSAGES TO FUNCTION???
+
+                                if save_status == 1:
+                                    print('File write successful. ' + \
                                           'Message saved.')
-
+                                                                        
+                                elif save_status == 0:
+                                    print('File write failed.\n')
+                                    
+                                elif save_status == -1:
+                                    print('File write aborted.\n')
+                                    
+                                    # return to [en/de]crypt menu
+                                    # loop_get_message_action = False
+                                    
                                 else:
-                                    print('\nFile write failed / aborted.\n')
+                                    raise('File write error.\n')
 
                                 # break and return to message actions menu
                                 break
-                            
-
-##                                if not (message := _load_file()):
-##                                    
-##                                    break # raise error here or return to menu???
-##
-##                                if message == '`->!ABORT!<-`': # abort code
-##
-##                                    # return to [en/de]crypt menu
-##                                    loop_message_actions = False
-##                                    break
 
                             elif method == '3': # [en/de]crypt another message
 
