@@ -909,6 +909,8 @@ def __main__():
 
         Loads a plaintext or ciphertext message. Only .txt files are supported.
 
+        Helper function for main Twosquare program.
+
         Parameter for filename, if included, must be a string representing a  
         valid filename for a file in the current directory, and must include
         the .txt file type extension in the name. If a filename is not
@@ -923,14 +925,15 @@ def __main__():
         """
 
         # FIX FOR WHEN FILENAME IS INCLUDED AS PARAMETER VALUE
-
         
         try:
             if type(filename) is not str:
                 raise TypeMismatchError('Filename must be a string.')
 
             if len(filename) > 0 and filename.endswith('.txt') is False:
-                raise BadValueError('File must be a .txt file.')  
+                raise BadValueError('File must be a .txt file.')
+
+            # SKIP THIS FILENAME ENTRY FOR FILENAME INCLUDED
 
             while filename == '':
                 
@@ -969,6 +972,8 @@ def __main__():
                 choice: str = input('\nEnter selection >> ')
 
                 if choice == '1': # proceed
+
+                    # ENTRY POINT FOR COMMAND LINE WHEN FILENAME INCLUDED
 
                     loop_load_file: bool = True
 
@@ -1034,7 +1039,7 @@ def __main__():
 
                                 elif recourse == '3': # abort
 
-                                    return '`->!ABORT!<-`'
+                                    return '`->!ABORT!<-`' # UNLESS COMMAND LINE
 
                                 else:
                                     print('Invalid selection. Please try again.')
@@ -1053,11 +1058,190 @@ def __main__():
 
                     print('\nAborting...\n')
                     
-                    return '`->!ABORT!<-`'
+                    return '`->!ABORT!<-`' # UNLESS COMMAND LINE
 
                 else:
-                    print('Invalid response. Please try again.')        
-                  
+                    print('Invalid response. Please try again.')
+
+        except BadValueError as err:
+            print(err)
+            return False
+
+        except TypeMismatchError as err:
+            print(err)
+            return False
+
+        except Exception as err:
+            print('Unable to load from file. ' +
+                  'An unexpected error has occured.')
+            print(err)
+            print(type(err))
+            
+            return False
+
+
+    def _save_file(filename: str = '') -> bool:
+        """Saves a message as a .txt file.
+
+        """
+
+        try:
+            if type(filename) is not str:
+                raise TypeMismatchError('Filename must be a string.')
+
+            if len(filename) > 0 and filename.endswith('.txt') is False:
+                raise BadValueError('File must be a .txt file.')
+
+            print('Saving file...\n')
+
+            return False
+
+##            # SKIP THIS FILENAME ENTRY FOR FILENAME INCLUDED
+##
+##            while filename == '':
+##                
+##                # prompt user for filename  
+##                print('Enter filename below and include the .txt extension.' + \
+##                      '\nThe file must be in the current directory.\n' + \
+##                      'Leave the field blank and ' + \
+##                      'hit <enter> to abort.\n')
+##                
+##                while not (filename := input('Enter filename >> ')):
+##
+##                    # if user leaves blank return abort code
+##                    if filename == '':
+##                        return '`->!ABORT!<-`'
+##                      
+##                    print('Invalid filename. Please try again.')
+##
+##                if not filename.endswith('.txt'):
+##                    
+##                    print('\nOnly .txt file types are supported. Please ' + \
+##                          'try again.\n')
+##
+##                    # reset filename 
+##                    filename = ''
+##
+##                    # go back and get it again
+##                    continue
+##
+##                # confirm file name - [P]roceed [R]etype or [A]bort
+##                print(f'\nConfirm filename: {filename}')
+##
+##                print('1: Proceed')
+##                print('2: Redo')
+##                print('3: Abort')
+##
+##                choice: str = input('\nEnter selection >> ')
+##
+##                if choice == '1': # proceed
+##
+##                    # ENTRY POINT FOR COMMAND LINE WHEN FILENAME INCLUDED
+##
+##                    loop_load_file: bool = True
+##
+##                    while loop_load_file:
+##
+##                        print('\Loading file...\n')
+##
+##                        message: str = ''
+##
+##                        # perform file operation
+##                        try:
+##
+##                            file = open(filename, mode = 'r')
+##                            
+##                            while line := file.readline():
+##                              
+##                                for  char in line:
+##                                    if char.isascii() and char.isalpha():
+##                                        message += char.upper()
+##
+##                            if message:
+##                                # display message that was loaded from file
+##                                print(f'Message loaded:\n\n{message}')
+##
+##                                return message
+##
+##                            else:
+##                                raise Exception(f'\Could not load {filename}')
+##
+##                        except Exception as err:
+##
+##                            # if file not found or other problem, notify user
+##                            print(err)
+##                            print(type(err))
+##
+##                            print(' ')
+##                            print('What would you like to do?\n')
+##                            print('1: Retry filename')
+##                            print('2: Re-enter filename')
+##                            print('3: Abort')
+##
+##                            while True:
+##
+##                                recourse: str = input('\nEnter selection >> ')
+##
+##                                if recourse == '1': # retry same filename
+##
+##                                    print(' ')
+##
+##                                    # return to beginning of file operation
+##                                    break
+##
+##                                elif recourse == '2': # re-enter filename
+##
+##                                    print(' ')
+##
+##                                    # reset filename
+##                                    filename = ''
+##
+##                                    # return to beginning of filename entry
+##                                    loop_load_file = False
+##                                    break
+##
+##                                elif recourse == '3': # abort
+##
+##                                    return '`->!ABORT!<-`' # UNLESS COMMAND LINE
+##
+##                                else:
+##                                    print('Invalid selection. Please try again.')
+##                                
+##                elif choice == '2': # redo
+##                    
+##                    print('\nRedoing...\n')
+##
+##                    # reset filename as blank
+##                    filename = ''
+##
+##                    # go up one level to get file name again
+##                    continue
+##                    
+##                elif choice == '3': # abort
+##
+##                    print('\nAborting...\n')
+##                    
+##                    return '`->!ABORT!<-`' # UNLESS COMMAND LINE
+##
+##                else:
+##                    print('Invalid response. Please try again.')
+
+        except BadValueError as err:
+            print(err)
+            return False
+
+        except TypeMismatchError as err:
+            print(err)
+            return False
+
+        except Exception as err:
+            print('Unable to load from file. ' +
+                  'An unexpected error has occured.')
+            print(err)
+            print(type(err))
+            
+            return False
+
 
         # 2 save message - separate function or generalize this one for both
 
@@ -1094,21 +1278,7 @@ def __main__():
         # 4 exit to main menu
             # break??? or use exit loop methods
 
-        except BadValueError as err:
-            print(err)
-            return False
-
-        except TypeMismatchError as err:
-            print(err)
-            return False
-
-        except Exception as err:
-            print('Unable to load from file. ' +
-                  'An unexpected error has occured.')
-            print(err)
-            print(type(err))
             
-            return False
 
     exit_program: bool = False
     info_file_types: List[str] = [
@@ -1368,26 +1538,137 @@ def __main__():
                     if processed_text:
                         print('\nOperation succcessful.')
 
-                    # if successful, ask user if they would like to display the
-                    # encrypted message (or save it as a .txt file)
-                        # if so, display / save message
-                        # print success / failure message
+                    # include else
+                        # raise 
 
-                        # options:
-                        # 1 view message
-                        # 2 save message
-                        # 3 [en/de]crypt another message
-                        # exit to main menu
+                    display_message_actions: bool = True
+                    
+                    while display_message_actions:
 
-                        # get selection
+                        # if successful, ask user what would like to do
+                        print('What would you like to do?\n')
+                        print('1: View message')
+                        print('2: Save message')
+                        print(f'3: {text_prefix.title()}crypt another message.') 
+                        print('4: Exit to main menu\n')
 
-                        # 1: view message - display (en/de)coded message
-                        print(f'\nHere is the {code_prefix}coded message:\n')
-                        print(processed_text)
+                        # get selection for message action
 
-                    else:
-                        raise FooBarError(f'\n{code_prefix}coding ' + \
-                                          'unsuccessful.')
+                        loop_get_message_action: bool = True
+                        
+                        while loop_get_message_action:
+                            
+                            method: str = input('Enter selection: ')
+
+                            if method == '1': # view message
+
+                                print(f'\nHere is the {code_prefix}coded ' + \
+                                      'message:\n')
+
+                                print(processed_text)
+                                
+                                print(' ')
+                                
+                                # break from loop_get_message_action
+                                # and print actions menu again
+                                break
+
+                            elif method == '2': # save file
+
+                                _coming_soon()
+
+                                print(' ')
+
+                                # break from loop_get_message_action
+                                # and print actions menu again
+                                break
+                                                            
+
+##                                print(' ')
+##
+##                                # display info about file types                      
+##                                for line in info_file_types:
+##                                    print(line)
+##
+##                                print(' ')
+##
+##                                if not (message := _load_file()):
+##                                    
+##                                    break # raise error here or return to menu???
+##
+##                                if message == '`->!ABORT!<-`': # abort code
+##
+##                                    # return to [en/de]crypt menu
+##                                    loop_message_actions = False
+##                                    break
+##
+##                                if not (message_is_valid := \
+##                                        validate_message(message)):
+##                                    
+##                                    print(' ')
+##                                    
+##                                    raise BadValueError('Loaded message fails ' + \
+##                                                        'validation check.')
+##                                
+##                                # if message loaded and validated, break and proceed
+##                                break
+
+
+
+                            elif method == '3': # [en/de]crypt another message
+
+                                _coming_soon()
+
+                                print(' ')
+
+                                break
+
+                                # up two levels:
+                                # break from loop_get_message_action
+                                # break from display_message_actions
+
+                            elif method == '4': # return to main menu
+
+                                _coming_soon()
+
+                                print(' ')
+
+                                break
+
+                                # up three levels:
+                                # break from loop_get_message_action
+                                # break from display_message_actions
+                                # break from loop_encode                                
+
+                                
+                                # return_to_main_menu = True
+                                # break
+
+                            else:
+                                print('Invalid method selection. Please try again.')
+
+                        if return_to_main_menu:
+
+                            pass
+
+##                            # loop_encode = False                        
+##                            return_to_main_menu = False
+##                            break
+##
+##                        if message == '`->!ABORT!<-`': # abort code
+##
+##                                # return to [en/de]crypt menu
+##                                continue
+
+
+
+##
+##                    else:
+##                        raise FooBarError(f'\n{code_prefix}coding ' + \
+##                                          'unsuccessful.')
+
+
+                    
 
                 except BadValueError as err:
                     print('\nUnable to complete operation.')
