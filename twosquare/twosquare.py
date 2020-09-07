@@ -1824,25 +1824,70 @@ def __main__():
                     break
 
         elif selection == 7: # validate a message
-            _coming_soon()
 
-            # prompt user for type of message to validate
-            # plaintext or ciphertext
+            loop_validate_message: bool = True
 
-            # print out brief description of message requirements
-            # with option for more detailed information
+            while loop_validate_message:
 
-            # get message from user
+                message_type: str = ''
+            
+                print('\nSelect message type:')
+                print('1: Plaintext')
+                print('2: Ciphertext')
+                print('3: Main menu\n')
 
-            # run validation check
+                while True:
 
-            # report results
+                    choice: str = input('Enter selection >> ')
 
-            # ask user if they would like to validate another message
+                    if choice == '1': # plaintext
 
-            # if so continue
+                        message_type = 'plaintext'
+                        mode = 'encrypt'
+                        break
 
-            # if not break and return to main menu
+                    elif choice == '2': # ciphertext
+
+                        message_type = 'ciphertext'
+                        mode = 'decrypt'
+                        break
+                        
+                    elif choice == '3': # return to main menu
+                        return_to_main_menu = True
+                        break
+
+                    else:
+                        print('Invalid selection. Please try again.')
+
+                if return_to_main_menu:
+                    return_to_main_menu = False
+                    break
+
+                # print out brief description of message requirements
+                # with option for more detailed information
+                print(f'\nOkay, {message_type}...')
+
+                # dummy values for testing purposes
+                message = 'THISISATESTMESSAGE'
+
+                # get message from user
+                    # display message source menu options
+                    # manual entry
+                    # from file
+                    # main menu
+
+                # run validation check on message - report results (pass / fail)
+                if validate_message(message, mode):
+                    print(f'Validation check passes as {message_type}.')
+
+                else:
+                    print(f'Validation check fails as {message_type}.')                  
+
+                # build prompt
+                action: str = 'Validate another message'
+
+                # ask user if they would like to validate another message
+                loop_validate_message: bool = _get_response(action)
 
         elif selection == 8: # about program / help / credits
 
@@ -1919,34 +1964,5 @@ def __main__():
     # exit program
     return
 
-    # OPTIONAL FUNCTIONALITY TO POSSIBLY IMPLEMENT LATER:
-
-    # command-line usage
-
-    # get message text from file instead of keyboard
-
-    # write message output to file
-
 if __name__ == '__main__':
     __main__()
-
-
-
-
-
-##                            # loop_encode = False                        
-##                            return_to_main_menu = False
-##                            break
-##
-##                        if message == '`->!ABORT!<-`': # abort code
-##
-##                                # return to [en/de]crypt menu
-##                                continue
-
-
-
-##
-##                    else:
-##                        raise FooBarError(f'\n{code_prefix}coding ' + \
-##                                          'unsuccessful.')
-
