@@ -492,23 +492,102 @@ def get_key(ordinal: str = '') -> str:
     else:
         return key
 
-def validate_ciphertext(message: bool) -> bool:
+def validate_ciphertext(message: str) -> bool:
     """Validates a ciphertext message for the Twosquare cipher.
-
-    Basically a thin wrapper that serves as syntactic sugar for the
-    validate_message() function.
-
+  
+    To pass validation, a ciphertext message has these requirements:
     
+    *Must be a non-empty string containing one or more alphabetic letters
+    *English-language letters from the ASCII character set count
+    *Punctuation and special characters are not allowed
+    *Non-printable ASCII characters are not allowed
+    *Unicode characters are not allowed
+    *All letters must be capitalized
+    *White space is not allowed
+    *Digits are not allowed
+
+    Returns True if message passes validation as ciphertext.
+    Returns False if message fails validation or if an error occurs.
+
     Dependencies:
 
-    From twosquare:
-        validate_message
+    From String:
+        ascii_uppercase
 
-    TO BE IMPLEMENTED...
+    From Twosquare:
+        BadValueError
+        TypeMismatchError
 
     """
 
-    pass
+    from string import ascii_uppercase
+
+    contains_a_letter: bool = False
+    message_type: str = 'ciphertext'
+
+    try:
+
+        # validate type of message is str
+        if type(message) is not str:
+            raise TypeMismatchError(f'Error: {message_type} must be a ' + \
+                                    'string. \nAre you trying to put a ' + \
+                                    'square peg in a round hole?')
+
+        # validate len of message is not zero
+        if len(message) == 0:
+            raise BadValueError(f'Error: {message_type} is empty. ' + \
+                                'Into the void we fall...')
+
+        # validate each character in the message
+        for character in message:
+
+            if not (character.isascii() and character.isprintable()):
+                raise BadValueError('Only printable ASCII characters are ' + \
+                                    'allowed in {message_type}.')
+
+            if not character.isupper():
+                raise BadValueError('All letters in {message_type} must be ' + \
+                                    'uppercase.')
+
+            if character.isspace():
+                raise BadValueError('White space is not allowed in the ' + \
+                                    '{message_type}.')
+
+            if character.isdigit():
+                raise BadValueError('Digits are not allowed in the ' + \
+                                    '{message_type}.')
+            
+            if character in ascii_uppercase:
+                contains_a_letter = True
+                
+            else:
+                raise BadValueError('Only capitalized letters from the ' + \
+                                    'ASCII character set are allowed.') 
+
+        if contains_a_letter == False:
+            raise BadValueError('Error: No alpha charcters in {message_type}' + \
+                                '. Alas, symbolism is sensational,\nand ' + \
+                                'punctuation is paramount, but letters ' + \
+                                'are legendary!')        
+
+    except BadValueError as err:
+        print(err)
+        return False
+
+    except TypeMismatchError as err:
+        print(err)
+        return False
+
+    except Exception as err:
+        from inspect import currentframe as cf
+        print('Unexpected exception type raised during execution:')
+        print(f'In function: {cf().f_code.co_name}') # function name
+        print(type(err))
+        print(err)
+        raise
+
+    else:            
+        return True
 
 def validate_key(key: str) -> bool:
     """Validates a key for a Playfair table.
@@ -594,8 +673,6 @@ def validate_message(message: str, mode: str = 'encrypt') -> bool:
 
     Validates a plaintext or ciphertext message according to the requirements
     and expected values of the Twosquare cipher.
-
-    Helper function for encrypt and decrypt functions.
 
     Returns True if the message is valid or False otherwise.
 
@@ -688,7 +765,7 @@ def validate_plaintext(message: str) -> bool:
 def validate_table(table: Table) -> bool:
     """Validates a Playfair table.
 
-    Returns True if the table is valid or False otherwise.
+    Returns True if the table is valid or returns False otherwise.
 
     Dependencies:
         None
@@ -1119,6 +1196,7 @@ def __main__():
             
 
             # PRINT MESSAGE ABOUT SUPPORTED FILE TYPES AND RESTRICTIONS
+                # DO IT HERE INSTEAD OF IN MAIN PROGRAM MENUS ???
             
 
             # SKIP THIS FILENAME ENTRY FOR FILENAME INCLUDED
@@ -1278,6 +1356,17 @@ def __main__():
             return 0            
 
     exit_program: bool = False
+    info_ciphertext: List[str] = [
+        'To pass validation, a ciphertext message has these requirements:\n',
+        '*Must be a non-empty string containing one or more alphabetic letters',
+        '*English-language letters from the ASCII character set count',
+        '*Punctuation and special characters are not allowed',
+        '*Non-printable ASCII characters are not allowed',
+        '*Unicode characters are not allowed',
+        '*All letters must be capitalized',
+        '*White space is not allowed',
+        '*Digits are not allowed',
+        ]
     info_file_types: List[str] = [
         'This implementation enables loading and saving messages as .txt ',
         'files. This is the only file type supported and files will not be',
@@ -1292,6 +1381,16 @@ def __main__():
         'Professional use is discouraged. No guarantee is made that the data',
         'will be secure, and no warranty is made against the possibility of ',
         'data loss or corruption. Use at your own risk.',
+        ]
+    info_plaintext: List[str] = [
+        'To pass validation, a plaintext message has these requirements:\n',
+        '*Must be a non-empty string containing one or more alphabetic letters',
+        '*English-language letters from the ASCII character set count',
+        '*Unicode characters do not count and, while allowed, will be ignored',
+        '*Digits are allowed, but will be ignored. Numbers can be spelled out',
+        '*Punctuation and special characters are allowed, but are ignored',
+        '*Non-printable ASCII characters are not allowed',
+        '*White space is allowed, but will be ignored',
         ]
     loop_main: bool = True
     key_description: List[str] = [
@@ -1850,17 +1949,7 @@ def __main__():
 
                         choice = int(choice)
                         break
-
-##                        message_type = 'plaintext'
-##                        mode = 'encrypt'
-##                        break
-##
-##                    elif choice == '2': # ciphertext
-##
-##                        message_type = 'ciphertext'
-##                        mode = 'decrypt'
-##                        break
-                        
+                       
                     elif choice == '3': # return to main menu
                         return_to_main_menu = True
                         break
@@ -1873,6 +1962,8 @@ def __main__():
                     break
 
                 code_prefix: str = 'en' if choice == 1 else 'de'
+                info_message: List[str] = info_plaintext if choice == 1 else \
+                    info_ciphertext
                 loop_print_message: bool = True
                 mode: str = 'encrypt' if choice == 1 else 'decrypt'
 
@@ -1881,23 +1972,23 @@ def __main__():
                 text_prefix: str = 'plain' if choice == 1 else 'cipher'
 
                 while loop_print_message:
-##                while True:
 
                     message_type: str = ''
 
                     print(f'\nOkay, {text_prefix}text...')
 
+                    print(' ')
+
                     # print out brief description of message requirements
-                    # with option for more detailed information
-                    # DO THIS INSIDE / OUTSIDE OF THIS LOOP???
+                    for line in info_message:
+                        print(line)
+
+                    print(' ')
+
 
                     
 
-##                    # dummy values for testing purposes
-##                    message = 'THISISATESTMESSAGE'
-
-
-                    # SAME AS CODE IN MENU OPTION 7: VALIDATE MESSAGE
+                    # SAME AS CODE IN MENU OPTION 1: ENCRYPT MESSAGE
                     # COMBINE INTO SINGLE HELPER FUNCTION AND CALL FROM BOTH
                     
 
@@ -1957,10 +2048,22 @@ def __main__():
 
                             # KEEP THIS??? OR USE CODE BELOW INSTEAD???
 
-                            if not (message_is_valid := \
-                                    validate_message(message, mode)):
+                            if mode == 'encrypt':
+                                message_is_valid = \
+                                    validate_message(message, mode)
+                        
+                            elif mode == 'decrypt':
+                                message_is_valid = \
+                                    validate_ciphertext(message)
+
+                            else: # this should never happen
+                                pass
+                                # raise FooBarError('Error: Invalid mode.')
+
+##                            if not (message_is_valid := \
+##                                    validate_message(message, mode)):
                                 
-                                print(' ')
+                            print(' ')
 
 
                                 # NEED TO ADD TRY EXCEPT TO KEEP THIS
@@ -1984,7 +2087,13 @@ def __main__():
                         else:
                             print('Invalid method selection. Please try again.')
 
+
+
+
                     # ARE TWO LEVELS OF LOOPS NECESSARY FOR ALL FUNCTIONALITY???
+                    # REASSESS AFTER MAKING HELPER FUNCTION(S)
+
+
 
                     if return_to_main_menu:
                         break
