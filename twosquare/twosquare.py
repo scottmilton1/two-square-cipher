@@ -1440,6 +1440,12 @@ def __main__():
                         for line in more_info[index]:
                             print(line)
 
+
+
+                    # SAME AS CODE IN MENU OPTION 7: VALIDATE MESSAGE
+                    # COMBINE INTO SINGLE HELPER FUNCTION AND CALL FROM BOTH
+                    
+
                     # prompt user for input method (manual / file)
                     print(f'Select {text_prefix}text source:\n')
                     print('1: Manual entry')
@@ -1510,9 +1516,11 @@ def __main__():
                         else:
                             print('Invalid method selection. Please try again.')
 
-                    if return_to_main_menu:
 
-                        # loop_encode = False                        
+                    # END SAME CODE BLOCK
+
+
+                    if return_to_main_menu:                   
                         return_to_main_menu = False
                         break
 
@@ -1828,9 +1836,7 @@ def __main__():
             loop_validate_message: bool = True
 
             while loop_validate_message:
-
-                message_type: str = ''
-            
+         
                 print('\nSelect message type:')
                 print('1: Plaintext')
                 print('2: Ciphertext')
@@ -1840,17 +1846,20 @@ def __main__():
 
                     choice: str = input('Enter selection >> ')
 
-                    if choice == '1': # plaintext
+                    if choice in ['1', '2']: # plaintext or ciphertext
 
-                        message_type = 'plaintext'
-                        mode = 'encrypt'
+                        choice = int(choice)
                         break
 
-                    elif choice == '2': # ciphertext
-
-                        message_type = 'ciphertext'
-                        mode = 'decrypt'
-                        break
+##                        message_type = 'plaintext'
+##                        mode = 'encrypt'
+##                        break
+##
+##                    elif choice == '2': # ciphertext
+##
+##                        message_type = 'ciphertext'
+##                        mode = 'decrypt'
+##                        break
                         
                     elif choice == '3': # return to main menu
                         return_to_main_menu = True
@@ -1863,25 +1872,133 @@ def __main__():
                     return_to_main_menu = False
                     break
 
-                # print out brief description of message requirements
-                # with option for more detailed information
-                print(f'\nOkay, {message_type}...')
+                code_prefix: str = 'en' if choice == 1 else 'de'
+                loop_print_message: bool = True
+                mode: str = 'encrypt' if choice == 1 else 'decrypt'
 
-                # dummy values for testing purposes
-                message = 'THISISATESTMESSAGE'
+                # NEED THIS??? RENAME IT???
+                return_to_loop_print_message: bool = False
+                text_prefix: str = 'plain' if choice == 1 else 'cipher'
 
-                # get message from user
-                    # display message source menu options
-                    # manual entry
-                    # from file
-                    # main menu
+                while loop_print_message:
+##                while True:
 
-                # run validation check on message - report results (pass / fail)
-                if validate_message(message, mode):
-                    print(f'Validation check passes as {message_type}.')
+                    message_type: str = ''
 
-                else:
-                    print(f'Validation check fails as {message_type}.')                  
+                    print(f'\nOkay, {text_prefix}text...')
+
+                    # print out brief description of message requirements
+                    # with option for more detailed information
+                    # DO THIS INSIDE / OUTSIDE OF THIS LOOP???
+
+                    
+
+##                    # dummy values for testing purposes
+##                    message = 'THISISATESTMESSAGE'
+
+
+                    # SAME AS CODE IN MENU OPTION 7: VALIDATE MESSAGE
+                    # COMBINE INTO SINGLE HELPER FUNCTION AND CALL FROM BOTH
+                    
+
+                    # prompt user for input method (manual / file)
+                    print(f'Select {text_prefix}text source:\n')
+                    print('1: Manual entry')
+                    print('2: From file')
+                    print('3: Main menu\n')
+
+                    loop_get_message: bool = True
+                    
+                    while loop_get_message:
+                        
+                        method: str = input('Enter selection: ')
+
+                        if method == '1': # manual entry
+
+                            print(' ')
+                            
+                            # prompt the user for message to encrypt / decrypt
+                            prompt: str = f'Enter {text_prefix}text to ' + \
+                                          f'validate: '
+                            message: str = input(prompt)
+
+                            # validate message format and get again until valid
+                            while not (message_is_valid := \
+                                       validate_message(message)):
+                                
+                                print(' ')
+                                
+                                message: str = input(prompt)
+
+                            loop_get_message = False
+                            loop_print_message = False
+                            break                        
+
+                        elif method == '2': # from file
+
+                            print(' ')
+
+                            # display info about file types                      
+                            for line in info_file_types:
+                                print(line)
+
+                            print(' ')
+
+                            if not (message := _load_file()):
+                                
+                                break # raise error here or return to menu???
+
+                            if message == '`->!ABORT!<-`': # abort code
+
+                                # return to [en/de]crypt menu
+                                loop_get_message = False            
+                                break
+
+
+                            # KEEP THIS??? OR USE CODE BELOW INSTEAD???
+
+                            if not (message_is_valid := \
+                                    validate_message(message, mode)):
+                                
+                                print(' ')
+
+
+                                # NEED TO ADD TRY EXCEPT TO KEEP THIS
+
+                                # BUT IF MOVING TO HELPER FUNCTION MIGHT NOT
+                                # NEED TO ADD HERE TOO
+                                
+##                                raise BadValueError('Loaded message fails ' + \
+##                                                    'validation check.')
+                            
+                            # if message loaded and validated, break and proceed
+                            loop_print_message = False
+                            break              
+
+
+                        elif method == '3': # return to main menu
+                            
+                            return_to_main_menu = True
+                            break
+
+                        else:
+                            print('Invalid method selection. Please try again.')
+
+                    # ARE TWO LEVELS OF LOOPS NECESSARY FOR ALL FUNCTIONALITY???
+
+                    if return_to_main_menu:
+                        break
+
+                if return_to_main_menu:
+                    return_to_main_menu = False
+                    break
+
+                # END SAME CODE BLOCK
+
+
+                # report validation check results
+                result: str = 'passes' if message_is_valid else 'fails'
+                print(f'Validation check {result} as {text_prefix}text.')
 
                 # build prompt
                 action: str = 'Validate another message'
