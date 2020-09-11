@@ -282,9 +282,7 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
         Row
         Table
         validate_key
-        # validate_message
-        # validate_ciphertext
-        # validate_plaintext
+        validate_plaintext    
 
     from typing:
         List
@@ -306,7 +304,7 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
                                 'Are you the keymaster?')
 
         # validate plaintext
-        if not validate_message(plaintext):
+        if not validate_plaintext(plaintext):
             raise BadValueError('Invalid plaintext error.')
 
         # capitalize all letters in plaintext
@@ -666,13 +664,91 @@ def validate_key(key: str) -> bool:
     else:
         return True
 
-def validate_message(message: str, mode: str = 'encrypt') -> bool:
+def validate_message(message: str, mode: str = 'plain') -> bool:
     """Validates a message for the Twosquare cipher.
 
-    Validates a plaintext or ciphertext message according to the requirements
-    and expected values of the Twosquare cipher.
+    Validates a plaintext or ciphertext message according to the 
+    requirements and expected values of the Twosquare cipher.
 
-    Returns True if the message is valid or False otherwise.
+    Value for message parameter should be a string containing the
+    plaintext or ciphertext to be validated.
+
+    Value for mode parameter should be a string indicating the type of
+    message to validate:
+    Value should be either 'plain' or 'p' for a plaintext message.
+    Value should be either 'cipher' or 'c' for a ciphertext message.
+
+    Calls validate_ciphertext or validate_plaintext based on value of
+    mode.
+    
+    Returns the return value returned by the function called.
+    The expected return values are:
+    True if the message is valid.
+    False if the message is invalid or if an error occurs.
+
+    Dependencies:
+
+    From string:
+        printable        
+
+    From twosquare:
+        TypeMismatchError
+        validate_ciphertext
+        validate_plaintext
+
+    """
+
+    try:
+
+        # validate type of message is str
+        if type(message) is not str:
+            raise TypeMismatchError(f'Error: message type must be a ' + \
+                                    'string. \nAre you trying to put a ' + \
+                                    'square peg in a round hole?')
+
+        # call the appropriate function for the requested mode
+        if mode in ['plain', 'p']:
+            return validate_plaintext(message)
+
+        elif mode in ['cipher', 'c']:
+            return validate_ciphertext(message)
+
+        else:
+            raise BadValueError('Error: Invalid mode.')
+
+    except BadValueError as err:
+        print(err)
+        return False
+
+    except TypeMismatchError as err:
+        print(err)
+        return False
+
+    except Exception as err:
+        from inspect import currentframe as cf
+        print('Unexpected exception type raised during execution:')
+        print(f'In function: {cf().f_code.co_name}') # function name
+        print(type(err))
+        print(err)
+        raise  
+
+def validate_plaintext(message: str) -> bool:
+    """Validates a plaintext message for the Twosquare cipher.
+
+    Validates a plaintext according to the requirements and expected values
+    of the Twosquare cipher.
+
+    Returns True if the message is valid as a plaintext.
+    Returns False if the message is invalid or if an error occurs.
+
+    To pass validation, a plaintext message has these requirements:
+    *Must be a non-empty string containing one or more alphabetic letters
+    *English-language letters from the ASCII character set count
+    *Unicode characters do not count and, while allowed, will be ignored
+    *Digits are allowed, but will be ignored. Numbers can be spelled out
+    *Punctuation and special characters are allowed, but are ignored
+    *Non-printable ASCII characters are not allowed
+    *White space is allowed, but will be ignored
 
     Dependencies:
 
@@ -687,11 +763,10 @@ def validate_message(message: str, mode: str = 'encrypt') -> bool:
 
     from string import printable
 
+    message_type: str = 'plaintext'
     printable_chars: str = printable
 
     try:
-
-        message_type: str = 'Plaintext' if mode == 'encrypt' else 'Ciphertext'
 
         # validate type of message is str
         if type(message) is not str:
@@ -729,10 +804,10 @@ def validate_message(message: str, mode: str = 'encrypt') -> bool:
                 contains_a_letter = True
 
         if contains_a_letter == False:
-            raise BadValueError('Error: No alpha characters in plaintext. ' + \
-                                'Alas, symbolism is sensational,\nand ' + \
-                                'punctuation is paramount, but letters ' + \
-                                'are legendary!')        
+            raise BadValueError('Error: No letters present in the ' + \
+                                '{message_type}. Alas, symbolism is ' + \
+                                'sensational,\nand punctuation is paramount' + \
+                                ', but letters are legendary!')        
 
     except BadValueError as err:
         print(err)
@@ -752,28 +827,6 @@ def validate_message(message: str, mode: str = 'encrypt') -> bool:
 
     else:            
         return True
-    
-
-def validate_plaintext(message: str) -> bool:
-    """Validates a plaintext message for the Twosquare cipher.
-
-    To pass validation, a plaintext message has these requirements:
-    *Must be a non-empty string containing one or more alphabetic letters
-    *English-language letters from the ASCII character set count
-    *Unicode characters do not count and, while allowed, will be ignored
-    *Digits are allowed, but will be ignored. Numbers can be spelled out
-    *Punctuation and special characters are allowed, but are ignored
-    *Non-printable ASCII characters are not allowed
-    *White space is allowed, but will be ignored
-
-    Dependencies:
-
-    TO BE IMPLEMENTED...
-
-    """
-
-    pass
-
    
 def validate_table(table: Table) -> bool:
     """Validates a Playfair table.
@@ -1093,13 +1146,6 @@ def __main__():
 
                                         message += line                                        
                                       
-##                                        # this was workaround for validation
-##                                        # failure with str.isprintable()
-##                                        for  char in line:
-##                                            if char.isascii() and \
-##                                               char.isalpha():
-##                                                message += char.upper()
-
                                 if message:
 
                                     print('Completed.')
@@ -1644,13 +1690,15 @@ def __main__():
               
                     # prepare to perform encoding or decoding of message  
                     # choose function to call depending on selected mode
-                    func: Callable[[str, str, str], Union[str, bool]] = encrypt if \
-                        mode == 'encrypt' else decrypt
+                    func: Callable[[str, str, str], Union[str, bool]] = \
+                        encrypt if mode == 'encrypt' else decrypt
 
                     # plug appropriate function into callable partial with args
-                    action: Callable[[ ], str] = partial(func, message, keys[0], keys[1])
+                    action: Callable[[ ], str] = partial(func, message, \
+                                                         keys[0], keys[1])
 
-                    # call function to perform [en/de]cryption and get processed_text
+                    # call function to perform [en/de]cryption
+                    # and get processed_text
                     processed_text: str = action()            
 
                     # report operation success / failure
@@ -1737,7 +1785,7 @@ def __main__():
                                 break                               
 
                             else:
-                                print('Invalid method selection. Please try ' +  \
+                                print('Invalid method selection. Please try ' + \
                                       'again.')
 
                         if return_to_loop_encode:
@@ -2061,15 +2109,16 @@ def __main__():
                             break
                         
                     if return_to_main_menu:
+                        return_to_main_menu = False   
                         break                
 
                     if mode == 'encrypt':
                         message_is_valid = \
-                            validate_message(message, mode)
+                            validate_plaintext(message)
                 
                     elif mode == 'decrypt':
                         message_is_valid = \
-                            validate_ciphertext(message)                  
+                            validate_ciphertext(message)
 
                     else: # this should never happen
                         raise FooBarError('Error: Invalid mode.')
@@ -2094,10 +2143,6 @@ def __main__():
                     print(err)
                     print(type(err))
                     raise
-
-                if return_to_main_menu:                    
-                    return_to_main_menu = False                    
-                    break  
 
                 # build prompt
                 action: str = 'Validate another message'
