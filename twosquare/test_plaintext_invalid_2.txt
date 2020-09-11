@@ -1,5 +1,5 @@
+á é í ó ú ü ñ ¿ ¡ ç â ê î ô û à è ì ò ù ë ï ü Ä ä Ë ë
+
 This is an invalid plaintext message. 
 
 It should fail because it contains non-ASCII characters:
-
-Ä ä Ë ë Ï ï Ö ö Ü ü Ÿ ÿ á é í ó ú ü ñ ¿ ¡ ç â ê î ô û à è ì ò ù ë ï ü

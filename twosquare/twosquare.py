@@ -552,10 +552,6 @@ def validate_ciphertext(message: str) -> bool:
             if character.isdigit():
                 raise BadValueError('Digits are not allowed in the ' + \
                                     f'{message_type}.')
-
-##            if not character.isupper():
-##                raise BadValueError(f'All letters in {message_type} must ' + \
-##                                    'be uppercase.')
             
             if character in ascii_uppercase:
                 contains_a_letter = True
@@ -599,6 +595,8 @@ def validate_key(key: str) -> bool:
     Prints a failure message and returns False if key is invalid.
 
     Dependencies:
+
+    From twosquare:
         BadValueError
         TypeMismatchError
 
@@ -677,10 +675,19 @@ def validate_message(message: str, mode: str = 'encrypt') -> bool:
     Returns True if the message is valid or False otherwise.
 
     Dependencies:
+
+    From string:
+        printable        
+
+    From twosquare:
         BadValueError
         TypeMismatchError
 
     """
+
+    from string import printable
+
+    printable_chars: str = printable
 
     try:
 
@@ -705,18 +712,21 @@ def validate_message(message: str, mode: str = 'encrypt') -> bool:
 
         # validate that message is only printable ASCII characters
         # or perhaps just ignore them instead???
-        if not (message.isascii() and message.isprintable()):
+        if not message.isascii():
             raise BadValueError(f'Error: {message_type} can consist of ' + \
-                                'printable ASCII characters only.\n' + \
-                                'Sorry, my friend. No unicorns allowed!')
+                                'ASCII characters only.\n')
 
         contains_a_letter: bool = False
 
-        # filter to remove non-alpha characters
+        # check for non-printable characters
         for character in message:
+            if character not in printable_chars:
+                raise BadValueError(f'Error: {message_type} cannot contain ' + \
+                                    'non-printable characters.')
+            
+            # make sure message contains at least one letter
             if character.isalpha():
                 contains_a_letter = True
-                break      
 
         if contains_a_letter == False:
             raise BadValueError('Error: No alpha characters in plaintext. ' + \
@@ -747,13 +757,16 @@ def validate_message(message: str, mode: str = 'encrypt') -> bool:
 def validate_plaintext(message: str) -> bool:
     """Validates a plaintext message for the Twosquare cipher.
 
-    Basically a thin wrapper that serves as syntactic sugar for the
-    validate_message() function.
+    To pass validation, a plaintext message has these requirements:
+    *Must be a non-empty string containing one or more alphabetic letters
+    *English-language letters from the ASCII character set count
+    *Unicode characters do not count and, while allowed, will be ignored
+    *Digits are allowed, but will be ignored. Numbers can be spelled out
+    *Punctuation and special characters are allowed, but are ignored
+    *Non-printable ASCII characters are not allowed
+    *White space is allowed, but will be ignored
 
     Dependencies:
-
-    From twosquare:
-        validate_message
 
     TO BE IMPLEMENTED...
 
@@ -999,10 +1012,17 @@ def __main__():
         Returns the message if successful.
         Returns false if an error occurs.
 
+        REFACTOR TODOs:
+        --------------
+
+        *FIX FOR WHEN FILENAME IS INCLUDED AS PARAMETER VALUE
+        *Use menu helper function to reduce excessive indentation
+        *Replace abort code with -1 int value like in _save_file function        
+        
+
         """
 
-        # FIX FOR WHEN FILENAME IS INCLUDED AS PARAMETER VALUE
-        
+       
         try:
             if type(filename) is not str:
                 raise TypeMismatchError('Filename must be a string.')
@@ -1070,11 +1090,15 @@ def __main__():
                                 with open(filename, mode = 'r') as file:
                              
                                     while line := file.readline():
+
+                                        message += line                                        
                                       
-                                        for  char in line:
-                                            if char.isascii() and \
-                                               char.isalpha():
-                                                message += char.upper()
+##                                        # this was workaround for validation
+##                                        # failure with str.isprintable()
+##                                        for  char in line:
+##                                            if char.isascii() and \
+##                                               char.isalpha():
+##                                                message += char.upper()
 
                                 if message:
 
@@ -1108,7 +1132,7 @@ def __main__():
 
                                     if recourse == '1': # retry same filename
 
-                                        print(' ')
+##                                        print(' ')
 
                                         # return to beginning of file operation
                                         loop_get_choice = False
