@@ -674,7 +674,7 @@ def validate_message(message: str, mode: str = 'plain') -> bool:
     plaintext or ciphertext to be validated.
 
     Value for mode parameter should be a string indicating the type of
-    message to validate:
+    message to validate.
     Value should be either 'plain' or 'p' for a plaintext message.
     Value should be either 'cipher' or 'c' for a ciphertext message.
 
@@ -759,6 +759,11 @@ def validate_plaintext(message: str) -> bool:
         BadValueError
         TypeMismatchError
 
+
+    ONE SEEMINGLY LOGICAL GENERAL APPROACH TO VALIDATION:
+        From greatest violations of requirements to least violations
+        Perhaps review all validation functions and sections against this order
+    
     """
 
     from string import printable
@@ -1047,6 +1052,88 @@ def __main__():
             except:
                 print('Invalid selection. Please try again.')
 
+    def _get_selection(options: List[str],
+                       header: str = 'Select an option:',
+                       list_item_character = '*',
+                       prompt: str = 'Enter selection >> ',
+                       error_message:  str = 'Invalid selection. ' + \
+                           'Please try again.') -> int:
+        """Prompts the user to make a selection from a list of options.
+
+        Returns an int corresponding to the index of the options list item
+        selected by the user if successful.
+        Returns an int value of -1 if an expected error occurs during
+        execution.
+
+        Dependencies:
+
+        From twosquare:
+        #BadValueError
+        TypeMismatchError
+
+        """
+
+        valid_choices: List[str]
+
+        try:
+
+            if type(options) is not list:
+                raise TypeMismatchError('Error: options must be a list.')
+
+            for item in options:
+                if type(item) is not str:
+                    raise TypeMismatchError('Error: all items in options ' + \
+                                            'list must be strings.')
+
+            if type(header) is not str:
+                raise TypeMismatchError('Error: header must be a string.')
+
+            if type(list_item_character) is not str:
+                raise TypeMismatchError('Error: list_item_character ' + \
+                                        'must be a string.')
+
+            if type(prompt) is not str:
+                raise TypeMismatchError('Error: prompt must be a string.')
+
+            if type(error_message) is not str:
+                raise TypeMismatchError('Error: error_message must be ' + \
+                                        'a string.')
+
+            # print header
+            print(f'n\{header}')
+
+            # print a menu of the options
+            for number, item in enumerate(options, start = 1):
+
+                print(f'{list_item_character}{number}: {item}')
+
+                # keep track of valid choices
+                valid_choices.append(str(number))            
+
+            # get a valid selection from the user
+            while True:
+                selection = input(f'\n{prompt}')
+
+                if selection in valid_choices:
+                    
+                    # return options list index corresponding to user's selection
+                    return int(selection) - 1
+
+                else:
+                    print(error_message)
+
+        except TypeMismatchError as err:
+            print(err)
+            return -1
+
+        except Exception as err:
+            from inspect import currentframe as cf
+            print('Unexpected exception type raised during execution:')
+            print(f'In function: {cf().f_code.co_name}') # function name
+            print(type(err))
+            print(err)
+            raise
+
     def _load_file(filename: str = '') -> Union[str, bool]:
         """Loads a message from a .txt file.
 
@@ -1065,8 +1152,8 @@ def __main__():
         Returns the message if successful.
         Returns false if an error occurs.
 
-        REFACTOR TODOs:
-        --------------
+        REFACTOR _LOAD_FILE TODOs:
+        -------------------------
 
         *FIX FOR WHEN FILENAME IS INCLUDED AS PARAMETER VALUE
         *Use menu helper function to reduce excessive indentation
@@ -1074,7 +1161,6 @@ def __main__():
         
 
         """
-
        
         try:
             if type(filename) is not str:
@@ -1111,6 +1197,22 @@ def __main__():
 
                     # go back and get it again
                     continue
+
+           
+
+
+##                # confirm file name - [P]roceed [R]etype or [A]bort            
+##                header: str = f'\nConfirm filename: {filename}'
+##
+##                options: List[str} = [
+##                    'Proceed',
+##                    'Redo',
+##                    'Abort',
+##                    ]
+##
+##                choice = _get_selection(options, header)
+
+
 
                 # confirm file name - [P]roceed [R]etype or [A]bort
                 print(f'\nConfirm filename: {filename}')
@@ -1238,7 +1340,6 @@ def __main__():
             print(type(err))
             
             return False
-
 
     def _save_file(filename: str = '', message: str = '') -> int:
         """Saves a message as a .txt file.
