@@ -1151,7 +1151,7 @@ def __main__():
         No validation is made for the contents of the file loaded. That is left
         to the validate_message function.
 
-        Returns the message if successful.
+        Returns the message if loaded successfully.
         Returns an int value of 0 if an error occurs.
         Returns an int value of -1 if the user aborts during execution.
 
@@ -1221,9 +1221,7 @@ def __main__():
 
                     if choice == 0: # proceed
 
-                        loop_load_file: bool = True
-
-                        while loop_load_file:
+                        while True:
 
                             print('\nLoading file...', end = '')
 
@@ -1280,7 +1278,7 @@ def __main__():
                                     
                                     return -1
 
-                                else: # if recourse has invalid value
+                                else: # if recourse has an invalid value
                                     
                                     raise FooBarError()
                                     
@@ -1326,13 +1324,47 @@ def __main__():
     def _save_file(filename: str = '', message: str = '') -> int:
         """Saves a message as a .txt file.
 
+        Saves a plaintext or ciphertext message. Only .txt files are supported.
+
+        Helper function for the Twosquare program.
+
+        Parameter for filename, if included, must be a string representing a  
+        valid filename for a file in the current directory, and must include
+        the .txt file type extension in the name. If a filename is not
+        included, this function will prompt the user for a filename.
+
         Returns an int value of 1 if message saved as file successfully.
         Returns an int value of 0 if unsuccessful.
         Returns an int value of -1 if user aborts operation.
 
+
+        Dependencies:
+
+        From os:
+            path.exists
+
+        From twosquare:
+            BadValueError
+            FooBarError
+            _get_selection
+            TypeMismatchError
+
         """
 
         from os.path import exists
+
+        options: List[str] = [
+            'Proceed',
+            'Redo',
+            'Abort',
+            ]
+        recourse_header: str = \
+            'What would you like to do?'
+        recourse_options: List[str] = [
+            'Retry filename',
+            'Re-enter filename',
+            'Abort',
+            ]
 
         try:
             if type(filename) is not str:
@@ -1347,13 +1379,6 @@ def __main__():
             if len(message) == 0:
                 raise BadValueError('Message cannot be empty.')
             
-
-            # PRINT MESSAGE ABOUT SUPPORTED FILE TYPES AND RESTRICTIONS
-                # DO IT HERE INSTEAD OF IN MAIN PROGRAM MENUS ???
-            
-
-            # SKIP THIS FILENAME ENTRY FOR FILENAME INCLUDED
-
             while filename == '':
                 
                 # prompt user for filename  
@@ -1381,26 +1406,46 @@ def __main__():
                     # go back and get it again
                     continue
 
-                # confirm file name - [P]roceed [R]etype or [A]bort
-                print(f'\nConfirm filename: {filename}')
 
-                print('1: Proceed')
-                print('2: Redo')
-                print('3: Abort')
 
+##                # confirm file name - [P]roceed [R]etype or [A]bort
+##                print(f'\nConfirm filename: {filename}')
+##
+##                print('1: Proceed')
+##                print('2: Redo')
+##                print('3: Abort')
+
+
+
+
+                header: str = f'Confirm filename: {filename}'
                 loop_get_choice: bool = True
 
                 while loop_get_choice:
 
-                    choice: str = input('\nEnter selection >> ')
 
-                    if choice == '1': # proceed
 
-                        # ENTRY POINT FOR COMMAND LINE WHEN FILENAME INCLUDED
 
-                        loop_save_file: bool = True
+##                    choice: str = input('\nEnter selection >> ')
 
-                        while loop_save_file:
+
+
+
+                    choice: int = _get_selection(options, header, '')  
+
+                    if choice == 0: # proceed
+
+
+                        
+
+##                        loop_save_file: bool = True
+##
+##                        while loop_save_file:
+
+
+
+
+                        while True:
 
                             print('\nSaving file...', end = '')
 
@@ -1436,44 +1481,62 @@ def __main__():
                                 print(err)
                                 print(type(err))
 
-                                print(' ')
-                                print('What would you like to do?\n')
-                                print('1: Retry filename')
-                                print('2: Re-enter filename')
-                                print('3: Abort')
+##                                print(' ')
+##                                print('What would you like to do?\n')
+##                                print('1: Retry filename')
+##                                print('2: Re-enter filename')
+##                                print('3: Abort')
 
-                                while True:
 
-                                    recourse: str = input('\nEnter ' + \
-                                                          'selection >> ')
+                                recourse: int = \
+                                    _get_selection(recourse_options,
+                                    recourse_header, '')
 
-                                    if recourse == '1': # retry same filename
 
-                                        # return to beginning of file operation
-                                        loop_get_choice = False
-                                        break
 
-                                    elif recourse == '2': # re-enter filename
+##                                while True:
+##
+##                                    recourse: str = input('\nEnter ' + \
+##                                                          'selection >> ')
 
-                                        print(' ')
+                                if recourse == 0: # retry same filename
 
-                                        # reset filename
-                                        filename = ''
+##                                    # return to beginning of file operation
+##                                    loop_get_choice = False
+##                                    break
 
-                                        # return to beginning of filename entry
-                                        loop_get_choice = False
-                                        loop_save_file = False
-                                        break
+                                    continue
+                                
+                                elif recourse == 1: # re-enter filename
 
-                                    elif recourse == '3': # abort
+                                    print(' ')
 
-                                        return -1
+                                    # reset filename
+                                    filename = ''
 
-                                    else:
-                                        print('Invalid selection. Please ' + \
-                                              'try again.')
+                                    # return to beginning of filename entry
+                                    loop_get_choice = False
+
+
                                     
-                    elif choice == '2': # redo
+##                                    loop_save_file = False
+
+
+                                    
+                                    break
+
+                                elif recourse == 2: # abort
+
+                                    return -1
+
+                                else: # if recourse has an invalid value
+
+                                    raise FooBarError()
+                                    
+##                                    print('Invalid selection. Please ' + \
+##                                          'try again.')
+                                    
+                    elif choice == 1: # redo
                         
                         print('\nRedoing...\n')
 
@@ -1483,18 +1546,30 @@ def __main__():
                         # go up one level to get file name again
                         break
                         
-                    elif choice == '3': # abort
+                    elif choice == 2: # abort
 
                         print('\nAborting...\n')
                         
                         return -1
 
-                    else:
-                        print('Invalid response. Please try again.')
+                    else: # if choice has an invalid value
+
+
+                        
+##                        print('Invalid response. Please try again.')
+
+
+
+                        raise FooBarError()
         
         except BadValueError as err:
             print(err)
             return 0
+
+        except FooBarError as err:
+            print('Bad return value from _get_selection function.')
+            print(err.subtext)
+            raise
 
         except TypeMismatchError as err:
             print(err)
@@ -1504,8 +1579,7 @@ def __main__():
             print('Unable to save file. ' +
                   'An unexpected error has occured.')
             print(err)
-            print(type(err))
-            
+            print(type(err))            
             return 0            
 
     exit_program: bool = False
@@ -1875,6 +1949,8 @@ def __main__():
                             break
 
                     if return_to_main_menu:
+
+                        return_to_main_menu = False
                         
                         break
 
@@ -1901,11 +1977,11 @@ def __main__():
                     print(type(err))
                     raise
 
-                if return_to_main_menu:
-                    
-                    return_to_main_menu = False
-                    
-                    break  
+##                if return_to_main_menu:
+##                    
+##                    return_to_main_menu = False
+##                    
+##                    break  
             
                 # build prompt string with appropriate type of action
                 prompt: str = f'{mode.title()} another {text_prefix}text'
