@@ -1638,6 +1638,14 @@ def __main__():
     # display program title
     _display_title(program_name, program_description)
 
+
+
+    # COULD REPLACE THIS SECTION WITH _get_selection() FUNCTION INSTEAD
+    # NOT SURE THAT IS DESIRABLE - FORMATTING IS DIFFERENT - PERHAPS TEST OUT
+    # AS AN ALTERNATIVE AND COMPARE RESULTS - A/B TESTING
+
+    
+
     # display menu of program options
     number = _display_menu(menu_options)
 
@@ -1656,6 +1664,11 @@ def __main__():
 
             else:
                 break
+
+
+        # END SECTION
+
+       
 
         print(f'\n*** {menu_options[selection].upper()} ***')
 
@@ -1698,19 +1711,49 @@ def __main__():
                         for line in more_info[index]:
                             print(line)
 
-                    # prompt user for input method (manual / file)
-                    print(f'Select {text_prefix}text source:\n')
-                    print('1: Manual entry')
-                    print('2: From file')
-                    print('3: Main menu\n')
+
+
+                    # REFACTORING TARGET 1 START
+
+                    error: str = \
+                        'Invalid method selection. Please try again.'
+                    header: str = f'Select {text_prefix}text source:'
+                    options: List[str] = [
+                        'Manual entry',
+                        'From file',
+                        'Main menu',
+                        ]
+
+
+##                    # prompt user for input method (manual / file)
+##                    print(f'Select {text_prefix}text source:\n')
+##                    print('1: Manual entry')
+##                    print('2: From file')
+##                    print('3: Main menu\n')
+
+
+
+                    # SHOULD BE ABLE TO REMOVE THIS LOOP
 
                     loop_get_message: bool = True
                     
                     while loop_get_message:
-                        
-                        method: str = input('Enter selection: ')
 
-                        if method == '1': # manual entry
+                    # IF SO, ALSO REMOVE REFERENCES TO IT BELOW
+                    # AND CORRECT BREAK STATEMENTS FOR PROPER CONTROL FLOW
+
+
+
+
+
+                        # prompt user for input method (manual / file)
+                        
+##                        method: str = input('Enter selection: ')
+
+                        method = _get_selection(options, header, '', \
+                                                error_message = error)
+
+                        if method == 0: # manual entry
 
                             print(' ')
                             
@@ -1728,7 +1771,7 @@ def __main__():
                             
                             break                        
 
-                        elif method == '2': # from file
+                        elif method == 1: # from file
 
                             print(' ')
 
@@ -1751,7 +1794,7 @@ def __main__():
                             if not (message_is_valid := \
                                     validate_message(message)):
                                 
-                                print(' ')
+##                                print(' ')
                                 
                                 raise BadValueError('Loaded message fails ' + \
                                                     'validation check.')
@@ -1760,17 +1803,31 @@ def __main__():
                             break
 
 
-                        elif method == '3': # return to main menu
+                        elif method == 2: # return to main menu
                             
                             return_to_main_menu = True
                             break
 
-                        else:
-                            print('Invalid method selection. Please try again.')
+                        else: # if method has an invalid value
+##                            print('Invalid method selection. Please try again.')
 
+                            raise FooBarError()
+
+                            # raise StakesTooHighError()
+                            
                     if return_to_main_menu:                   
                         return_to_main_menu = False
                         break
+
+
+
+
+
+                    # END TARGET 1
+
+
+
+                    
 
                     if message == -1: # abort code
 
@@ -1794,8 +1851,16 @@ def __main__():
                     if processed_text:
                         print('\nOperation succcessful.')
 
-                    # include else
-                        # raise 
+                    else:
+                        raise FooBarError()
+
+
+
+
+                    # TARGET 2 FOR REFACTORING START
+
+
+                    
 
                     display_message_actions: bool = True
                     
@@ -1854,7 +1919,7 @@ def __main__():
                                     print('File write aborted.\n')
                                     
                                 else:
-                                    raise('File write error.\n')
+                                    raise BadValueError('File write error.\n')
 
                                 # break and return to message actions menu
                                 break
@@ -1876,6 +1941,8 @@ def __main__():
                                 print('Invalid method selection. Please try ' + \
                                       'again.')
 
+                                # raise StakesTooHighError()
+
                         if return_to_loop_encode:
                             break
 
@@ -1890,6 +1957,14 @@ def __main__():
                         return_to_loop_encode = False
 
                         continue
+
+
+
+
+                # END TARGET 2 FOR REFACTORING
+                
+
+
 
                 except BadValueError as err:
                     print('\nUnable to complete operation.')
