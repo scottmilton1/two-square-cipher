@@ -1406,44 +1406,14 @@ def __main__():
                     # go back and get it again
                     continue
 
-
-
-##                # confirm file name - [P]roceed [R]etype or [A]bort
-##                print(f'\nConfirm filename: {filename}')
-##
-##                print('1: Proceed')
-##                print('2: Redo')
-##                print('3: Abort')
-
-
-
-
                 header: str = f'Confirm filename: {filename}'
                 loop_get_choice: bool = True
 
                 while loop_get_choice:
 
-
-
-
-##                    choice: str = input('\nEnter selection >> ')
-
-
-
-
                     choice: int = _get_selection(options, header, '')  
 
                     if choice == 0: # proceed
-
-
-                        
-
-##                        loop_save_file: bool = True
-##
-##                        while loop_save_file:
-
-
-
 
                         while True:
 
@@ -1481,29 +1451,11 @@ def __main__():
                                 print(err)
                                 print(type(err))
 
-##                                print(' ')
-##                                print('What would you like to do?\n')
-##                                print('1: Retry filename')
-##                                print('2: Re-enter filename')
-##                                print('3: Abort')
-
-
                                 recourse: int = \
                                     _get_selection(recourse_options,
                                     recourse_header, '')
 
-
-
-##                                while True:
-##
-##                                    recourse: str = input('\nEnter ' + \
-##                                                          'selection >> ')
-
                                 if recourse == 0: # retry same filename
-
-##                                    # return to beginning of file operation
-##                                    loop_get_choice = False
-##                                    break
 
                                     continue
                                 
@@ -1515,14 +1467,7 @@ def __main__():
                                     filename = ''
 
                                     # return to beginning of filename entry
-                                    loop_get_choice = False
-
-
-                                    
-##                                    loop_save_file = False
-
-
-                                    
+                                    loop_get_choice = False                                    
                                     break
 
                                 elif recourse == 2: # abort
@@ -1531,11 +1476,8 @@ def __main__():
 
                                 else: # if recourse has an invalid value
 
-                                    raise FooBarError()
-                                    
-##                                    print('Invalid selection. Please ' + \
-##                                          'try again.')
-                                    
+                                    raise FooBarError()                                    
+                                   
                     elif choice == 1: # redo
                         
                         print('\nRedoing...\n')
@@ -1553,12 +1495,6 @@ def __main__():
                         return -1
 
                     else: # if choice has an invalid value
-
-
-                        
-##                        print('Invalid response. Please try again.')
-
-
 
                         raise FooBarError()
         
@@ -1698,10 +1634,6 @@ def __main__():
         'are each generated using one of the keys you create.',
         ]
     tables: Union[Table, bool] = [[''], ['']] # SET HINT AS TABLE OR LIST???
-
-    ##### PROGRAM START #####
-
-    ##### ADD TRY EXCEPT BLOCKS TO MAIN PROGRAM TO HANDLE ERRORS GRACEFULLY ###
 
     # display program title
     _display_title(program_name, program_description)
@@ -1876,10 +1808,9 @@ def __main__():
                         print(f'3: {code_prefix.title()}crypt another message.') 
                         print('4: Exit to main menu\n')
 
-                        # get selection for message action
-
                         loop_get_message_action: bool = True
-                        
+
+                        # get selection for message action                        
                         while loop_get_message_action:
                             
                             method: str = input('Enter selection: ')
@@ -1976,13 +1907,7 @@ def __main__():
                     print(err)
                     print(type(err))
                     raise
-
-##                if return_to_main_menu:
-##                    
-##                    return_to_main_menu = False
-##                    
-##                    break  
-            
+           
                 # build prompt string with appropriate type of action
                 prompt: str = f'{mode.title()} another {text_prefix}text'
 
