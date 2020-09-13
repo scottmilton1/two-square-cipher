@@ -1724,15 +1724,6 @@ def __main__():
                         'Main menu',
                         ]
 
-
-##                    # prompt user for input method (manual / file)
-##                    print(f'Select {text_prefix}text source:\n')
-##                    print('1: Manual entry')
-##                    print('2: From file')
-##                    print('3: Main menu\n')
-
-
-
                     # SHOULD BE ABLE TO REMOVE THIS LOOP
 
                     loop_get_message: bool = True
@@ -1743,13 +1734,7 @@ def __main__():
                     # AND CORRECT BREAK STATEMENTS FOR PROPER CONTROL FLOW
 
 
-
-
-
                         # prompt user for input method (manual / file)
-                        
-##                        method: str = input('Enter selection: ')
-
                         method = _get_selection(options, header, '', \
                                                 error_message = error)
 
@@ -1792,16 +1777,13 @@ def __main__():
                                 break
 
                             if not (message_is_valid := \
-                                    validate_message(message)):
-                                
-##                                print(' ')
-                                
+                                    validate_message(message)):                                
+                             
                                 raise BadValueError('Loaded message fails ' + \
                                                     'validation check.')
                             
                             # if message loaded and validated, break and proceed
                             break
-
 
                         elif method == 2: # return to main menu
                             
@@ -1809,11 +1791,8 @@ def __main__():
                             break
 
                         else: # if method has an invalid value
-##                            print('Invalid method selection. Please try again.')
-
+                            
                             raise FooBarError()
-
-                            # raise StakesTooHighError()
                             
                     if return_to_main_menu:                   
                         return_to_main_menu = False
@@ -1821,13 +1800,6 @@ def __main__():
 
 
 
-
-
-                    # END TARGET 1
-
-
-
-                    
 
                     if message == -1: # abort code
 
