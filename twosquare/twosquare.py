@@ -2084,14 +2084,26 @@ def __main__():
                                                   '')
 
                     if message_type in [0, 1]: # plaintext or ciphertext
+
+                        # assign shorter name for message_type for convenience
                         index: int = [0, 1].index(message_type)
-                        code_prefix: str = ['en', 'de'].pop(index)
+
+                        # use index to assign correct values for message type
+                        code_prefix: str = ['en', 'de'][index]
                         info_message: List[str] = \
-                            [info_plaintext, info_ciphertext].pop(index)
-##                        info_message: List[str] = info_plaintext if \
-##                            message_type == 0 else info_ciphertext
-                        mode: str = ['encrypt', 'decrypt'].pop(index)
-                        text_prefix: str = ['plain', 'cipher'].pop(index)
+                            [info_plaintext, info_ciphertext][index]
+                        mode: str = ['encrypt', 'decrypt'][index]
+                        text_prefix: str = ['plain', 'cipher'][index]
+
+
+##                        index: int = [0, 1].index(message_type)
+##                        code_prefix: str = ['en', 'de'].pop(index)
+##                        info_message: List[str] = \
+##                            [info_plaintext, info_ciphertext].pop(index)
+####                        info_message: List[str] = info_plaintext if \
+####                            message_type == 0 else info_ciphertext
+##                        mode: str = ['encrypt', 'decrypt'].pop(index)
+##                        text_prefix: str = ['plain', 'cipher'].pop(index)
 
 
 ##                        choice = int(choice)
