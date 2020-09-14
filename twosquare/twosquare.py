@@ -540,8 +540,8 @@ def validate_ciphertext(message: str) -> bool:
         for character in message:
 
             if not (character.isascii() and character.isprintable()):
-                raise BadValueError(f'Only printable ASCII characters are ' + \
-                                    'allowed in {message_type}.')
+                raise BadValueError('Only printable ASCII characters are ' + \
+                                    f'allowed in {message_type}.')
 
             if character.isspace():
                 raise BadValueError('White space is not allowed in the ' + \
@@ -810,7 +810,7 @@ def validate_plaintext(message: str) -> bool:
 
         if contains_a_letter == False:
             raise BadValueError('Error: No letters present in the ' + \
-                                '{message_type}. Alas, symbolism is ' + \
+                                f'{message_type}. Alas, symbolism is ' + \
                                 'sensational,\nand punctuation is paramount' + \
                                 ', but letters are legendary!')        
 
@@ -2070,15 +2070,6 @@ def __main__():
 
                 try:
 
-##                    print('\nSelect message type:')
-##                    print('1: Plaintext')
-##                    print('2: Ciphertext')
-##                    print('3: Main menu\n')
-
-##                    while True:
-
-##                    choice: str = input('Enter selection >> ')
-
                     message_type = _get_selection(message_type_options,
                                                   message_type_header,
                                                   '')
@@ -2094,55 +2085,18 @@ def __main__():
                             [info_plaintext, info_ciphertext][index]
                         mode: str = ['encrypt', 'decrypt'][index]
                         text_prefix: str = ['plain', 'cipher'][index]
-
-
-##                        index: int = [0, 1].index(message_type)
-##                        code_prefix: str = ['en', 'de'].pop(index)
-##                        info_message: List[str] = \
-##                            [info_plaintext, info_ciphertext].pop(index)
-####                        info_message: List[str] = info_plaintext if \
-####                            message_type == 0 else info_ciphertext
-##                        mode: str = ['encrypt', 'decrypt'].pop(index)
-##                        text_prefix: str = ['plain', 'cipher'].pop(index)
-
-
-##                        choice = int(choice)
-##                        pass
                        
                     elif message_type == 2: # return to main menu
-##                            return_to_main_menu = True
+
                         break
 
                     else: # if message_type has invalid value
                         
                         raise FooBarError()
+
+                    print(' ') 
                     
-##                            print('Invalid selection. Please try again.')
-
-
-
-
-
-##                    if return_to_main_menu:
-##                        return_to_main_menu = False
-##                        break
-
-##                    code_prefix: str = 'en' if message_type == 0 else 'de'
-##                    info_message: List[str] = info_plaintext if \
-##                        message_type == 0 else info_ciphertext
-
-                    
-                    loop_print_message: bool = True
-
-
-                    
-##                    mode: str = 'encrypt' if message_type == 0 else 'decrypt'
-##                    text_prefix: str = 'plain' if message_type == 0 else \
-##                                       'cipher'
-
-                    print(' ')
-
-                    
+                    loop_print_message: bool = True                 
 
                     while loop_print_message:
 
