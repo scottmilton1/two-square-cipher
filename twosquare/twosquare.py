@@ -2058,55 +2058,79 @@ def __main__():
 
         elif selection == 7: # validate a message
 
-            loop_validate_message: bool = True 
+            loop_validate_message: bool = True
+            message_type_header: str = 'Select message type:'
+            message_type_options: List[str] = [
+                'Plaintext',
+                'Ciphertext',
+                'Main menu',
+                ]
 
             while loop_validate_message:
 
                 try:
 
+##                    print('\nSelect message type:')
+##                    print('1: Plaintext')
+##                    print('2: Ciphertext')
+##                    print('3: Main menu\n')
+
+##                    while True:
+
+##                    choice: str = input('Enter selection >> ')
+
+                    message_type = _get_selection(message_type_options,
+                                                  message_type_header,
+                                                  '')
+
+                    if message_type in [0, 1]: # plaintext or ciphertext
+                        index: int = [0, 1].index(message_type)
+                        code_prefix: str = ['en', 'de'].pop(index)
+                        info_message: List[str] = \
+                            [info_plaintext, info_ciphertext].pop(index)
+##                        info_message: List[str] = info_plaintext if \
+##                            message_type == 0 else info_ciphertext
+                        mode: str = ['encrypt', 'decrypt'].pop(index)
+                        text_prefix: str = ['plain', 'cipher'].pop(index)
 
 
-
-
-                    print('\nSelect message type:')
-                    print('1: Plaintext')
-                    print('2: Ciphertext')
-                    print('3: Main menu\n')
-
-                    while True:
-
-                        choice: str = input('Enter selection >> ')
-
-                        if choice in ['1', '2']: # plaintext or ciphertext
-
-                            choice = int(choice)
-                            break
-                           
-                        elif choice == '3': # return to main menu
-                            return_to_main_menu = True
-                            break
-
-                        else:
-                            print('Invalid selection. Please try again.')
-
-
-
-
-
-                    if return_to_main_menu:
-                        return_to_main_menu = False
+##                        choice = int(choice)
+##                        pass
+                       
+                    elif message_type == 2: # return to main menu
+##                            return_to_main_menu = True
                         break
 
-                    code_prefix: str = 'en' if choice == 1 else 'de'
-                    info_message: List[str] = info_plaintext if choice == 1 \
-                        else info_ciphertext
-                    loop_print_message: bool = True
-                    mode: str = 'encrypt' if choice == 1 else 'decrypt'
+                    else: # if message_type has invalid value
+                        
+                        raise FooBarError()
+                    
+##                            print('Invalid selection. Please try again.')
 
-                    return_to_loop_print_message: bool = False
-                    text_prefix: str = 'plain' if choice == 1 else 'cipher'
+
+
+
+
+##                    if return_to_main_menu:
+##                        return_to_main_menu = False
+##                        break
+
+##                    code_prefix: str = 'en' if message_type == 0 else 'de'
+##                    info_message: List[str] = info_plaintext if \
+##                        message_type == 0 else info_ciphertext
+
+                    
+                    loop_print_message: bool = True
+
+
+                    
+##                    mode: str = 'encrypt' if message_type == 0 else 'decrypt'
+##                    text_prefix: str = 'plain' if message_type == 0 else \
+##                                       'cipher'
 
                     print(' ')
+
+                    
 
                     while loop_print_message:
 
