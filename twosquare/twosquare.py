@@ -1196,7 +1196,10 @@ def __main__():
                 while not (filename := input('Enter filename >> ')):
 
                     # if user leaves blank return abort code
-                    if filename == '':                        
+                    if filename == '':
+
+                        print(' ')
+                        
                         return -1
                       
                     print('Invalid filename. Please try again.')
@@ -1275,6 +1278,8 @@ def __main__():
                                     break
 
                                 elif recourse == 2: # abort
+
+                                    print(' ')
                                     
                                     return -1
 
@@ -1391,6 +1396,9 @@ def __main__():
 
                     # if user leaves blank return abort code
                     if filename == '':
+
+                        print(' ')
+                        
                         return -1
                       
                     print('Invalid filename. Please try again.')
@@ -1471,6 +1479,8 @@ def __main__():
                                     break
 
                                 elif recourse == 2: # abort
+
+                                    print(' ')
 
                                     return -1
 
@@ -2050,6 +2060,10 @@ def __main__():
 
             loop_validate_message: bool = True
 
+            
+
+            
+
             while loop_validate_message:
 
                 try:
@@ -2076,6 +2090,7 @@ def __main__():
                             print('Invalid selection. Please try again.')
 
                     if return_to_main_menu:
+                        return_to_main_menu = False
                         break
 
                     code_prefix: str = 'en' if choice == 1 else 'de'
@@ -2087,11 +2102,25 @@ def __main__():
                     return_to_loop_print_message: bool = False
                     text_prefix: str = 'plain' if choice == 1 else 'cipher'
 
+                    print(' ')
+
                     while loop_print_message:
 
-                        message_type: str = ''
+                        # message_type: str = ''
 
-                        print(f'\nOkay, {text_prefix}text...')
+                        # MOVE THESE VARIABLES TO TOP OF MAIN PROGRAM???
+                        # OR MAKE THIS METHOD SELECTION A HELPER FUNCTION
+                        # SINCE IT SEEMS TO OCCUR AT TWO PLACES IN THE PROGRAM
+                        method_error: str = \
+                            'Invalid method selection. Please try again.'
+                        method_header: str = f'Select {text_prefix}text source:'
+                        method_options: List[str] = [
+                            'Manual entry',
+                            'From file',
+                            'Main menu',
+                            ]
+
+                        print(f'Okay, {text_prefix}text...')
 
                         print(' ')
 
@@ -2099,68 +2128,64 @@ def __main__():
                         for line in info_message:
                             print(line)
 
-                        print(' ')                  
-
                         # prompt user for input method (manual / file)
-                        print(f'Select {text_prefix}text source:\n')
-                        print('1: Manual entry')
-                        print('2: From file')
-                        print('3: Main menu\n')
+                        method = _get_selection(method_options, method_header, \
+                                                '', error_message = method_error)
 
-                        loop_get_message: bool = True
-                        
-                        while loop_get_message:
+                        if method == 0: # manual entry
+
+                            print(' ')
                             
-                            method: str = input('Enter selection: ')
+                            # prompt the user for message
+                            prompt: str = f'Enter {text_prefix}text to ' + \
+                                          f'validate: '
+                            message: str = input(prompt)
 
-                            if method == '1': # manual entry
+##                            loop_print_message = False
+                            break                        
 
-                                print(' ')
+                        elif method == 1: # from file
+
+                            print(' ')
+
+                            # display info about file types                      
+                            for line in info_file_types:
+                                print(line)
+
+                            print(' ')
+
+                            if not (message := _load_file()): # if error
                                 
-                                # prompt the user for message
-                                prompt: str = f'Enter {text_prefix}text to ' + \
-                                              f'validate: '
-                                message: str = input(prompt)
+##                                continue
 
-                                loop_get_message = False
-                                loop_print_message = False
-                                break                        
-
-                            elif method == '2': # from file
-
-                                print(' ')
-
-                                # display info about file types                      
-                                for line in info_file_types:
-                                    print(line)
-
-                                print(' ')
-
-                                if not (message := _load_file()):
-                                    
-                                    break
-
-                                if message == -1: # abort code
-
-                                    # return to [en/de]crypt menu
-                                    loop_get_message = False            
-                                    break                                
-                               
-                                # if message loaded, break 
-                                loop_print_message = False
                                 break
 
-                            elif method == '3': # return to main menu
-                                
-                                return_to_main_menu = True
-                                break
+                            if message == -1: # abort code
 
-                            else:
-                                print('Invalid method selection. Please try' + \
-                                      ' again.')
-
-                        if return_to_main_menu:
+                                continue
+                            
+##                                # return to [en/de]crypt menu
+##                                loop_get_message = False            
+##                                break                                
+                           
+                            # if message loaded, break 
+##                            loop_print_message = False
                             break
+
+                        elif method == 2: # return to main menu
+                            
+                            return_to_main_menu = True
+                            break
+
+                        else: # if method has invalid value                            
+                          
+                            raise FooBarError()
+
+
+                        
+
+##                        if return_to_main_menu:
+##                            break
                         
                     if return_to_main_menu:
                         return_to_main_menu = False   
