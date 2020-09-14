@@ -1779,30 +1779,11 @@ def __main__():
                     else:
                         raise FooBarError()
 
-
-
-
-                    # TARGET 2 FOR REFACTORING START
-
-                    # MIGHT BE ABLE TO GET RID OF THIS LOOP
-                    
-
                     display_message_actions: bool = True
-                    
+
+                    # ask user what would like to do with message                    
                     while display_message_actions:
-
-
-
-                    # END LOOP
                         
-
-##                        # if successful, ask user what would like to do
-##                        print('What would you like to do?\n')
-##                        print('1: View message')
-##                        print('2: Save message')
-##                        print(f'3: {code_prefix.title()}crypt another message.') 
-##                        print('4: Exit to main menu\n')
-
                         message_actions_header: str = \
                             'What would you like to do?' 
                         message_options: List[str] = [
@@ -1812,93 +1793,59 @@ def __main__():
                             'Exit to main menu',
                             ]
 
+                        message_action: str = _get_selection( \
+                            message_options, message_actions_header, '')                         
 
+                        if message_action == 0: # view message
 
-                        # CAN PROBABLY REMOVE THIS LOOP                        
+                            print(f'\nHere is the {code_prefix}coded ' + \
+                                  'message:\n')
 
-                        loop_get_message_action: bool = True
-
-                        # get selection for message action                        
-                        while loop_get_message_action:
-
-                            # END LOOP
+                            print(processed_text)
                             
+                        elif message_action == 1: # save file
+
+                            print(' ')
+
+                            # display info about file types                      
+                            for line in info_file_types:
+                                print(line)
+
+                            print(' ')
+
+                            filename: str = ''
+
+                            save_status: int = \
+                                _save_file(filename, processed_text)
+
+                            if save_status == 1:
+                                print('File write successful. ' + \
+                                      'Message saved.')
+                                                                    
+                            elif save_status == 0:
+                                print('File write failed.')
+                                
+                            elif save_status == -1:
+                                print('File write aborted.')
+                                
+                            else:
+                                raise BadValueError('File write error.')
+
+                        elif message_action == 2: # [en/de]crypt another
                             
+                            # break and return to encode menu
+                            return_to_loop_encode = True
+                            break 
 
+                        elif message_action == 3: # return to main menu
 
-                            # if successful, ask user what would like to do
-                            message_action: str = _get_selection( \
-                                message_options, message_actions_header, '')
-                          
+                            # up two levels:
+                            return_to_main_menu = True
+                            break                               
 
-                         
+                        else: # if value of message_action is invalid
 
-                            if message_action == 0: # view message
-
-                                print(f'\nHere is the {code_prefix}coded ' + \
-                                      'message:\n')
-
-                                print(processed_text)
-                                
-##                                print(' ')
-                                
-                                # break from loop_get_message_action
-                                # and print actions menu again
-                                break
-
-                            elif message_action == 1: # save file
-
-                                print(' ')
-
-                                # display info about file types                      
-                                for line in info_file_types:
-                                    print(line)
-
-                                print(' ')
-
-                                filename: str = ''
-
-                                save_status: int = \
-                                    _save_file(filename, processed_text)
-
-                                if save_status == 1:
-                                    print('File write successful. ' + \
-                                          'Message saved.')
-                                                                        
-                                elif save_status == 0:
-                                    print('File write failed.')
-                                    
-                                elif save_status == -1:
-                                    print('File write aborted.')
-                                    
-                                else:
-                                    raise BadValueError('File write error.')
-
-                                # break and return to message actions menu
-                                break
-
-                            elif message_action == 2: # [en/de]crypt another
-                                
-                                # break and return to encode menu:
-                                return_to_loop_encode = True
-                                break 
-
-                            elif message_action == 3: # return to main menu
-
-                                # up three levels:
-                                return_to_main_menu = True
-                                return_to_loop_encode = True
-                                break                               
-
-                            else: # if value of message_action is invalid
-
-                                raise FooBarError()
-
-                        if return_to_loop_encode:
-                            break
-
-
-
+                            raise FooBarError()
 
 
                     if return_to_main_menu:
@@ -1906,23 +1853,13 @@ def __main__():
                         return_to_main_menu = False
                         
                         break
-
-
                     
-
+                    # return early to avoid the prompt below exceptions section
                     if return_to_loop_encode:
                         
                         return_to_loop_encode = False
 
                         continue
-
-
-
-
-                # END TARGET 2 FOR REFACTORING
-                
-
-
 
                 except BadValueError as err:
                     print('Unable to complete operation.')
