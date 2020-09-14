@@ -2058,16 +2058,16 @@ def __main__():
 
         elif selection == 7: # validate a message
 
-            loop_validate_message: bool = True
-
-            
-
-            
+            loop_validate_message: bool = True 
 
             while loop_validate_message:
 
                 try:
-         
+
+
+
+
+
                     print('\nSelect message type:')
                     print('1: Plaintext')
                     print('2: Ciphertext')
@@ -2089,6 +2089,10 @@ def __main__():
                         else:
                             print('Invalid selection. Please try again.')
 
+
+
+
+
                     if return_to_main_menu:
                         return_to_main_menu = False
                         break
@@ -2105,8 +2109,6 @@ def __main__():
                     print(' ')
 
                     while loop_print_message:
-
-                        # message_type: str = ''
 
                         # MOVE THESE VARIABLES TO TOP OF MAIN PROGRAM???
                         # OR MAKE THIS METHOD SELECTION A HELPER FUNCTION
@@ -2129,8 +2131,10 @@ def __main__():
                             print(line)
 
                         # prompt user for input method (manual / file)
-                        method = _get_selection(method_options, method_header, \
-                                                '', error_message = method_error)
+                        method = _get_selection(method_options,
+                                                method_header,
+                                                '',
+                                                error_message = method_error)
 
                         if method == 0: # manual entry
 
@@ -2141,7 +2145,6 @@ def __main__():
                                           f'validate: '
                             message: str = input(prompt)
 
-##                            loop_print_message = False
                             break                        
 
                         elif method == 1: # from file
@@ -2156,20 +2159,13 @@ def __main__():
 
                             if not (message := _load_file()): # if error
                                 
-##                                continue
-
                                 break
 
                             if message == -1: # abort code
 
-                                continue
-                            
-##                                # return to [en/de]crypt menu
-##                                loop_get_message = False            
-##                                break                                
+                                continue        
                            
                             # if message loaded, break 
-##                            loop_print_message = False
                             break
 
                         elif method == 2: # return to main menu
@@ -2180,12 +2176,6 @@ def __main__():
                         else: # if method has invalid value                            
                           
                             raise FooBarError()
-
-
-                        
-
-##                        if return_to_main_menu:
-##                            break
                         
                     if return_to_main_menu:
                         return_to_main_menu = False   
