@@ -908,7 +908,7 @@ def __main__():
     
     """
 
-    # inner functions for main program only - not for use as module
+    # inner functions for main program only - not intended for use as module
 
     def _coming_soon() -> NoReturn:
         """Prints a message indicating that a program's feature is coming soon.
@@ -1697,18 +1697,18 @@ def __main__():
                         for line in more_info[index]:
                             print(line)
 
-                    error: str = \
+                    method_error: str = \
                         'Invalid method selection. Please try again.'
-                    header: str = f'Select {text_prefix}text source:'
-                    options: List[str] = [
+                    method_header: str = f'Select {text_prefix}text source:'
+                    method_options: List[str] = [
                         'Manual entry',
                         'From file',
                         'Main menu',
                         ]
 
                     # prompt user for input method (manual / file)
-                    method = _get_selection(options, header, '', \
-                                            error_message = error)
+                    method = _get_selection(method_options, method_header, \
+                                            '', error_message = method_error)
 
                     if method == 0: # manual entry
 
@@ -1784,9 +1784,9 @@ def __main__():
                     # ask user what would like to do with message                    
                     while display_message_actions:
                         
-                        message_actions_header: str = \
+                        message_action_header: str = \
                             'What would you like to do?' 
-                        message_options: List[str] = [
+                        message_action_options: List[str] = [
                             'View message',
                             'Save message',
                             f'{code_prefix.title()}crypt another message.',
@@ -1794,7 +1794,7 @@ def __main__():
                             ]
 
                         message_action: str = _get_selection( \
-                            message_options, message_actions_header, '')                         
+                            message_action_options, message_action_header, '')                         
 
                         if message_action == 0: # view message
 
