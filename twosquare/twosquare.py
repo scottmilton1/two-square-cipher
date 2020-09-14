@@ -1636,15 +1636,7 @@ def __main__():
     tables: Union[Table, bool] = [[''], ['']] # SET HINT AS TABLE OR LIST???
 
     # display program title
-    _display_title(program_name, program_description)
-
-
-
-    # COULD REPLACE THIS SECTION WITH _get_selection() FUNCTION INSTEAD
-    # NOT SURE THAT IS DESIRABLE - FORMATTING IS DIFFERENT - PERHAPS TEST OUT
-    # AS AN ALTERNATIVE AND COMPARE RESULTS - A/B TESTING
-
-    
+    _display_title(program_name, program_description)   
 
     # display menu of program options
     number = _display_menu(menu_options)
@@ -1665,15 +1657,9 @@ def __main__():
             else:
                 break
 
-
-        # END SECTION
-
-       
-
         print(f'\n*** {menu_options[selection].upper()} ***')
 
-        # handle the user's selection
-      
+        # handle the user's selection      
         if selection == 0: # display options menu
             print(' ')
             
@@ -1711,10 +1697,6 @@ def __main__():
                         for line in more_info[index]:
                             print(line)
 
-
-
-                    # REFACTORING TARGET 1 START
-
                     error: str = \
                         'Invalid method selection. Please try again.'
                     header: str = f'Select {text_prefix}text source:'
@@ -1723,16 +1705,6 @@ def __main__():
                         'From file',
                         'Main menu',
                         ]
-
-##                    # SHOULD BE ABLE TO REMOVE THIS LOOP
-##
-##                    loop_get_message: bool = True
-##                    
-##                    while loop_get_message:
-##
-##                    # IF SO, ALSO REMOVE REFERENCES TO IT BELOW
-##                    # AND CORRECT BREAK STATEMENTS FOR PROPER CONTROL FLOW
-
 
                     # prompt user for input method (manual / file)
                     method = _get_selection(options, header, '', \
@@ -1752,9 +1724,7 @@ def __main__():
                             
                             print(' ')
                             
-                            message: str = input(prompt)
-                        
-##                        break                        
+                            message: str = input(prompt)                 
 
                     elif method == 1: # from file
 
@@ -1767,20 +1737,12 @@ def __main__():
                         print(' ')
 
                         if not (message := _load_file()): # if returns 0: error
-                            
-##                            break # raise error here or return to menu???
-                            
+                           
                             # return to loop_encode and display menu again
                             continue
-                        
-                            # pass
-
 
                         if message == -1: # abort code
 
-                            # return to [en/de]crypt menu
-##                            loop_get_message = False
-##                            break
                             continue
 
                         if not (message_is_valid := \
@@ -1789,35 +1751,14 @@ def __main__():
                             raise BadValueError('Loaded message fails ' + \
                                                 'validation check.')
                         
-##                        # if message loaded and validated, break and proceed
-##                        break
-
                     elif method == 2: # return to main menu
                         
-##                        return_to_main_menu = True
                         break
 
                     else: # if method has an invalid value
                         
                         raise FooBarError()
-
-
-
-
-
-                            
-##                    if return_to_main_menu:                   
-##                        return_to_main_menu = False
-##                        break
-
-
-
-
-##                    if message == -1: # abort code
-##
-##                            # return to [en/de]crypt menu
-##                            continue
-              
+            
                     # prepare to perform encoding or decoding of message  
                     # choose function to call depending on selected mode
                     func: Callable[[str, str, str], Union[str, bool]] = \
@@ -1843,41 +1784,69 @@ def __main__():
 
                     # TARGET 2 FOR REFACTORING START
 
-
+                    # MIGHT BE ABLE TO GET RID OF THIS LOOP
                     
 
                     display_message_actions: bool = True
                     
                     while display_message_actions:
 
-                        # if successful, ask user what would like to do
-                        print('What would you like to do?\n')
-                        print('1: View message')
-                        print('2: Save message')
-                        print(f'3: {code_prefix.title()}crypt another message.') 
-                        print('4: Exit to main menu\n')
+
+
+                    # END LOOP
+                        
+
+##                        # if successful, ask user what would like to do
+##                        print('What would you like to do?\n')
+##                        print('1: View message')
+##                        print('2: Save message')
+##                        print(f'3: {code_prefix.title()}crypt another message.') 
+##                        print('4: Exit to main menu\n')
+
+                        message_actions_header: str = \
+                            'What would you like to do?' 
+                        message_options: List[str] = [
+                            'View message',
+                            'Save message',
+                            f'{code_prefix.title()}crypt another message.',
+                            'Exit to main menu',
+                            ]
+
+
+
+                        # CAN PROBABLY REMOVE THIS LOOP                        
 
                         loop_get_message_action: bool = True
 
                         # get selection for message action                        
                         while loop_get_message_action:
-                            
-                            method: str = input('Enter selection: ')
 
-                            if method == '1': # view message
+                            # END LOOP
+                            
+                            
+
+
+                            # if successful, ask user what would like to do
+                            message_action: str = _get_selection( \
+                                message_options, message_actions_header, '')
+                          
+
+                         
+
+                            if message_action == 0: # view message
 
                                 print(f'\nHere is the {code_prefix}coded ' + \
                                       'message:\n')
 
                                 print(processed_text)
                                 
-                                print(' ')
+##                                print(' ')
                                 
                                 # break from loop_get_message_action
                                 # and print actions menu again
                                 break
 
-                            elif method == '2': # save file
+                            elif message_action == 1: # save file
 
                                 print(' ')
 
@@ -1897,44 +1866,49 @@ def __main__():
                                           'Message saved.')
                                                                         
                                 elif save_status == 0:
-                                    print('File write failed.\n')
+                                    print('File write failed.')
                                     
                                 elif save_status == -1:
-                                    print('File write aborted.\n')
+                                    print('File write aborted.')
                                     
                                 else:
-                                    raise BadValueError('File write error.\n')
+                                    raise BadValueError('File write error.')
 
                                 # break and return to message actions menu
                                 break
 
-                            elif method == '3': # [en/de]crypt another message
-
+                            elif message_action == 2: # [en/de]crypt another
+                                
                                 # break and return to encode menu:
                                 return_to_loop_encode = True
                                 break 
 
-                            elif method == '4': # return to main menu
+                            elif message_action == 3: # return to main menu
 
                                 # up three levels:
                                 return_to_main_menu = True
                                 return_to_loop_encode = True
                                 break                               
 
-                            else:
-                                print('Invalid method selection. Please try ' + \
-                                      'again.')
+                            else: # if value of message_action is invalid
 
-                                # raise StakesTooHighError()
+                                raise FooBarError()
 
                         if return_to_loop_encode:
                             break
+
+
+
+
 
                     if return_to_main_menu:
 
                         return_to_main_menu = False
                         
                         break
+
+
+                    
 
                     if return_to_loop_encode:
                         
@@ -1951,17 +1925,17 @@ def __main__():
 
 
                 except BadValueError as err:
-                    print('\nUnable to complete operation.')
+                    print('Unable to complete operation.')
                     print(err)
 
                 except FooBarError as err:
-                    print('\nUnable to complete operation.')
+                    print('Unable to complete operation.')
                     print(err)
                     print(type(err))
                     print(err.subtext)
                     
                 except Exception as err:
-                    print('\nUnable to complete operation.')
+                    print('Unable to complete operation.')
                     print('\nAn unexpected error occurred.')
                     print(err)
                     print(type(err))
@@ -2271,17 +2245,17 @@ def __main__():
                     print(f'Validation check {result} as {text_prefix}text.')
 
                 except BadValueError as err:
-                    print('\nUnable to complete operation.')
+                    print('Unable to complete operation.')
                     print(err)
 
                 except FooBarError as err:
-                    print('\nUnable to complete operation.')
+                    print('Unable to complete operation.')
                     print(err)
                     print(type(err))
                     print(err.subtext)
                     
                 except Exception as err:
-                    print('\nUnable to complete operation.')
+                    print('Unable to complete operation.')
                     print('\nAn unexpected error occurred.')
                     print(err)
                     print(type(err))
