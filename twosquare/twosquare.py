@@ -1707,7 +1707,7 @@ def __main__():
 
                     # print a brief description of process and requirements
                     # give option for more detailed information
-                    for index in range(3):
+                    for index in range(len(more_info)): # range(4):
                         for line in more_info[index]:
                             print(line)
 
@@ -1724,87 +1724,99 @@ def __main__():
                         'Main menu',
                         ]
 
-                    # SHOULD BE ABLE TO REMOVE THIS LOOP
+##                    # SHOULD BE ABLE TO REMOVE THIS LOOP
+##
+##                    loop_get_message: bool = True
+##                    
+##                    while loop_get_message:
+##
+##                    # IF SO, ALSO REMOVE REFERENCES TO IT BELOW
+##                    # AND CORRECT BREAK STATEMENTS FOR PROPER CONTROL FLOW
 
-                    loop_get_message: bool = True
-                    
-                    while loop_get_message:
 
-                    # IF SO, ALSO REMOVE REFERENCES TO IT BELOW
-                    # AND CORRECT BREAK STATEMENTS FOR PROPER CONTROL FLOW
+                    # prompt user for input method (manual / file)
+                    method = _get_selection(options, header, '', \
+                                            error_message = error)
 
+                    if method == 0: # manual entry
 
-                        # prompt user for input method (manual / file)
-                        method = _get_selection(options, header, '', \
-                                                error_message = error)
+                        print(' ')
+                        
+                        # prompt the user for message to encrypt / decrypt
+                        prompt: str = f'Enter {text_prefix}text to {mode}: '
+                        message: str = input(prompt)
 
-                        if method == 0: # manual entry
-
+                        # validate message format and get again until valid
+                        while not (message_is_valid := \
+                                   validate_message(message)):
+                            
                             print(' ')
                             
-                            # prompt the user for message to encrypt / decrypt
-                            prompt: str = f'Enter {text_prefix}text to {mode}: '
                             message: str = input(prompt)
+                        
+##                        break                        
 
-                            # validate message format and get again until valid
-                            while not (message_is_valid := \
-                                       validate_message(message)):
-                                
-                                print(' ')
-                                
-                                message: str = input(prompt)
+                    elif method == 1: # from file
+
+                        print(' ')
+
+                        # display info about file types                      
+                        for line in info_file_types:
+                            print(line)
+
+                        print(' ')
+
+                        if not (message := _load_file()): # if returns 0: error
                             
-                            break                        
-
-                        elif method == 1: # from file
-
-                            print(' ')
-
-                            # display info about file types                      
-                            for line in info_file_types:
-                                print(line)
-
-                            print(' ')
-
-                            if not (message := _load_file()):
-                                
-                                break # raise error here or return to menu???
-
-                            if message == -1: # abort code
-
-                                # return to [en/de]crypt menu
-                                loop_get_message = False
-                                break
-
-                            if not (message_is_valid := \
-                                    validate_message(message)):                                
-                             
-                                raise BadValueError('Loaded message fails ' + \
-                                                    'validation check.')
+##                            break # raise error here or return to menu???
                             
-                            # if message loaded and validated, break and proceed
-                            break
-
-                        elif method == 2: # return to main menu
-                            
-                            return_to_main_menu = True
-                            break
-
-                        else: # if method has an invalid value
-                            
-                            raise FooBarError()
-                            
-                    if return_to_main_menu:                   
-                        return_to_main_menu = False
-                        break
+                            # return to loop_encode and display menu again
+                            continue
+                        
+                            # pass
 
 
-
-
-                    if message == -1: # abort code
+                        if message == -1: # abort code
 
                             # return to [en/de]crypt menu
+##                            loop_get_message = False
+##                            break
                             continue
+
+                        if not (message_is_valid := \
+                                validate_message(message)):                                
+                         
+                            raise BadValueError('Loaded message fails ' + \
+                                                'validation check.')
+                        
+##                        # if message loaded and validated, break and proceed
+##                        break
+
+                    elif method == 2: # return to main menu
+                        
+##                        return_to_main_menu = True
+                        break
+
+                    else: # if method has an invalid value
+                        
+                        raise FooBarError()
+
+
+
+
+
+                            
+##                    if return_to_main_menu:                   
+##                        return_to_main_menu = False
+##                        break
+
+
+
+
+##                    if message == -1: # abort code
+##
+##                            # return to [en/de]crypt menu
+##                            continue
               
                     # prepare to perform encoding or decoding of message  
                     # choose function to call depending on selected mode
