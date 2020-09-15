@@ -135,6 +135,48 @@ def test_runner(tests: list, verbose: bool = True) -> Tuple[int, int]:
 
 ##### CUSTOM ASSERTIONS #####
 
+def assert_False():
+    """TO BE IMPLEMENTED...
+
+    """
+    
+    pass
+
+def assert_in():
+    """TO BE IMPLEMENTED...
+
+    """
+    
+    pass
+
+def assert_is():
+    """TO BE IMPLEMENTED...
+
+    """
+    
+    pass
+
+def assert_is_instance():
+    """TO BE IMPLEMENTED...
+
+    """
+    
+    pass
+
+def assert_is_None():
+    """TO BE IMPLEMENTED...
+
+    """
+    
+    pass
+
+def assert_True():
+    """TO BE IMPLEMENTED...
+
+    """
+    
+    pass
+
 def assert_equal(expected_result, func, *args, **kwargs) -> str:
     """Tests that a function's return value equals an expected result.
 
@@ -216,6 +258,67 @@ def assert_equal(expected_result, func, *args, **kwargs) -> str:
         return "PASS"
 
 ##### UNIT TESTS FOR TWOSQUARE FUNCTIONS #####
+
+
+
+
+
+def test_function_generic(verbose: bool = True) -> NoReturn:
+    """Test suite for an arbitrary function.
+
+    # USE THIS FORMAT TO CREATE GENERALIZED FUNCTION THAT CAN PASS
+    # TEST BANKS TO AS ARGUMENTS - REFACTOR FOR DRY PRINCIPLE
+
+    """
+
+    # should these be global OR just return the local numbers instead
+    # to be tallied by the calling test harness???
+    global global_passed
+    global global_failed
+
+    local_passed: int = 0
+    local_failed: int = 0
+
+    if verbose:
+        logging.debug('\nRunning unit tests for decrypt() function.')
+        logging.debug('Testing different argument types...')
+
+    # create tests against argument types
+    tests_arg_types: list = [ ]
+
+    # create tests for correct return value types
+    tests_ret_val: list = [ ]
+
+    # aliases for type hints
+    Result: Tuple[str, str]
+    Summary: List[Result, Result] = [ ]
+
+    # run tests using the list of assertions
+    Summary.append(test_runner(tests_arg_types, verbose))
+    
+    if verbose:
+        logging.debug('Testing return values...')
+
+    # run second block of tests
+    Summary.append(test_runner(tests_ret_val, verbose))
+
+    # unpack results and add to local counters
+    for result in Summary:
+        passed, failed = result
+        local_passed += passed
+        local_failed += failed
+
+    if verbose:
+        logging.debug(f'{local_passed} tests passed.')
+        logging.debug(f'{local_failed} tests failed.')
+
+    # keep these or change to return statement with total passed / failed
+    global_passed += local_passed
+    global_failed += local_failed
+
+
+
+
 
 def test_create_table(verbose: bool = True) -> NoReturn:
     """Test suite for create_table() function.
@@ -369,6 +472,7 @@ def test_display_table(verbose: bool = True) -> NoReturn:
 
     global_passed += local_passed
     global_failed += local_failed
+
 
 def test_decode(verbose: bool = True) -> NoReturn:
     """Test suite for decode() function.
