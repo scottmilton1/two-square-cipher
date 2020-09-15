@@ -40,9 +40,12 @@ custom_error_classes = [
 for error_class in custom_error_classes:
     exec(f'from {import_path} import {error_class}') 
 
-# Use type aliases for type hints on complex types
+# use type aliases for type hints on complex types
 Row = List[str]
 Table = List[Row]
+
+# set all print statements globally with setting flush = True
+print = partial(print, flush = True)
 
 def create_table(key: str) -> Union[Table, bool]: # return either Table or False
     """Create a Playfair table.
@@ -1661,7 +1664,8 @@ def __main__():
                 if selection < 0 or selection > number:
                     raise ValueError
 
-            except:
+            except Exception as err:
+                
                 print('Invalid selection. Please try again.')
 
             else:
