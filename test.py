@@ -16,7 +16,6 @@ Feel free to replace this test suite with your test runner of choice.
 from typing import List
 from typing import NoReturn
 from typing import Tuple
-from typing import Union
 
 # use logging for test output
 import logging
@@ -44,7 +43,7 @@ for item in import_items:
     exec(f'from {import_path} import {item}')
 
 # globals
-VERBOSE: bool = False
+VERBOSE: bool = True # Could expand this to several levels (e.g. - 0, 1, 2)
 
 # table data is not of type string
 invalid_table_example_1: Table = [
@@ -100,13 +99,6 @@ def run_test(assertion: str, verbose: bool = True) -> bool:
     
     """
 
-##    # if verbose is False, supress all print output from function being tested
-##    if not verbose:      
-##        import io
-##        import sys
-##        saved_stdout = sys.stdout
-##        sys.stdout = io.StringIO()
-
     try:
         exec(assertion)
   
@@ -115,9 +107,6 @@ def run_test(assertion: str, verbose: bool = True) -> bool:
         if verbose:
             logging.debug(err)
             logging.debug('FAIL')
-
-##        else:
-##            sys.stdout = saved_stdout
             
         return False
         
@@ -125,19 +114,8 @@ def run_test(assertion: str, verbose: bool = True) -> bool:
         
         if verbose:
             logging.debug('PASS')
-
-##        else:
-##            sys.stdout = saved_stdout
            
         return True
-
-
-##    finally:
-##
-##        if not verbose:
-##            
-##            # return print output to normal
-##            sys.stdout = saved_stdout
 
 def test_runner(tests: list, verbose: bool = True) -> Tuple[int, int]:
     """Runs a list of tests using run_test function.
@@ -160,6 +138,90 @@ def test_runner(tests: list, verbose: bool = True) -> Tuple[int, int]:
             number_failed += 1
 
     return (number_passed, number_failed)
+
+def test_suite(verbose: bool = True) -> NoReturn:
+    """Test suite that runs all unit tests.
+
+    Test suite that gathers unit tests from the global namespace and
+    passes them to the test_runner function. These unit tests are lists
+    with names that start with the word 'tests' and are comprised of
+    list items that are strings each consisting of an assert statement
+    or a call to an assert function (e.g. - assert_equal()).
+      
+    The test suite tallies totals for passed and failed tests and
+    displays them via logging.debug statements. It has a verbose setting
+    for more detailed output when set to True and when set to False,
+    will attempt to suppress the print statement output from the units
+    being tested.
+
+    Dependencies:
+
+    From logging:
+        debug
+
+    From test (current file):
+        run_test
+        test_runner
+
+    From time:
+        perf_counter
+
+    """
+
+    from time import perf_counter as tpc
+
+    # if verbose is False, supress all print output from units being tested
+    if not verbose:      
+        import io
+        import sys
+        saved_stdout = sys.stdout
+        sys.stdout = io.StringIO()
+
+    total_failed: int = 0
+    total_passed: int = 0
+
+    # start timer for tests
+    start_time = tpc()
+
+    # get all names beginning with 'tests' from global scope
+    for key, value in globals().items():
+        if key.startswith('tests'):
+
+            # remove 'tests' from key to get actual function name
+            name = key[6:]
+
+            if verbose:
+                logging.debug(f'\nRunning unit tests for {name} function.')
+
+            # pass each test bank to test harness
+            passed, failed = test_runner(value, verbose)
+
+            if verbose:
+                logging.debug(f'\nResults for {name}:')
+                logging.debug(f'{passed} tests passed.')
+                logging.debug(f'{failed} tests failed.')
+         
+            # add current test results to total passed and failed
+            total_passed += passed
+            total_failed += failed
+
+    end_time = tpc()
+    total_time = end_time - start_time
+    total_tests = total_passed + total_failed
+
+    message = 'Completed %d tests in %.2f seconds:' % \
+              (total_tests, total_time)
+    messsage_border = '-' * len(message)
+
+    logging.debug('') # white space before completion message
+    logging.debug(message)
+    logging.debug(messsage_border)
+    logging.debug(f'TOTAL TESTS PASSED: {total_passed}')
+    logging.debug(f'TOTAL TESTS FAILED: {total_failed}')
+
+    # restore normal print output
+    if not verbose:
+        sys.stdout = saved_stdout
 
 ##### CUSTOM ASSERTIONS #####
 
@@ -409,98 +471,6 @@ tests_validate_table: List[str] = [
     "assert type(validate_table('keyword')) not in [str, int, tuple, dict]",
     "assert type(validate_table('keyword')) not in [True, None, [ ], '']",
     ]
-
-def test_suite(verbose: bool = True) -> NoReturn:
-    """Test suite that runs all unit tests.
-
-    Test suite that gathers unit tests from the global namespace and
-    passes them to the test_runner function. These unit tests are lists
-    with names that start with the word 'tests' and are comprised of
-    list items that are strings each consisting of an assert statement
-    or a call to an assert function (e.g. - assert_equal()).
-      
-    The test suite tallies totals for passed and failed tests and
-    displays them via logging.debug statements. It has a verbose setting
-    for more detailed output when set to True and when set to False,
-    will attempt to suppress the print statement output from the units
-    being tested.
-
-    Dependencies:
-
-    From logging:
-        debug
-
-    From test (current file):
-        run_test
-        test_runner
-
-    From time:
-        perf_counter
-
-    From typing:
-        List
-        Tuple
-
-    """
-
-    from time import perf_counter as tpc
-
-    # if verbose is False, supress all print output from units being tested
-    if not verbose:      
-        import io
-        import sys
-        saved_stdout = sys.stdout
-        sys.stdout = io.StringIO()
-
-    # aliases for type hints
-    Result: Tuple[str, str]
-    Summary: List[Result] = [ ]
-
-    total_failed: int = 0
-    total_passed: int = 0
-
-    # start timer for tests
-    start_time = tpc()
-
-    # get all names beginning with 'tests' from global scope
-    for key, value in globals().items():
-        if key.startswith('tests'):
-
-            # remove 'tests' from key to get actual function name
-            name = key[6:]
-
-            if verbose:
-                logging.debug(f'\nRunning unit tests for {name} function.')
-
-            # pass each test bank to test harness
-            passed, failed = test_runner(value, verbose)
-
-            if verbose:
-                logging.debug(f'\nResults for {name}:')
-                logging.debug(f'{passed} tests passed.')
-                logging.debug(f'{failed} tests failed.')
-         
-            # add current test results to total passed and failed
-            total_passed += passed
-            total_failed += failed
-
-    end_time = tpc()
-    total_time = end_time - start_time
-    total_tests = total_passed + total_failed
-
-    message = 'Completed %d tests in %.2f seconds:' % \
-              (total_tests, total_time)
-    messsage_border = '-' * len(message)
-
-    logging.debug('') # white space before completion message
-    logging.debug(message)
-    logging.debug(messsage_border)
-    logging.debug(f'TOTAL TESTS PASSED: {total_passed}')
-    logging.debug(f'TOTAL TESTS FAILED: {total_failed}')
-
-    # restore normal print output
-    if not verbose:
-        sys.stdout = saved_stdout
 
 def __main__(verbose: bool = VERBOSE):
 
