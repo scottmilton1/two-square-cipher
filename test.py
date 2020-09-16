@@ -12,6 +12,7 @@ Feel free to replace this test suite with your test runner of choice.
 
 """
 
+# import all functions to be tested
 from twosquare.twosquare import Row
 from twosquare.twosquare import Table
 from twosquare.twosquare import create_table
@@ -25,27 +26,20 @@ from twosquare.twosquare import validate_message
 from twosquare.twosquare import validate_plaintext
 from twosquare.twosquare import validate_table
 
+# import general types (optional: for type hint checking)
 from typing import List
 from typing import NoReturn
 from typing import Tuple
 from typing import Union
 
-# use logging for test output   
+# use logging for test output
 import logging
 logging.basicConfig(level=logging.DEBUG, format = '%(message)s',)
 
 # globals
 VERBOSE: bool = True
-global_passed: int = 0
-global_failed: int = 0
-
-valid_table_example: Table = [
-     ['P', 'Y', 'T', 'H', 'O'],
-     ['N', 'A', 'B', 'C', 'D'],
-     ['E', 'F', 'G', 'IJ', 'K'],
-     ['L', 'M', 'Q', 'R', 'S'],
-     ['U', 'V', 'W', 'X', 'Z'],
-     ]
+##global_passed: int = 0
+##global_failed: int = 0
 
 # table data is not of type string
 invalid_table_example_1: Table = [
@@ -80,6 +74,14 @@ invalid_table_example_4: Table = [
     ['A', 'B', 'C', 'D', 'E'],
     ]
 
+valid_table_example: Table = [
+     ['P', 'Y', 'T', 'H', 'O'],
+     ['N', 'A', 'B', 'C', 'D'],
+     ['E', 'F', 'G', 'IJ', 'K'],
+     ['L', 'M', 'Q', 'R', 'S'],
+     ['U', 'V', 'W', 'X', 'Z'],
+     ]
+
 ##### TEST RUNNERS #####
 
 def run_test(assertion: str, verbose: bool = True) -> bool:
@@ -110,6 +112,43 @@ def run_test(assertion: str, verbose: bool = True) -> bool:
             logging.debug('PASS')
             
         return True
+
+def test_function_generic(function_name: str, tests: list, verbose: bool = True) -> Tuple[int, int]:
+    """Test suite for an arbitrary function.
+
+    Test harness:
+    Takes lists of tests and passees them to a test runner function.
+    Tallies totals for passed and failed tests.
+
+    # USE THIS FORMAT TO CREATE GENERALIZED FUNCTION THAT CAN PASS
+    # TEST BANKS TO AS ARGUMENTS - REFACTOR FOR DRY PRINCIPLE
+
+    """
+
+    local_passed: int = 0
+    local_failed: int = 0
+
+    if verbose:
+        logging.debug(f'\nRunning unit tests for {function_name} function.')
+
+    # aliases for type hints
+    Result: Tuple[str, str]
+    Summary: List[Result] = [ ]
+
+    # run tests using the list of assertions
+    Summary.append(test_runner(tests, verbose))
+    
+    # unpack results and add to counters
+    for result in Summary:
+        passed, failed = result
+        local_passed += passed
+        local_failed += failed
+
+    if verbose:
+        logging.debug(f'{local_passed} tests passed.')
+        logging.debug(f'{local_failed} tests failed.')
+
+    return (local_passed, local_failed)
 
 def test_runner(tests: list, verbose: bool = True) -> Tuple[int, int]:
     """Runs a list of tests using run_test function.
@@ -259,556 +298,128 @@ def assert_equal(expected_result, func, *args, **kwargs) -> str:
 
 ##### UNIT TESTS FOR TWOSQUARE FUNCTIONS #####
 
-
-
-
-
-def test_function_generic(verbose: bool = True) -> NoReturn:
-    """Test suite for an arbitrary function.
-
-    # USE THIS FORMAT TO CREATE GENERALIZED FUNCTION THAT CAN PASS
-    # TEST BANKS TO AS ARGUMENTS - REFACTOR FOR DRY PRINCIPLE
-
-    """
-
-    # should these be global OR just return the local numbers instead
-    # to be tallied by the calling test harness???
-    global global_passed
-    global global_failed
-
-    local_passed: int = 0
-    local_failed: int = 0
-
-    if verbose:
-        logging.debug('\nRunning unit tests for decrypt() function.')
-        logging.debug('Testing different argument types...')
-
-    # create tests against argument types
-    tests_arg_types: list = [ ]
-
-    # create tests for correct return value types
-    tests_ret_val: list = [ ]
-
-    # aliases for type hints
-    Result: Tuple[str, str]
-    Summary: List[Result, Result] = [ ]
-
-    # run tests using the list of assertions
-    Summary.append(test_runner(tests_arg_types, verbose))
-    
-    if verbose:
-        logging.debug('Testing return values...')
-
-    # run second block of tests
-    Summary.append(test_runner(tests_ret_val, verbose))
-
-    # unpack results and add to local counters
-    for result in Summary:
-        passed, failed = result
-        local_passed += passed
-        local_failed += failed
-
-    if verbose:
-        logging.debug(f'{local_passed} tests passed.')
-        logging.debug(f'{local_failed} tests failed.')
-
-    # keep these or change to return statement with total passed / failed
-    global_passed += local_passed
-    global_failed += local_failed
-
-
-
-
-
-def test_create_table(verbose: bool = True) -> NoReturn:
-    """Test suite for create_table() function.
-
-
-    """
-    
-    global global_passed
-    global global_failed
-
-    local_passed: int = 0
-    local_failed: int = 0
-
-    if verbose:
-        logging.debug('\nRunning unit tests for create_table() function.')
-        logging.debug('Testing different argument types...')
-
-    # create tests against argument types
-    tests_arg_types: list = [
-        "assert create_table('string')",
-        "assert not create_table(str)",
-        "assert not create_table('') #mt string",
-        "assert not create_table(' an invalid string!')",
-        "assert not create_table(123)",
-        "assert not create_table(b'01') #bytes",
-        ]
-
-    # create tests for return value types
-    tests_ret_val: list = [        
-        "assert type(create_table('keyword')) in [list, bool]",
-        "assert type(create_table('keyword')) not in [str, int, tuple, dict]",
-        "assert type(create_table('keyword')) not in [True, None, [ ], '']",
-        ]
-
-    # aliases for type hints
-    Result: Tuple[str, str]
-    Summary: List[Result, Result] = [ ]
-
-    # run tests using the list of assertions
-    Summary.append(test_runner(tests_arg_types, verbose))
-    
-    if verbose:
-        logging.debug('Testing return values...')
-
-    # run second block of tests
-    Summary.append(test_runner(tests_ret_val, verbose))
-
-    # unpack results and add to local counters
-    for result in Summary:
-        passed, failed = result
-        local_passed += passed
-        local_failed += failed
-
-    if verbose:
-        logging.debug(f'{local_passed} tests passed.')
-        logging.debug(f'{local_failed} tests failed.')
-
-    global_passed += local_passed
-    global_failed += local_failed
-
-def test_display_table(verbose: bool = True) -> NoReturn:
-    """Test suite for display_table() function.
-
-    """
-
-    global global_passed
-    global global_failed
-
-    local_passed: int = 0
-    local_failed: int = 0
-
-    if verbose:
-        logging.debug('\nRunning unit tests for display_table() function.')
-        logging.debug('Testing different argument types...')
-
-    # test against argument types
-    result = assert_equal(False, display_table, 'string')
-   
-    if result == 'PASS':
-        local_passed += 1
-        
-    elif result.startswith('FAIL'):
-        local_failed += 1
-        
-    else:
-        if verbose:
-            logging.debug('Unexpected test result from assert_equal function.')
-        local_failed += 1
-        
-    if verbose:
-        logging.debug(result)
-
-    # create tests against argument types
-    tests_arg_types: list = [
-        "assert not display_table(list)",
-        "assert not display_table(123)",      
-        "assert not display_table({'dict': 'ionary'})",
-        ]
-
-    # create tests for values
-    tests_values: list = [
-        "assert display_table([" +
-            "['A', 'B', 'C', 'D', 'E']," +
-            "['A', 'B', 'C', 'D', 'E']," +
-            "['A', 'B', 'C', 'D', 'E']," +
-            "['A', 'B', 'C', 'D', 'E']," +
-            "['A', 'B', 'C', 'D', 'E']," +
-            "])",
-        # bad table structure
-        "assert not display_table(['list'])",
-        # table data is not of type string
-        "assert not display_table(invalid_table_example_1)",
-        # not enough rows in table
-        "assert not display_table(invalid_table_example_3)",
-        # too many items in row
-        "assert not display_table(invalid_table_example_4)",
-        ]
-
-    # create tests for return value types
-    tests_ret_val: list = [        
-        "assert type(display_table([[1,2],[3,4]])) == " +
-            "display_table.__annotations__.get('return')", # bool
-        "assert type(display_table(123) == " +
-            "display_table.__annotations__.get('return'))", # bool
-        "assert type(display_table([[5,6],[7,8]])) is bool",
-        "assert type(display_table('false return')) is bool", 
-        ]
-
-    # aliases for type hints
-    Result: Tuple[str, str]
-    Summary: List[Result, Result, Result] = [ ]
-
-    # run tests using the list of assertions
-    Summary.append(test_runner(tests_arg_types, verbose))    
-
-    if verbose:
-        logging.debug('Testing more table values and structures...')
-
-    # run second block of tests
-    Summary.append(test_runner(tests_values, verbose))
-
-    if verbose:
-        logging.debug('Testing return values...')
-
-    # run third block of tests
-    Summary.append(test_runner(tests_ret_val, verbose))
-
-    if verbose:
-        logging.debug(f'{local_passed} tests passed.')
-        logging.debug(f'{local_failed} tests failed.')
-
-    global_passed += local_passed
-    global_failed += local_failed
-
-
-def test_decode(verbose: bool = True) -> NoReturn:
-    """Test suite for decode() function.
-
-    TO BE IMPLEMENTED...
-    
-    """
-
-    pass
-
-def test_decrypt(verbose: bool = True) -> NoReturn:
-    """Test suite for decrypt() function.
-
-    # USE THIS FORMAT TO CREATE GENERALIZED FUNCTION THAT CAN PASS
-    # TEST BANKS TO AS ARGUMENTS - REFACTOR FOR DRY PRINCIPLE
-
-    """
-
-    global global_passed
-    global global_failed
-
-    local_passed: int = 0
-    local_failed: int = 0
-
-    if verbose:
-        logging.debug('\nRunning unit tests for decrypt() function.')
-        logging.debug('Testing different argument types...')
-
-    # create tests against argument types
-    tests_arg_types: list = [ ]
-
-    # create tests for correct return value types
-    tests_ret_val: list = [ ]
-
-    # aliases for type hints
-    Result: Tuple[str, str]
-    Summary: List[Result, Result] = [ ]
-
-    # run tests using the list of assertions
-    Summary.append(test_runner(tests_arg_types, verbose))
-    
-    if verbose:
-        logging.debug('Testing return values...')
-
-    # run second block of tests
-    Summary.append(test_runner(tests_ret_val, verbose))
-
-    # unpack results and add to local counters
-    for result in Summary:
-        passed, failed = result
-        local_passed += passed
-        local_failed += failed
-
-    if verbose:
-        logging.debug(f'{local_passed} tests passed.')
-        logging.debug(f'{local_failed} tests failed.')
-
-    global_passed += local_passed
-    global_failed += local_failed
-
-def test_encrypt(verbose: bool = True) -> NoReturn:
-    """Test suite for encrypt() function.
-
-    """
-
-    global global_passed
-    global global_failed
-
-    local_passed: int = 0
-    local_failed: int = 0
-
-    if verbose:
-        logging.debug('\nRunning unit tests for encrypt() function.')
-        logging.debug('Testing different argument types...')
-
-    # create tests against argument types
-    tests_arg_types: list = [
-        'assert encrypt("This should pass", "falcon", "osprey")',
-        'assert not encrypt("One invalid keyword", "keyword", "pythonista")',
-        'assert not encrypt(123, "not", "string")',
-        'assert not encrypt("", "empty", "plaintex")',
-        'assert not encrypt("$^&@.", "only", "symbol")',
-        'assert not encrypt("1234", "only", "digts")', 
-        'assert not encrypt("1.234", "only", "numbers")',
-        'assert not encrypt("    ", "only", "whitespac")',
-        'assert not encrypt("accént", "foreign", "chars")',
-        'assert not encrypt("umläütö", "foreign", "chars")', 
-        'assert not encrypt("文字", "foreign", "chars")',
-        ]
-
-    # create tests for correct return value types
-    tests_ret_val: list = [
-        'assert type(encrypt("This should pass", "falcon", "osprey")) == str',
-        'assert type(encrypt("Retürns Fälse", "python", "tricks")) is bool',        
-        ]
-
-    # aliases for type hints
-    Result: Tuple[str, str]
-    Summary: List[Result, Result] = [ ]
-
-    # run tests using the list of assertions
-    Summary.append(test_runner(tests_arg_types, verbose))
-    
-    if verbose:
-        logging.debug('Testing return values...')
-
-    # run second block of tests
-    Summary.append(test_runner(tests_ret_val, verbose))
-
-    # unpack results and add to local counters
-    for result in Summary:
-        passed, failed = result
-        local_passed += passed
-        local_failed += failed
-
-    if verbose:
-        logging.debug(f'{local_passed} tests passed.')
-        logging.debug(f'{local_failed} tests failed.')
-
-    global_passed += local_passed
-    global_failed += local_failed
-
-def test_validate_ciphertext(verbose: bool = True) -> NoReturn:
-    """Test suite for validate_ciphertext() function.
-
-    TO BE IMPLEMENTED...
-    
-    """
-
-    pass
-
-def test_validate_key(verbose: bool = True) -> NoReturn:
-    """Test suite for validate_key() function.
-
-    """
-
-    global global_passed
-    global global_failed
-
-    local_passed: int = 0
-    local_failed: int = 0
-
-    if verbose:
-        logging.debug('\nRunning unit tests for validate_key() function.')
-        logging.debug('Testing different argument types...')
-
-    # create tests against argument types
-    tests_arg_types: list = [
-        "assert validate_key('astring')",
-        "assert not validate_key(['list', 2])",
-        "assert not validate_key(123)",
-        "assert not validate_key(True)",
-        "assert not validate_key(None)",
-        "assert not validate_key({})",
-        ]
-
-    # create tests for correct return value types
-    tests_ret_val: list = [        
-        "assert type(validate_key('foo')) is bool",
-        "assert not type(validate_key('bar')) == None",
-        "assert not type(validate_key('baz')) == str",
-        "assert not type(validate_key('bah')) == int",
-        ]
-
-    # aliases for type hints
-    Result: Tuple[str, str]
-    Summary: List[Result, Result] = [ ]
-
-    # run tests using the list of assertions
-    Summary.append(test_runner(tests_arg_types, verbose))
-    
-    if verbose:
-        logging.debug('Testing return values...')
-
-    # run second block of tests
-    Summary.append(test_runner(tests_ret_val, verbose))
-
-    # unpack results and add to local counters
-    for result in Summary:
-        passed, failed = result
-        local_passed += passed
-        local_failed += failed
-
-    if verbose:
-        logging.debug(f'{local_passed} tests passed.')
-        logging.debug(f'{local_failed} tests failed.')
-
-    global_passed += local_passed
-    global_failed += local_failed
-
-def test_validate_message(verbose: bool = True) -> NoReturn:
-    """Test suite for validate_message() function.
-   
-    """
-
-    global global_passed
-    global global_failed
-
-    local_passed: int = 0
-    local_failed: int = 0
-
-    if verbose:
-        logging.debug('\nRunning unit tests for validate_message() function.')
-        logging.debug('Testing different argument types...')
-
-    # create tests against arguments
-    tests_arg_types: list = [
-        "assert validate_message('astring')",
-        "assert not validate_message('')",
-        "assert not validate_message('      ')",        
-        "assert not validate_message('    3   ')",     
-        "assert validate_message('  c     ')",        
-        "assert not validate_message('12345')",        
-        "assert not validate_message('!$%*')",
-        "assert not validate_message('    1   ')",
-        'assert validate_message("This should pass")',
-        'assert not validate_message("1.234")',
-        'assert not validate_message("accént")',
-        'assert not validate_message("umläütö")', 
-        'assert not validate_message("文字")',
-        "assert not validate_message(['list', 2])",
-        "assert not validate_message(123)",
-        "assert not validate_message(True)",
-        "assert not validate_message(None)",
-        "assert not validate_message({})",     
-        ]
-
-    # create tests for correct return value types
-    tests_ret_val: list = [        
-        "assert type(validate_message('foo')) is bool",
-        "assert not type(validate_message('bar')) == None",
-        "assert not type(validate_message('baz')) == str",
-        "assert not type(validate_message('bah')) == int",
-        ]
-
-    # aliases for type hints
-    Result: Tuple[str, str]
-    Summary: List[Result, Result] = [ ]
-
-    # run tests using the list of assertions
-    Summary.append(test_runner(tests_arg_types, verbose))
-    
-    if verbose:
-        logging.debug('Testing return values...')
-
-    # run second block of tests
-    Summary.append(test_runner(tests_ret_val, verbose))
-
-    # unpack results and add to local counters
-    for result in Summary:
-        passed, failed = result
-        local_passed += passed
-        local_failed += failed
-
-    if verbose:
-        logging.debug(f'{local_passed} tests passed.')
-        logging.debug(f'{local_failed} tests failed.')
-
-    global_passed += local_passed
-    global_failed += local_failed
-
-def test_validate_plaintext(verbose: bool = True) -> NoReturn:
-    """Test suite for validate_plaintext() function.
-
-    TO BE IMPLEMENTED...
-    
-    """
-
-    pass
-
-def test_validate_table(verbose: bool = True) -> NoReturn:
-    """Test suite for validate_table() function.
-
-    """
-    global global_passed
-    global global_failed
-
-    local_passed: int = 0
-    local_failed: int = 0
-
-    if verbose:
-        logging.debug('\nRunning unit tests for validate_table() function.')
-        logging.debug('Testing different argument types...')
-
-    # create tests against argument types
-    tests_arg_types: list = [
-        "assert validate_table(valid_table_example)",
-        # table data is not of type string
-        "assert not validate_table(invalid_table_example_1)",        
-        # same letter more than once
-        "assert not validate_table(invalid_table_example_2)",        
-        # not enough rows in table
-        "assert not validate_table(invalid_table_example_3)",
-        # too many items in row
-        "assert not validate_table(invalid_table_example_4)",
-        # bad table structure
-        "assert not validate_table(['list'])",
-        # wrong parameter type
-        "assert not validate_table('string')",
-        "assert not validate_table(123)",
-        "assert not validate_table(b'01') #bytes",
-        ]
-
-    # create tests for return value types
-    tests_ret_val: list = [        
-        "assert type(validate_table('keyword')) in [list, bool]",
-        "assert type(validate_table('keyword')) not in [str, int, tuple, dict]",
-        "assert type(validate_table('keyword')) not in [True, None, [ ], '']",
-        ]
-
-    # aliases for type hints
-    Result: Tuple[str, str]
-    Summary: List[Result, Result] = [ ]
-
-    # run tests using the list of assertions
-    Summary.append(test_runner(tests_arg_types, verbose))
-    
-    if verbose:
-        logging.debug('Testing return values...')
-
-    # run second block of tests
-    Summary.append(test_runner(tests_ret_val, verbose))
-
-    # unpack results and add to local counters
-    for result in Summary:
-        passed, failed = result
-        local_passed += passed
-        local_failed += failed
-
-    if verbose:
-        logging.debug(f'{local_passed} tests passed.')
-        logging.debug(f'{local_failed} tests failed.')
-
-    global_passed += local_passed
-    global_failed += local_failed
-
+tests_create_table: List[str] = [
+    "assert create_table('string')",
+    "assert not create_table(str)",
+    "assert not create_table('') #mt string",
+    "assert not create_table(' an invalid string!')",
+    "assert not create_table(123)",
+    "assert not create_table(b'01') #bytes",
+    "assert type(create_table('keyword')) in [list, bool]",
+    "assert type(create_table('keyword')) not in [str, int, tuple, dict]",
+    "assert type(create_table('keyword')) not in [True, None, [ ], '']",
+    ]
+
+tests_display_table: List[str] = [
+##    "assert_equal(False, display_table, 'string')",
+    "assert not display_table(list)",
+    "assert not display_table(123)",      
+    "assert not display_table({'dict': 'ionary'})",
+    "assert not display_table([" +
+        "['A', 'B', 'C', 'D', 'E']," +
+        "['A', 'B', 'C', 'D', 'E']," +
+        "['A', 'B', 'C', 'D', 'E']," +
+        "['A', 'B', 'C', 'D', 'E']," +
+        "['A', 'B', 'C', 'D', 'E']," +
+        "])",
+    # bad table structure
+    "assert not display_table(['list'])",
+    # table data is not of type string
+    "assert not display_table(invalid_table_example_1)",
+    # not enough rows in table
+    "assert not display_table(invalid_table_example_3)",
+    # too many items in row
+    "assert not display_table(invalid_table_example_4)",
+    "assert type(display_table([[1,2],[3,4]])) == " +
+        "display_table.__annotations__.get('return')", # bool
+    "assert type(display_table(123) == " +
+        "display_table.__annotations__.get('return'))", # bool
+    "assert type(display_table([[5,6],[7,8]])) is bool",
+    "assert type(display_table('false return')) is bool",
+    ]
+
+tests_encrypt: List[str] = [
+    'assert encrypt("This should pass", "falcon", "osprey")',
+    'assert not encrypt("One invalid keyword", "keyword", "pythonista")',
+    'assert not encrypt(123, "not", "string")',
+    'assert not encrypt("", "empty", "plaintex")',
+    'assert not encrypt("$^&@.", "only", "symbol")',
+    'assert not encrypt("1234", "only", "digts")', 
+    'assert not encrypt("1.234", "only", "numbers")',
+    'assert not encrypt("    ", "only", "whitespac")',
+    'assert not encrypt("accént", "foreign", "chars")',
+    'assert not encrypt("umläütö", "foreign", "chars")', 
+    'assert not encrypt("文字", "foreign", "chars")',
+    'assert type(encrypt("This should pass", "falcon", "osprey")) == str',
+    'assert type(encrypt("Retürns Fälse", "python", "tricks")) is bool', 
+    ]
+
+##tests_decode: List[str] = ['']
+##
+##tests_decrypt: List[str] = ['']
+##
+##tests_validate_ciphertext: List[str] = ['']
+
+tests_validate_key: List[str] = [
+    "assert validate_key('astring')",
+    "assert not validate_key(['list', 2])",
+    "assert not validate_key(123)",
+    "assert not validate_key(True)",
+    "assert not validate_key(None)",
+    "assert not validate_key({})",
+    "assert type(validate_key('foo')) is bool",
+    "assert not type(validate_key('bar')) == None",
+    "assert not type(validate_key('baz')) == str",
+    "assert not type(validate_key('bah')) == int",
+    ]
+
+tests_validate_message: List[str] = [
+    "assert validate_message('astring')",
+    "assert not validate_message('')",
+    "assert not validate_message('      ')",        
+    "assert not validate_message('    3   ')",     
+    "assert validate_message('  c     ')",        
+    "assert not validate_message('12345')",        
+    "assert not validate_message('!$%*')",
+    "assert not validate_message('    1   ')",
+    'assert validate_message("This should pass")',
+    'assert not validate_message("1.234")',
+    'assert not validate_message("accént")',
+    'assert not validate_message("umläütö")', 
+    'assert not validate_message("文字")',
+    "assert not validate_message(['list', 2])",
+    "assert not validate_message(123)",
+    "assert not validate_message(True)",
+    "assert not validate_message(None)",
+    "assert not validate_message({})",
+    "assert type(validate_message('foo')) is bool",
+    "assert not type(validate_message('bar')) == None",
+    "assert not type(validate_message('baz')) == str",
+    "assert not type(validate_message('bah')) == int",
+    ]
+
+##tests_validate_plaintext: List[str] = ['']
+
+tests_validate_table: List[str] = [
+    "assert validate_table(valid_table_example)",
+    # table data is not of type string
+    "assert not validate_table(invalid_table_example_1)",        
+    # same letter more than once
+    "assert not validate_table(invalid_table_example_2)",        
+    # not enough rows in table
+    "assert not validate_table(invalid_table_example_3)",
+    # too many items in row
+    "assert not validate_table(invalid_table_example_4)",
+    # bad table structure
+    "assert not validate_table(['list'])",
+    # wrong parameter type
+    "assert not validate_table('string')",
+    "assert not validate_table(123)",
+    "assert not validate_table(b'01') #bytes",
+    "assert type(validate_table('keyword')) in [list, bool]",
+    "assert type(validate_table('keyword')) not in [str, int, tuple, dict]",
+    "assert type(validate_table('keyword')) not in [True, None, [ ], '']",
+    ]
 
 def __main__(verbose: bool = VERBOSE):
 
@@ -818,25 +429,26 @@ def __main__(verbose: bool = VERBOSE):
         from time import perf_counter as tpc
     
         start_time = tpc()
+        total_failed: int = 0
+        total_passed: int = 0
 
-        # THESE TWO WON'T WORK HERE - CREATE NEW TESTS???        
-        # assert mode == 'encrypt' or mode == 'decrypt'
-        # assert first_key
+        # get all names beginning with 'tests' from global scope
+        for key, value in globals().items():
+            if key.startswith('tests'):
 
-        test_create_table(verbose)
-        test_display_table(verbose)
-        test_encrypt(verbose)
-        test_validate_table(verbose)
-        test_validate_key(verbose)
-        # test_decode(verbose)
-        # test_decrypt(verbose)
-        # test_validate_ciphertext()
-        test_validate_message(verbose)
-        # text validate_plaintext()
+                # remove 'tests' from key to get actual function name
+                name = key[6:]
+
+                # pass each test bank to test harness
+                passed, failed = test_function_generic(name, value, verbose)
+              
+                # add current test results to total passed and failed
+                total_passed += passed
+                total_failed += failed
 
         end_time = tpc()
         total_time = end_time - start_time
-        total_tests = global_passed + global_failed
+        total_tests = total_passed + total_failed
 
         message = 'Completed %d tests in %.2f seconds:' % \
                   (total_tests, total_time)
@@ -846,8 +458,8 @@ def __main__(verbose: bool = VERBOSE):
         logging.debug('') # white space before completion message
         logging.debug(message)
         logging.debug(border)
-        logging.debug(f'TOTAL TESTS PASSED: {global_passed}')
-        logging.debug(f'TOTAL TESTS FAILED: {global_failed}')
+        logging.debug(f'TOTAL TESTS PASSED: {total_passed}')
+        logging.debug(f'TOTAL TESTS FAILED: {total_failed}')
 
 if __name__ == '__main__':
     __main__()
