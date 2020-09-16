@@ -100,12 +100,12 @@ def run_test(assertion: str, verbose: bool = True) -> bool:
     
     """
 
-    # if verbose is False, supress all print output from function being tested
-    if not verbose:      
-        import io
-        import sys
-        saved_stdout = sys.stdout
-        sys.stdout = io.StringIO()
+##    # if verbose is False, supress all print output from function being tested
+##    if not verbose:      
+##        import io
+##        import sys
+##        saved_stdout = sys.stdout
+##        sys.stdout = io.StringIO()
 
     try:
         exec(assertion)
@@ -132,12 +132,12 @@ def run_test(assertion: str, verbose: bool = True) -> bool:
         return True
 
 
-    finally:
-
-        if not verbose:
-            
-            # return print output to normal
-            sys.stdout = saved_stdout
+##    finally:
+##
+##        if not verbose:
+##            
+##            # return print output to normal
+##            sys.stdout = saved_stdout
 
 def test_runner(tests: list, verbose: bool = True) -> Tuple[int, int]:
     """Runs a list of tests using run_test function.
@@ -445,13 +445,22 @@ def test_suite(verbose: bool = True) -> NoReturn:
 
     from time import perf_counter as tpc
 
+    # if verbose is False, supress all print output from units being tested
+    if not verbose:      
+        import io
+        import sys
+        saved_stdout = sys.stdout
+        sys.stdout = io.StringIO()
+
     # aliases for type hints
     Result: Tuple[str, str]
     Summary: List[Result] = [ ]
 
-    start_time = tpc()
     total_failed: int = 0
     total_passed: int = 0
+
+    # start timer for tests
+    start_time = tpc()
 
     # get all names beginning with 'tests' from global scope
     for key, value in globals().items():
@@ -488,6 +497,10 @@ def test_suite(verbose: bool = True) -> NoReturn:
     logging.debug(messsage_border)
     logging.debug(f'TOTAL TESTS PASSED: {total_passed}')
     logging.debug(f'TOTAL TESTS FAILED: {total_failed}')
+
+    # restore normal print output
+    if not verbose:
+        sys.stdout = saved_stdout
 
 def __main__(verbose: bool = VERBOSE):
 
