@@ -118,42 +118,42 @@ def run_test(assertion: str, verbose: bool = True) -> bool:
             
         return True
 
-def test_function_generic(function_name: str, tests: list, verbose: bool = True) -> Tuple[int, int]:
-    """Test suite for an arbitrary function.
-
-    Test harness:
-    Takes lists of tests and passees them to a test runner function.
-    Tallies totals for passed and failed tests.
-
-    # USE THIS FORMAT TO CREATE GENERALIZED FUNCTION THAT CAN PASS
-    # TEST BANKS TO AS ARGUMENTS - REFACTOR FOR DRY PRINCIPLE
-
-    """
-
-    local_passed: int = 0
-    local_failed: int = 0
-
-    if verbose:
-        logging.debug(f'\nRunning unit tests for {function_name} function.')
-
-    # aliases for type hints
-    Result: Tuple[str, str]
-    Summary: List[Result] = [ ]
-
-    # run tests using the list of assertions
-    Summary.append(test_runner(tests, verbose))
-    
-    # unpack results and add to counters
-    for result in Summary:
-        passed, failed = result
-        local_passed += passed
-        local_failed += failed
-
-    if verbose:
-        logging.debug(f'{local_passed} tests passed.')
-        logging.debug(f'{local_failed} tests failed.')
-
-    return (local_passed, local_failed)
+##def test_function_generic(function_name: str, tests: list, verbose: bool = True) -> Tuple[int, int]:
+##    """Test suite for an arbitrary function.
+##
+##    Test harness:
+##    Takes lists of tests and passees them to a test runner function.
+##    Tallies totals for passed and failed tests.
+##
+##    # USE THIS FORMAT TO CREATE GENERALIZED FUNCTION THAT CAN PASS
+##    # TEST BANKS TO AS ARGUMENTS - REFACTOR FOR DRY PRINCIPLE
+##
+##    """
+##
+##    local_passed: int = 0
+##    local_failed: int = 0
+##
+##    if verbose:
+##        logging.debug(f'\nRunning unit tests for {function_name} function.')
+##
+##    # aliases for type hints
+##    Result: Tuple[str, str]
+##    Summary: List[Result] = [ ]
+##
+##    # run tests using the list of assertions
+##    Summary.append(test_runner(tests, verbose))
+##    
+##    # unpack results and add to counters
+##    for result in Summary:
+##        passed, failed = result
+##        local_passed += passed
+##        local_failed += failed
+##
+##    if verbose:
+##        logging.debug(f'{local_passed} tests passed.')
+##        logging.debug(f'{local_failed} tests failed.')
+##
+##    return (local_passed, local_failed)
 
 def test_runner(tests: list, verbose: bool = True) -> Tuple[int, int]:
     """Runs a list of tests using run_test function.
@@ -426,45 +426,97 @@ tests_validate_table: List[str] = [
     "assert type(validate_table('keyword')) not in [True, None, [ ], '']",
     ]
 
+def test_suite(verbose: bool = True) -> NoReturn:
+    """Test suite that runs all unit tests.
+
+    Test suite that gathers unit tests from the global namespace and
+    passes them to the test_runner function. These unit tests are lists
+    with names that start with the word 'tests' and are comprised of
+    list items that are strings each consisting of an assert statement
+    or a call to an assert function (e.g. - assert_equal()).
+      
+    The test suite tallies totals for passed and failed tests and
+    displays them via logging.debug statements. It has a verbose setting
+    for more detailed output when set to True and when set to False,
+    will attempt to suppress the print statement output from the units
+    being tested.
+
+    Dependencies:
+
+    From logging:
+        debug
+
+    From test (current file):
+        run_test
+        test_runner
+
+    From time:
+        perf_counter
+
+    From typing:
+        List
+        Tuple
+
+    """
+
+    from time import perf_counter as tpc
+
+    # aliases for type hints
+    Result: Tuple[str, str]
+    Summary: List[Result] = [ ]
+
+    start_time = tpc()
+    total_failed: int = 0
+    total_passed: int = 0
+
+    # get all names beginning with 'tests' from global scope
+    for key, value in globals().items():
+        if key.startswith('tests'):
+
+            # remove 'tests' from key to get actual function name
+            name = key[6:]
+
+            if verbose:
+                logging.debug(f'\nRunning unit tests for {name} function.')
+
+            # pass each test bank to test harness
+            passed, failed = test_runner(value, verbose)
+
+            if verbose:
+                logging.debug(f'\nResults for {name}:')
+                logging.debug(f'{passed} tests passed.')
+                logging.debug(f'{failed} tests failed.')
+         
+            # add current test results to total passed and failed
+            total_passed += passed
+            total_failed += failed
+
+    end_time = tpc()
+    total_time = end_time - start_time
+    total_tests = total_passed + total_failed
+
+    message = 'Completed %d tests in %.2f seconds:' % \
+              (total_tests, total_time)
+    messsage_border = '-' * len(message)
+
+    logging.debug('') # white space before completion message
+    logging.debug(message)
+    logging.debug(messsage_border)
+    logging.debug(f'TOTAL TESTS PASSED: {total_passed}')
+    logging.debug(f'TOTAL TESTS FAILED: {total_failed}')
+
 def __main__(verbose: bool = VERBOSE):
 
     # run unit tests if debugging is on
     if __debug__:
 
-        from time import perf_counter as tpc
-    
-        start_time = tpc()
-        total_failed: int = 0
-        total_passed: int = 0
+        test_suite(verbose)
 
-        # get all names beginning with 'tests' from global scope
-        for key, value in globals().items():
-            if key.startswith('tests'):
+    else:
 
-                # remove 'tests' from key to get actual function name
-                name = key[6:]
+        logging.debug('Unit tests off: __debug__ is set to False.')
 
-                # pass each test bank to test harness
-                passed, failed = test_function_generic(name, value, verbose)
-              
-                # add current test results to total passed and failed
-                total_passed += passed
-                total_failed += failed
 
-        end_time = tpc()
-        total_time = end_time - start_time
-        total_tests = total_passed + total_failed
-
-        message = 'Completed %d tests in %.2f seconds:' % \
-                  (total_tests, total_time)
-        # message = f'Completed {total_tests} tests in {total_time} seconds:'
-        border = '-' * len(message)
-
-        logging.debug('') # white space before completion message
-        logging.debug(message)
-        logging.debug(border)
-        logging.debug(f'TOTAL TESTS PASSED: {total_passed}')
-        logging.debug(f'TOTAL TESTS FAILED: {total_failed}')
 
 if __name__ == '__main__':
     __main__()
