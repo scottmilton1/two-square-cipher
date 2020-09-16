@@ -170,12 +170,11 @@ def test_suite(verbose: bool = True) -> NoReturn:
 
     from time import perf_counter as tpc
 
-    # if verbose is False, supress all print output from units being tested
-    if not verbose:      
-        import io
-        import sys
-        saved_stdout = sys.stdout
-        sys.stdout = io.StringIO()
+    # if verbose is False, supress all print output by redirecting to a buffer
+    if not verbose:  
+        import io       
+        from contextlib import redirect_stdout
+        output_buffer = io.StringIO()
 
     total_failed: int = 0
     total_passed: int = 0
@@ -185,21 +184,29 @@ def test_suite(verbose: bool = True) -> NoReturn:
 
     # get all names beginning with 'tests' from global scope
     for key, value in globals().items():
+        
         if key.startswith('tests'):
 
             # remove 'tests' from key to get actual function name
             name = key[6:]
 
             if verbose:
+                
                 logging.debug(f'\nRunning unit tests for {name} function.')
 
-            # pass each test bank to test harness
-            passed, failed = test_runner(value, verbose)
+                # pass each test bank to test harness
+                passed, failed = test_runner(value)
 
-            if verbose:
                 logging.debug(f'\nResults for {name}:')
                 logging.debug(f'{passed} tests passed.')
                 logging.debug(f'{failed} tests failed.')
+
+            else: # if not verbose
+
+                # use context manager to temporarily redirect print output
+                with redirect_stdout(output_buffer):
+                    
+                    passed, failed = test_runner(value, verbose)
          
             # add current test results to total passed and failed
             total_passed += passed
@@ -218,10 +225,6 @@ def test_suite(verbose: bool = True) -> NoReturn:
     logging.debug(messsage_border)
     logging.debug(f'TOTAL TESTS PASSED: {total_passed}')
     logging.debug(f'TOTAL TESTS FAILED: {total_failed}')
-
-    # restore normal print output
-    if not verbose:
-        sys.stdout = saved_stdout
 
 ##### CUSTOM ASSERTIONS #####
 
