@@ -12,20 +12,6 @@ Feel free to replace this test suite with your test runner of choice.
 
 """
 
-# import all functions to be tested
-from twosquare.twosquare import Row
-from twosquare.twosquare import Table
-from twosquare.twosquare import create_table
-from twosquare.twosquare import decrypt
-from twosquare.twosquare import display_table
-from twosquare.twosquare import encode
-from twosquare.twosquare import encrypt
-from twosquare.twosquare import validate_ciphertext
-from twosquare.twosquare import validate_key
-from twosquare.twosquare import validate_message
-from twosquare.twosquare import validate_plaintext
-from twosquare.twosquare import validate_table
-
 # import general types (optional: for type hint checking)
 from typing import List
 from typing import NoReturn
@@ -36,10 +22,29 @@ from typing import Union
 import logging
 logging.basicConfig(level=logging.DEBUG, format = '%(message)s',)
 
+# create list of all units to import
+import_items: List[str] = [
+    'Row',
+    'Table',
+    'create_table',
+    'decrypt',
+    'display_table',
+    'encode',
+    'encrypt',
+    'validate_ciphertext',
+    'validate_key',
+    'validate_message',
+    'validate_plaintext',
+    'validate_table',
+    ]
+import_path: str = 'twosquare.twosquare'
+
+# import the items from import path
+for item in import_items:
+    exec(f'from {import_path} import {item}')
+
 # globals
 VERBOSE: bool = True
-##global_passed: int = 0
-##global_failed: int = 0
 
 # table data is not of type string
 invalid_table_example_1: Table = [
