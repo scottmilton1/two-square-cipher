@@ -44,7 +44,7 @@ for item in import_items:
     exec(f'from {import_path} import {item}')
 
 # globals
-VERBOSE: bool = True
+VERBOSE: bool = False
 
 # table data is not of type string
 invalid_table_example_1: Table = [
@@ -100,6 +100,13 @@ def run_test(assertion: str, verbose: bool = True) -> bool:
     
     """
 
+    # if verbose is False, supress all print output from function being tested
+    if not verbose:      
+        import io
+        import sys
+        saved_stdout = sys.stdout
+        sys.stdout = io.StringIO()
+
     try:
         exec(assertion)
   
@@ -108,6 +115,9 @@ def run_test(assertion: str, verbose: bool = True) -> bool:
         if verbose:
             logging.debug(err)
             logging.debug('FAIL')
+
+##        else:
+##            sys.stdout = saved_stdout
             
         return False
         
@@ -115,45 +125,19 @@ def run_test(assertion: str, verbose: bool = True) -> bool:
         
         if verbose:
             logging.debug('PASS')
-            
+
+##        else:
+##            sys.stdout = saved_stdout
+           
         return True
 
-##def test_function_generic(function_name: str, tests: list, verbose: bool = True) -> Tuple[int, int]:
-##    """Test suite for an arbitrary function.
-##
-##    Test harness:
-##    Takes lists of tests and passees them to a test runner function.
-##    Tallies totals for passed and failed tests.
-##
-##    # USE THIS FORMAT TO CREATE GENERALIZED FUNCTION THAT CAN PASS
-##    # TEST BANKS TO AS ARGUMENTS - REFACTOR FOR DRY PRINCIPLE
-##
-##    """
-##
-##    local_passed: int = 0
-##    local_failed: int = 0
-##
-##    if verbose:
-##        logging.debug(f'\nRunning unit tests for {function_name} function.')
-##
-##    # aliases for type hints
-##    Result: Tuple[str, str]
-##    Summary: List[Result] = [ ]
-##
-##    # run tests using the list of assertions
-##    Summary.append(test_runner(tests, verbose))
-##    
-##    # unpack results and add to counters
-##    for result in Summary:
-##        passed, failed = result
-##        local_passed += passed
-##        local_failed += failed
-##
-##    if verbose:
-##        logging.debug(f'{local_passed} tests passed.')
-##        logging.debug(f'{local_failed} tests failed.')
-##
-##    return (local_passed, local_failed)
+
+    finally:
+
+        if not verbose:
+            
+            # return print output to normal
+            sys.stdout = saved_stdout
 
 def test_runner(tests: list, verbose: bool = True) -> Tuple[int, int]:
     """Runs a list of tests using run_test function.
