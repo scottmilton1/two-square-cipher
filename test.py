@@ -10,6 +10,8 @@ abstract away the basic underlying processes involved.
 
 Feel free to replace this test suite with your test runner of choice.
 
+Set VERBOSE to True for more detailed logging and print output during testing.
+
 """
 
 # import general types (optional: for type hint checking)
@@ -42,8 +44,9 @@ import_path: str = 'twosquare.twosquare'
 for item in import_items:
     exec(f'from {import_path} import {item}')
 
-# globals
-VERBOSE: bool = True # Could expand this to several levels (e.g. - 0, 1, 2)
+##### GLOBALS #####
+
+VERBOSE: bool = False # Could expand this to several levels (e.g. - 0, 1, 2)
 
 # table data is not of type string
 invalid_table_example_1: Table = [
@@ -216,8 +219,23 @@ def test_suite(verbose: bool = True) -> NoReturn:
     total_time = end_time - start_time
     total_tests = total_passed + total_failed
 
-    message = 'Completed %d tests in %.2f seconds:' % \
-              (total_tests, total_time)
+    # adjust the time format for meaningful display
+    adjusted_total_time = total_time
+    powers_of_ten = 0
+    
+    while adjusted_total_time < 0.01:
+        powers_of_ten += 3
+        adjusted_total_time *= 1000
+
+    # use floor division to set an index for each metric prefix
+    # setting 3 as the maximum allowed index value
+    index = min((powers_of_ten // 3), 3)
+
+    # use index to select the appropriate prefix
+    prefix = ['', 'milli', 'micro', 'nano'][index] 
+   
+    message = 'Completed %d tests in %.2f %sseconds:' % \
+              (total_tests, adjusted_total_time, prefix)
     messsage_border = '-' * len(message)
 
     logging.debug('') # white space before completion message
