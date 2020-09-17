@@ -382,6 +382,8 @@ tests_create_table: List[str] = [
     "assert type(create_table('keyword')) not in [True, None, [ ], '']",
     ]
 
+##tests_decrypt: List[str] = ['']
+
 tests_display_table: List[str] = [
 ##    "assert_equal(False, display_table, 'string')",
     "assert not display_table(list)",
@@ -410,6 +412,8 @@ tests_display_table: List[str] = [
     "assert type(display_table('false return')) is bool",
     ]
 
+##tests_encode: List[str] = ['']
+
 tests_encrypt: List[str] = [
     'assert encrypt("This should pass", "falcon", "osprey")',
     'assert not encrypt("One invalid keyword", "keyword", "pythonista")',
@@ -426,10 +430,10 @@ tests_encrypt: List[str] = [
     'assert type(encrypt("Retürns Fälse", "python", "tricks")) is bool', 
     ]
 
-##tests_decode: List[str] = ['']
-##
-##tests_decrypt: List[str] = ['']
-##
+##tests_get_coordinates: List[str] = ['']
+
+##tests_get_key: List[str] = ['']
+
 ##tests_validate_ciphertext: List[str] = ['']
 
 tests_validate_key: List[str] = [
@@ -492,6 +496,19 @@ tests_validate_table: List[str] = [
     "assert type(validate_table('keyword')) not in [str, int, tuple, dict]",
     "assert type(validate_table('keyword')) not in [True, None, [ ], '']",
     ]
+
+##### Inner functions in Twosquare main program #####
+
+##tests__create_key: List[str] = ['']
+##tests__display_keys: List[str] = ['']
+##tests__display_menu: List[str] = ['']
+##tests__display_title: List[str] = ['']
+##tests__get_response: List[str] = ['']
+##tests__get_selection: List[str] = ['']
+##tests__load_file: List[str] = ['']
+##tests__save_file: List[str] = ['']
+
+##tests___main__: List[str] = ['']
 
 def __main__(verbose: bool = VERBOSE):
 
