@@ -926,6 +926,27 @@ def __main__():
 
     def _create_key(key_list: List[str], ordinal: List[str], \
          index: int, action: str = 'create') -> NoReturn:
+        """Gets a valid key from the user and adds it to the list of keys.
+
+        Prompts the user for a keyword or keyphrase, passes it to the
+        validate_key function for validation, and inserts it in the
+        key_list at the insertion point specified by the value of the
+        index parameter.
+
+        Parameters:
+            key_list: list with values of type str prepopulated with values;
+                empty strings are okay.
+            ordinal: string used for print formatting. It should indicate the
+                ordinal number of the key being created: 'first', 'second', ...
+            index: int value that must point to a valid index in the key_list
+            action: optional string value that indicates what is being done
+                (e.g. - 'create' a new key or 'update' an existing key)
+
+        Dependencies:
+            None
+        
+
+        """
 
         try:
 

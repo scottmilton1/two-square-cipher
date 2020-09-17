@@ -499,7 +499,10 @@ tests_validate_table: List[str] = [
 
 ##### Inner functions in Twosquare main program #####
 
-##tests__create_key: List[str] = ['']
+### CAN'T AUTO TEST THIS ONE - REQUIRES USER INTERACTION
+##tests__create_key: List[str] = [''] 
+
+
 ##tests__display_keys: List[str] = ['']
 ##tests__display_menu: List[str] = ['']
 ##tests__display_title: List[str] = ['']
