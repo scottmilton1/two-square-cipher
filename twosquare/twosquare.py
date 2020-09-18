@@ -1247,6 +1247,7 @@ def __main__():
    
         """
 
+        filename_included: bool = False
         options: List[str] = [
             'Proceed',
             'Redo',
@@ -1262,110 +1263,138 @@ def __main__():
 
         try:
             if type(filename) is not str:
+                
                 raise TypeMismatchError('Filename must be a string.')
 
-            if len(filename) > 0 and filename.endswith('.txt') is False:
-                raise BadValueError('File must be a .txt file.')
+            # check to see if filename included as parameter
+            if len(filename) > 0:
 
-            # if filename not included as parameter, get it from user
-            while filename == '':
+                # if so make sure it has proper file type extension
+                if filename.endswith('.txt'):
+                
+                    # set flag for non-interactive behavior
+                    filename_included = True
 
-                filename = _get_filename()
+                else: # if invalid file type
+                    
+                    raise BadValueError('File must be a .txt file.')
 
-                if filename == -1:
+            while True:
 
-                    return -1
+                # if filename not included as parameter, get it from user
+                while filename == '':
+                    
+                    filename = _get_filename()
 
-                header: str = f'Confirm filename: {filename}'
-                loop_get_choice: bool = True
+                    if filename == -1:
 
-                while loop_get_choice:
-
-                    choice: int = _get_selection(options, header, '')                    
-
-                    if choice == 0: # proceed
-
-                        while True:
-
-                            print('\nLoading file...', end = '')
-
-                            message: str = ''
-
-                            # perform file operation
-                            try:
-
-                                with open(filename, mode = 'r') as file:
-                             
-                                    while line := file.readline():
-
-                                        message += line                                        
-                                      
-                                if message:
-
-                                    print('Completed.')
-                                    
-                                    return message
-
-                                else:
-                                    print('Failed.\n')
-                                          
-                                    raise Exception(f'\nCould not load ' + \
-                                                    f'{filename}')
-
-                            except Exception as err:
-
-                                # if file not found or other problem notify user
-                                print(' ')
-                                print(err)
-                                print(type(err))
-
-                                recourse: int = \
-                                    _get_selection(recourse_options,
-                                    recourse_header, '')
-
-                                if recourse == 0: # retry same filename
-
-                                    continue
-
-                                elif recourse == 1: # re-enter filename
-
-                                    print(' ')
-
-                                    # reset filename
-                                    filename = ''
-
-                                    # return to beginning of filename entry
-                                    loop_get_choice = False
-                                    break
-
-                                elif recourse == 2: # abort
-
-                                    print(' ')
-                                    
-                                    return -1
-
-                                else: # if recourse has an invalid value
-                                    
-                                    raise FooBarError()
-                                    
-                    elif choice == 1: # redo
-                        
-                        print('\nRedoing...\n')
-
-                        # reset filename as blank
-                        filename = ''
-
-                        # go up one level to get file name again
-                        break
-                        
-                    elif choice == 2: # abort
-
-                        print('\nAborting...\n')
-                        
                         return -1
+                    
+                    # prompt the user - proceed, redo, or abort
+                    header: str = f'Confirm filename: {filename}'
+                    loop_get_choice: bool = True
 
-                    else: # if choice has an invalid value
-                        raise FooBarError()
+                    while loop_get_choice:
+
+                        choice: int = _get_selection(options, header, '')                    
+
+                        if choice == 0: # proceed
+
+                            break
+
+                        elif choice == 1: # redo
+                            
+                            print('\nRedoing...\n')
+
+                            # reset filename as blank
+                            filename = ''
+
+                            # go up one level to get file name again
+                            break
+                            
+                        elif choice == 2: # abort
+
+                            print('\nAborting...\n')
+                            
+                            return -1
+
+                        else: # if choice has an invalid value
+                            raise FooBarError()
+
+                # loop load file
+                while filename:
+
+                    print('\nLoading file...', end = '')
+
+                    message: str = ''
+
+                    # perform file operation
+                    try:
+
+                        with open(filename, mode = 'r') as file:
+                     
+                            while line := file.readline():
+
+                                message += line                                        
+                              
+                        if message:
+
+                            print('Completed.')
+                            
+                            return message
+
+                        else:
+                            print('Failed.\n')
+                                  
+                            raise Exception(f'\nCould not load ' + \
+                                            f'{filename}')
+
+                    except Exception as err:
+
+                        # if file not found or other problem notify user
+                        print(' ')
+                        print(err)
+                        print(type(err))
+
+                        # if function call included filename and was not
+                        # interactive, return now
+                        if filename_included:
+
+                            return 0
+
+                        # otherwise, will prompt user for next action
+                        recourse: int = \
+                            _get_selection(recourse_options,
+                            recourse_header, '')
+
+                        if recourse == 0: # retry same filename
+
+                            continue
+
+                        elif recourse == 1: # re-enter filename
+
+                            print(' ')
+
+                            # reset filename
+                            filename = ''
+
+                            # return to beginning of filename entry
+                            loop_get_choice = False
+                            break
+
+                        elif recourse == 2: # abort
+
+                            print(' ')
+                            
+                            return -1
+
+                        else: # if recourse has an invalid value
+                            
+                            raise FooBarError()
+
+                else: # no filename - should not happen
+
+                    raise FooBarError('Error: No filename in _load_file.')
 
         except BadValueError as err:
             print(err)
