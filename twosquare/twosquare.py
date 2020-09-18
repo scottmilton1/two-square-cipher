@@ -1220,9 +1220,9 @@ def __main__():
     def _load_file(filename: str = '') -> Union[str, int]:
         """Loads a message from a .txt file.
 
-        Inner helper function for the main Twosquare program.
-
         Loads a plaintext or ciphertext message. Only .txt files are supported.
+
+        Inner helper function for the main Twosquare program.
 
         Parameter for filename, if included, must be a string representing a  
         valid filename for a file in the current directory, and must include
@@ -1319,6 +1319,7 @@ def __main__():
                             return -1
 
                         else: # if choice has an invalid value
+                            
                             raise FooBarError()
 
                 # loop load file
@@ -1379,7 +1380,6 @@ def __main__():
                             filename = ''
 
                             # return to beginning of filename entry
-##                            loop_get_choice = False
                             break
 
                         elif recourse == 2: # abort
@@ -1421,7 +1421,7 @@ def __main__():
 
         Saves a plaintext or ciphertext message. Only .txt files are supported.
 
-        Helper function for the Twosquare program.
+        Inner helper function for the main Twosquare program.
 
         Parameter for filename, if included, must be a string representing a  
         valid filename for a file in the current directory, and must include
@@ -1432,7 +1432,6 @@ def __main__():
         Returns an int value of 0 if unsuccessful.
         Returns an int value of -1 if user aborts operation.
 
-
         Dependencies:
 
         From os:
@@ -1441,6 +1440,7 @@ def __main__():
         From twosquare:
             BadValueError
             FooBarError
+            _get_filename
             _get_selection
             TypeMismatchError
 
@@ -1448,6 +1448,14 @@ def __main__():
 
         from os.path import exists
 
+        file_operation: List[str] = ['save', 'saving', 'saved']
+        filename_included: bool = False
+        instructions: List[str] = [
+            'Enter filename below and include the .txt extension.',
+            'The file will be saved in the current directory and',
+            'cannot already exist. Leave the field blank and',
+            'hit <enter> to abort.',
+            ]
         options: List[str] = [
             'Proceed',
             'Redo',
@@ -1463,141 +1471,155 @@ def __main__():
 
         try:
             if type(filename) is not str:
+                
                 raise TypeMismatchError('Filename must be a string.')
 
             if type(message) is not str:
-                raise TypeMismatchError('Message must be a string.')            
-
-            if len(filename) > 0 and filename.endswith('.txt') is False:
-                raise BadValueError('File must be a .txt file.')
+                
+                raise TypeMismatchError('Message must be a string.')
 
             if len(message) == 0:
+                
                 raise BadValueError('Message cannot be empty.')
-            
-            while filename == '':
+
+            # check to see if filename included as parameter
+            if len(filename) > 0:
+
+                # if so make sure it has proper file type extension
+                if filename.endswith('.txt'):
                 
-                # prompt user for filename  
-                print('Enter filename below and include the .txt extension.' + \
-                      '\nThe file will be saved in the current directory ' + \
-                      'and cannot already exist.\nLeave the field blank and ' + \
-                      'hit <enter> to abort.\n')
-                
-                while not (filename := input('Enter filename >> ')):
+                    # set flag for non-interactive behavior
+                    filename_included = True
 
-                    # if user leaves blank return abort code
-                    if filename == '':
-
-                        print(' ')
-                        
-                        return -1
-                      
-                    print('Invalid filename. Please try again.')
-
-                if not filename.endswith('.txt'):
+                else: # if invalid file type
                     
-                    print('\nOnly .txt file types are supported. Please ' + \
-                          'try again.\n')
+                    raise BadValueError('File must be a .txt file.')
 
-                    # reset filename 
-                    filename = ''
+            while True:
 
-                    # go back and get it again
-                    continue
+                # if filename is empty, get it from user
+                while filename == '':
 
-                header: str = f'Confirm filename: {filename}'
-                loop_get_choice: bool = True
+                    for line in instructions:
+                        print(line)
 
-                while loop_get_choice:
+                    print(' ')
 
-                    choice: int = _get_selection(options, header, '')  
+                    filename = _get_filename()
 
-                    if choice == 0: # proceed
+                    if filename == -1:
 
-                        while True:
+                        return -1      
 
-                            print('\nSaving file...', end = '')
+                    # prompt the user - proceed, redo, or abort
+                    header: str = f'Confirm filename: {filename}'
+                    loop_get_choice: bool = True
 
-                            # perform file operation
-                            try:
+                    while loop_get_choice:
 
-                                # check to see if file already exists
-                                if exists(filename):
-                                    
-                                    raise BadValueError('A file with that ' + \
-                                                        'name already exists.')
+                        choice: int = _get_selection(options, header, '')  
 
-                                # proceed with operation
-                                with open(filename, mode = 'w') as file:
-                                    chars_written: int = file.write(message)
+                        if choice == 0: # proceed
 
-                                if chars_written == len(message):
-                                    
-                                    print('Completed.')
-                                    
-                                    return 1
+                            break
 
-                                else:
-                                    print('Failed.')
-                                          
-                                    raise Exception(f'Could not save ' + \
-                                                    f'{filename}')
+                        elif choice == 1: # redo
+                            
+                            print('\nRedoing...\n')
 
-                            except Exception as err:
+                            # reset filename as blank
+                            filename = ''
 
-                                # if file exists or other problem notify user
-                                print(' ')
-                                print(err)
-                                print(type(err))
+                            # go up one level to get file name again
+                            break
+                            
+                        elif choice == 2: # abort
 
-                                recourse: int = \
-                                    _get_selection(recourse_options,
-                                    recourse_header, '')
+                            print('\nAborting...\n')
+                            
+                            return -1
 
-                                if recourse == 0: # retry same filename
+                        else: # if choice has an invalid value
 
-                                    continue
-                                
-                                elif recourse == 1: # re-enter filename
+                            raise FooBarError()
 
-                                    print(' ')
+                # loop save file
+                while filename:
 
-                                    # reset filename
-                                    filename = ''
+                    print(f'\n{file_operation[1].title()} file...', end = '')
 
-                                    # return to beginning of filename entry
-                                    loop_get_choice = False                                    
-                                    break
+                    # perform file operation
+                    try:
 
-                                elif recourse == 2: # abort
+                        # check to see if file already exists
+                        if exists(filename):
+                            
+                            raise BadValueError('A file with that ' + \
+                                                'name already exists.')
 
-                                    print(' ')
+                        # proceed with operation
+                        with open(filename, mode = 'w') as file:
+                            chars_written: int = file.write(message)
 
-                                    return -1
+                        if chars_written == len(message):
+                            
+                            print('Completed.')
+                            
+                            return 1
 
-                                else: # if recourse has an invalid value
+                        else:
+                            print('Failed.')
+                                  
+                            raise Exception(f'Could not {file_operation[0]}' + \
+                                            f' {filename}')
 
-                                    raise FooBarError()                                    
-                                   
-                    elif choice == 1: # redo
+                    except Exception as err:
+
+                        # if file exists or other problem notify user
+                        print(' ')
+                        print(err)
+                        print(type(err))
+
+                        # if function call included filename and was not
+                        # interactive, return now
+                        if filename_included:
+
+                            return 0
+
+                        # otherwise, will prompt user for next action
+                        recourse: int = \
+                            _get_selection(recourse_options,
+                            recourse_header, '')
+
+                        if recourse == 0: # retry same filename
+
+                            continue
                         
-                        print('\nRedoing...\n')
+                        elif recourse == 1: # re-enter filename
 
-                        # reset filename as blank
-                        filename = ''
+                            print(' ')
 
-                        # go up one level to get file name again
-                        break
-                        
-                    elif choice == 2: # abort
+                            # reset filename
+                            filename = ''
 
-                        print('\nAborting...\n')
-                        
-                        return -1
+                            # return to beginning of filename entry                                 
+                            break
 
-                    else: # if choice has an invalid value
+                        elif recourse == 2: # abort
 
-                        raise FooBarError()
-        
+                            print(' ')
+
+                            return -1
+
+                        else: # if recourse has an invalid value
+
+                            raise FooBarError()      
+
+                else: # no filename - should not happen
+
+                    raise FooBarError('Error: No filename in ' + \
+                                      f'_{file_operation[0]}_file.')
+
         except BadValueError as err:
             print(err)
             return 0
@@ -1612,7 +1634,7 @@ def __main__():
             return 0
 
         except Exception as err:
-            print('Unable to save file. ' +
+            print(f'Unable to {file_operation[0]} file. ' +
                   'An unexpected error has occured.')
             print(err)
             print(type(err))            
