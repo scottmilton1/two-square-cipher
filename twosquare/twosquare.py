@@ -1054,6 +1054,50 @@ def __main__():
 
         return
 
+    def _get_filename() -> Union[str, int]:
+        """Prompts the user for a filename.
+
+        Inner helper function for the main Twosquare program.
+
+        Returns a string containing the filename entered by the user if
+        successful or returns a value of -1 if the user aborts.
+
+        Dependencies:
+            None
+
+        """
+
+        while True:
+
+            filename: str = ''
+            
+            # prompt user for filename  
+            print('Enter filename below and include the .txt extension.' + \
+                  '\nThe file must be in the current directory.\n' + \
+                  'Leave the field blank and ' + \
+                  'hit <enter> to abort.\n')
+            
+            while not (filename := input('Enter filename >> ')):
+
+                # if user leaves blank return abort code
+                if filename == '':
+
+                    print(' ')
+                    
+                    return -1
+                
+                print('Invalid filename. Please try again.')
+
+            # check for correct file type extension
+            if filename.endswith('.txt') == False:
+                
+                print('\nOnly .txt file types are supported. Please ' + \
+                      'try again.\n')
+
+            else: # if file type valid
+
+                return filename
+
     def _get_response(action: str) -> bool:
         """Gets a yes or no response from the user.
 
@@ -1173,50 +1217,6 @@ def __main__():
             print(err)
             raise
 
-    def _get_filename() -> Union[str, int]:
-        """Prompts the user for a filename.
-
-        Inner helper function for the main Twosquare program.
-
-        Returns a string containing the filename entered by the user if
-        successful or returns a value of -1 if the user aborts.
-
-        Dependencies:
-            None
-
-        """
-
-        while True:
-
-            filename: str = ''
-            
-            # prompt user for filename  
-            print('Enter filename below and include the .txt extension.' + \
-                  '\nThe file must be in the current directory.\n' + \
-                  'Leave the field blank and ' + \
-                  'hit <enter> to abort.\n')
-            
-            while not (filename := input('Enter filename >> ')):
-
-                # if user leaves blank return abort code
-                if filename == '':
-
-                    print(' ')
-                    
-                    return -1
-                
-                print('Invalid filename. Please try again.')
-
-            # check for correct file type extension
-            if filename.endswith('.txt') == False:
-                
-                print('\nOnly .txt file types are supported. Please ' + \
-                      'try again.\n')
-
-            else: # if file type valid
-
-                return filename
-
     def _load_file(filename: str = '') -> Union[str, int]:
         """Loads a message from a .txt file.
 
@@ -1267,40 +1267,6 @@ def __main__():
             if len(filename) > 0 and filename.endswith('.txt') is False:
                 raise BadValueError('File must be a .txt file.')
 
-##            while filename == '':
-##                
-##                # prompt user for filename  
-##                print('Enter filename below and include the .txt extension.' + \
-##                      '\nThe file must be in the current directory.\n' + \
-##                      'Leave the field blank and ' + \
-##                      'hit <enter> to abort.\n')
-##                
-##                while not (filename := input('Enter filename >> ')):
-##
-##                    # if user leaves blank return abort code
-##                    if filename == '':
-##
-##                        print(' ')
-##                        
-##                        return -1
-##                      
-##                    print('Invalid filename. Please try again.')
-##
-##                if not filename.endswith('.txt'):
-##                    
-##                    print('\nOnly .txt file types are supported. Please ' + \
-##                          'try again.\n')
-##
-##                    # reset filename 
-##                    filename = ''
-##
-##                    # go back and get it again
-##                    continue
-
-
-
-            ###############
-
             # if filename not included as parameter, get it from user
             while filename == '':
 
@@ -1309,8 +1275,6 @@ def __main__():
                 if filename == -1:
 
                     return -1
-
-                ##########
 
                 header: str = f'Confirm filename: {filename}'
                 loop_get_choice: bool = True
