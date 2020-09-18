@@ -499,18 +499,21 @@ tests_validate_table: List[str] = [
 
 ##### Inner functions in Twosquare main program #####
 
-### CAN'T AUTO TEST THIS ONE - REQUIRES USER INTERACTION
-##tests__create_key: List[str] = [''] 
-
-
-##tests__display_keys: List[str] = ['']
-##tests__display_menu: List[str] = ['']
-##tests__display_title: List[str] = ['']
+### CAN'T AUTO TEST THESE ONES - REQUIRE USER INTERACTION
+##tests__create_key: List[str] = ['']
 ##tests__get_response: List[str] = ['']
 ##tests__get_selection: List[str] = ['']
 ##tests__load_file: List[str] = ['']
 ##tests__save_file: List[str] = ['']
+### LAST TWO COULD BE TESTED IF MOVE TO GLOBAL SCOPE AND REFACTOR FOR
+### FILENAME PROVIDED AS PARAMETER OPTION INSTEAD OF GETTING USER INPUT 
 
+### THESE THREE ARE IMPLEMENTATION DETAILS OF MAIN PROGRAM
+##tests__display_keys: List[str] = ['']
+##tests__display_menu: List[str] = ['']
+##tests__display_title: List[str] = ['']
+
+### TESTS FOR MAIN FUNCTION ARE INTEGRATION TESTS, NOT UNIT TESTS
 ##tests___main__: List[str] = ['']
 
 def __main__(verbose: bool = VERBOSE):

@@ -904,14 +904,16 @@ def validate_table(table: Table) -> bool:
         return True
 
 def __main__():
-    """This is the main program.
+    """This is the main Twosquare program.
 
-    The other functions in the global scope of this implementation can also
-    be imported and used as a module.
-    
+    The functions placed in the global scope of this implementation can
+    also be used as a module.
+
+    The inner functions below are intended for use only as helper
+    functions for the main program and are thus merely internal
+    implementation details.
+
     """
-
-    # inner functions for main program only - not intended for use as module
 
     def _coming_soon() -> NoReturn:
         """Prints a message indicating that a program's feature is coming soon.
@@ -928,6 +930,8 @@ def __main__():
          index: int, action: str = 'create') -> NoReturn:
         """Gets a valid key from the user and adds it to the list of keys.
 
+        Inner helper function for the main twosquare program.
+
         Prompts the user for a keyword or keyphrase, passes it to the
         validate_key function for validation, and inserts it in the
         key_list at the insertion point specified by the value of the
@@ -936,16 +940,17 @@ def __main__():
         Parameters:
             key_list: list with values of type str prepopulated with values;
                 empty strings are okay.
-            ordinal: string used for print formatting. It should indicate the
-                ordinal number of the key being created: 'first', 'second', ...
+            ordinal: list of strings used for print formatting. It should
+                contain values that are the ordinal numbers for the keys
+                being created ('first', 'second').
             index: int value that must point to a valid index in the key_list
+                and the list of ordinal numbers
             action: optional string value that indicates what is being done
                 (e.g. - 'create' a new key or 'update' an existing key)
 
         Dependencies:
             None
         
-
         """
 
         try:
@@ -976,6 +981,9 @@ def __main__():
 
         Inner helper function for the main twosquare program.
 
+        Dependencies:
+            None
+
         """
     
         print('\nHere are your current keys: \n')
@@ -997,6 +1005,9 @@ def __main__():
         Returns number of menu_options in list if successful
         or returns False if an exception occurs. Keep this in mind,
         and handle potential Exceptions accordingly.
+
+        Dependencies:
+            None
 
         """
 
@@ -1025,9 +1036,11 @@ def __main__():
 
         Inner helper function for the main twosquare program.
 
-        TODOs: Ideas for additional features:
+        Dependencies:
+            None
 
-        Add keyword arg for text_alignment with default = 'center'
+        TODOs - Ideas for additional features:
+            Add keyword arg for text_alignment with default = 'center'
 
         """
         
@@ -1046,10 +1059,8 @@ def __main__():
 
         Inner helper function for the main twosquare program.
 
-        Prompts the user for input.
-
-        The input validation only accepts [upper/lower]case variants of 'Y'
-        and 'N'.
+        Prompts the user for input. The input validation only accepts
+        [upper/lower]case variants of 'Y' and 'N'.
 
         Returns True if user selects 'Y'
         Returns False if user selects 'N'
@@ -1087,6 +1098,8 @@ def __main__():
                            'Please try again.') -> int:
         """Prompts the user to make a selection from a list of options.
 
+        Inner helper function for the main twosquare program.
+
         Returns an int corresponding to the index of the options list item
         selected by the user if successful.
         Returns an int value of -1 if an expected error occurs during
@@ -1095,7 +1108,7 @@ def __main__():
         Dependencies:
 
         From twosquare:
-        TypeMismatchError
+            TypeMismatchError
 
         """
 
@@ -1160,12 +1173,56 @@ def __main__():
             print(err)
             raise
 
+    def _get_filename() -> Union[str, int]:
+        """Prompts the user for a filename.
+
+        Inner helper function for the main Twosquare program.
+
+        Returns a string containing the filename entered by the user if
+        successful or returns a value of -1 if the user aborts.
+
+        Dependencies:
+            None
+
+        """
+
+        while True:
+
+            filename: str = ''
+            
+            # prompt user for filename  
+            print('Enter filename below and include the .txt extension.' + \
+                  '\nThe file must be in the current directory.\n' + \
+                  'Leave the field blank and ' + \
+                  'hit <enter> to abort.\n')
+            
+            while not (filename := input('Enter filename >> ')):
+
+                # if user leaves blank return abort code
+                if filename == '':
+
+                    print(' ')
+                    
+                    return -1
+                
+                print('Invalid filename. Please try again.')
+
+            # check for correct file type extension
+            if filename.endswith('.txt') == False:
+                
+                print('\nOnly .txt file types are supported. Please ' + \
+                      'try again.\n')
+
+            else: # if file type valid
+
+                return filename
+
     def _load_file(filename: str = '') -> Union[str, int]:
         """Loads a message from a .txt file.
 
-        Loads a plaintext or ciphertext message. Only .txt files are supported.
+        Inner helper function for the main Twosquare program.
 
-        Helper function for main Twosquare program.
+        Loads a plaintext or ciphertext message. Only .txt files are supported.
 
         Parameter for filename, if included, must be a string representing a  
         valid filename for a file in the current directory, and must include
@@ -1184,6 +1241,7 @@ def __main__():
         From twosquare:
             BadValueError
             FooBarError
+            _get_filename
             _get_selection
             TypeMismatchError
    
@@ -1209,35 +1267,50 @@ def __main__():
             if len(filename) > 0 and filename.endswith('.txt') is False:
                 raise BadValueError('File must be a .txt file.')
 
+##            while filename == '':
+##                
+##                # prompt user for filename  
+##                print('Enter filename below and include the .txt extension.' + \
+##                      '\nThe file must be in the current directory.\n' + \
+##                      'Leave the field blank and ' + \
+##                      'hit <enter> to abort.\n')
+##                
+##                while not (filename := input('Enter filename >> ')):
+##
+##                    # if user leaves blank return abort code
+##                    if filename == '':
+##
+##                        print(' ')
+##                        
+##                        return -1
+##                      
+##                    print('Invalid filename. Please try again.')
+##
+##                if not filename.endswith('.txt'):
+##                    
+##                    print('\nOnly .txt file types are supported. Please ' + \
+##                          'try again.\n')
+##
+##                    # reset filename 
+##                    filename = ''
+##
+##                    # go back and get it again
+##                    continue
+
+
+
+            ###############
+
+            # if filename not included as parameter, get it from user
             while filename == '':
-                
-                # prompt user for filename  
-                print('Enter filename below and include the .txt extension.' + \
-                      '\nThe file must be in the current directory.\n' + \
-                      'Leave the field blank and ' + \
-                      'hit <enter> to abort.\n')
-                
-                while not (filename := input('Enter filename >> ')):
 
-                    # if user leaves blank return abort code
-                    if filename == '':
+                filename = _get_filename()
 
-                        print(' ')
-                        
-                        return -1
-                      
-                    print('Invalid filename. Please try again.')
+                if filename == -1:
 
-                if not filename.endswith('.txt'):
-                    
-                    print('\nOnly .txt file types are supported. Please ' + \
-                          'try again.\n')
+                    return -1
 
-                    # reset filename 
-                    filename = ''
-
-                    # go back and get it again
-                    continue
+                ##########
 
                 header: str = f'Confirm filename: {filename}'
                 loop_get_choice: bool = True
