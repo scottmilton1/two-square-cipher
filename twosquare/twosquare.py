@@ -1281,7 +1281,7 @@ def __main__():
 
             while True:
 
-                # if filename not included as parameter, get it from user
+                # if filename is empty, get it from user
                 while filename == '':
                     
                     filename = _get_filename()
@@ -1379,7 +1379,7 @@ def __main__():
                             filename = ''
 
                             # return to beginning of filename entry
-                            loop_get_choice = False
+##                            loop_get_choice = False
                             break
 
                         elif recourse == 2: # abort
