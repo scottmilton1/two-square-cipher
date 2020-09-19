@@ -382,7 +382,9 @@ tests_create_table: List[str] = [
     "assert type(create_table('keyword')) not in [True, None, [ ], '']",
     ]
 
-##tests_decrypt: List[str] = ['']
+tests_decrypt: List[str] = [
+    "assert decrypt('THISSHOULDPASS', 'key', 'keytwo')",
+    ]
 
 tests_display_table: List[str] = [
 ##    "assert_equal(False, display_table, 'string')",

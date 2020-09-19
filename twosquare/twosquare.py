@@ -149,7 +149,7 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
     else:
         return table
 
-def decrypt(ciphertext: str, key1: str, key2: str) -> str:
+def decrypt(ciphertext: str, key1: str, key2: str) -> Union[str, bool]:
     """Decrypts a message using the Twosquare cipher.
 
     Dependencies:
