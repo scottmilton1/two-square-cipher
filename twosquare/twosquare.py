@@ -17,6 +17,7 @@ used as a module.
 from functools import partial
 
 from typing import Callable
+from typing import Dict
 from typing import List
 from typing import NoReturn
 from typing import Tuple
@@ -1210,6 +1211,318 @@ def __main__():
             print(type(err))
             print(err)
             raise
+
+
+
+
+
+    def _file_io(mode: str, filename: str = '', message: str = '') \
+                -> Union[str, int]:
+        """Loads or saves a .txt file message.
+
+        Inner helper function for the main Twosquare program.
+
+        Loads or saves a plaintext or ciphertext message. Only .txt files
+        are supported. To load a file, the file must exist in the current
+        directory. To save a file, the file must not already exist in the
+        current directory.
+
+        Parameters:
+        
+        mode must be a non-empty string.
+        Valid values are:
+            'l' or 'load' for file input operations
+            's' or 'save' for file output operations.
+
+        filename, if included, must be a string representing a valid
+        filename and must include the .txt file type extension in the
+        name. If a filename is not included, the function will prompt
+        the user for a filename.
+        
+        message is required as parameter for save operations only
+        and any value passed for load operations will be ignored
+
+        Returns:
+        
+            the message if loaded successfully OR
+            an int value of 1 if file saved successfully
+            an int value of 0 if unsuccessful
+            an int value of -1 if user aborts operation
+
+        Dependencies:
+
+        From os:
+            path.exists
+
+        From twosquare:
+            BadValueError
+            FooBarError
+            _get_filename
+            _get_selection
+            TypeMismatchError
+   
+        """
+
+        from os.path import exists
+
+        file_operation: Dict[List[str]] = {
+            'load': ['loading', 'loaded'],
+            'save': ['saving', 'saved'],
+            }
+        filename_included: bool = False
+        instructions: Dict[List[str]] = {
+            'load': [
+                'Enter filename below and include the .txt extension.',
+                'The file must be in the current directory.',
+                'Leave the field blank and hit <enter> to abort.',
+                ],
+            'save': [
+                'Enter filename below and include the .txt extension.',
+                'The file will be saved in the current directory and',
+                'cannot already exist. Leave the field blank and',
+                'hit <enter> to abort.',
+                ],
+            }
+        options: List[str] = [
+            'Proceed',
+            'Redo',
+            'Abort',
+            ]
+        recourse_header: str = \
+            'What would you like to do?'
+        recourse_options: List[str] = [
+            'Retry filename',
+            'Re-enter filename',
+            'Abort',
+            ]
+
+        try:
+
+            if type(mode) is not str:
+
+                raise TypeMismatchError('Mode must be a string.')
+
+            if mode in ['l', 'load']:
+
+                mode = 'load'
+
+            elif mode in ['s', 'save']:
+
+                mode = 'save'
+
+            else:
+
+                raise BadValueError('Invalid mode.')
+            
+            if type(filename) is not str:
+                
+                raise TypeMismatchError('Filename must be a string.')
+
+            # check to see if filename included as parameter
+            if len(filename) > 0:
+
+                # if so make sure it has proper file type extension
+                if filename.endswith('.txt'):
+                
+                    # set flag for non-interactive behavior
+                    filename_included = True
+
+                else: # if invalid file type
+                    
+                    raise BadValueError('File must be a .txt file.')
+
+            # enforce message type and length for save operations only
+            if mode == 'save':
+
+                if type(message) is not str:
+                
+                    raise TypeMismatchError('Message must be a string.')
+
+                if len(message) == 0:
+                    
+                    raise BadValueError('Message cannot be empty.')
+
+            error_message: str = f'Could not {mode} {filename}'
+            current_operation: str = file_operation.get(mode)[0].title()
+
+            while True:
+
+                # if filename is empty, get it from user
+                while filename == '':
+
+                    for line in instructions.get(mode):
+                        print(line)
+                        
+                    print(' ')
+
+                    # prompt user for filename                    
+                    filename = _get_filename()
+
+                    if filename == -1:
+
+                        return -1
+                    
+                    # prompt the user - proceed, redo, or abort
+                    header: str = f'Confirm filename: {filename}'
+                    loop_get_choice: bool = True
+
+                    while loop_get_choice:
+
+                        choice: int = _get_selection(options, header, '')                    
+
+                        if choice == 0: # proceed
+
+                            break
+
+                        elif choice == 1: # redo
+                            
+                            print('\nRedoing...\n')
+
+                            # reset filename as blank
+                            filename = ''
+
+                            # go up one level to get file name again
+                            break
+                            
+                        elif choice == 2: # abort
+
+                            print('\nAborting...\n')
+                            
+                            return -1
+
+                        else: # if choice has an invalid value
+                            
+                            raise FooBarError()
+
+                # loop load file
+                while filename:
+                   
+                    print(f'\n{current_operation} file...', end = '')
+
+                    # perform file operation
+                    try:
+
+                        if mode == 'load':
+
+                            message: str = ''
+
+                            with open(filename, mode = 'r') as file:
+                         
+                                while line := file.readline():
+
+                                    message += line                                        
+                                  
+                            if message:
+
+                                print('Completed.')
+                                
+                                return message
+
+                            else:
+                                
+                                print('Failed.\n')
+                                   
+                                raise Exception(error_message)
+
+                        elif mode == 'save':
+
+                            # check to see if file already exists
+                            if exists(filename):
+                                
+                                raise BadValueError('A file with that ' + \
+                                                    'name already exists.')
+
+                            # proceed with operation
+                            with open(filename, mode = 'w') as file:
+                                chars_written: int = file.write(message)
+
+                            if chars_written == len(message):
+                                
+                                print('Completed.')
+                                
+                                return 1
+
+                            else:
+                                
+                                print('Failed.\n')
+                                   
+                                raise Exception(error_message)
+
+                        else: # mode not load or save
+
+                            raise FooBarError('Error: invalid mode.')                        
+
+                    except Exception as err:
+
+                        # if file not found or other problem notify user
+                        print(' ')
+                        print(err)
+                        print(type(err))
+
+                        # if function call included filename and was not
+                        # interactive, return now
+                        if filename_included:
+
+                            return 0
+
+                        # otherwise, will prompt user for next action
+                        recourse: int = \
+                            _get_selection(recourse_options,
+                            recourse_header, '')
+
+                        if recourse == 0: # retry same filename
+
+                            continue
+
+                        elif recourse == 1: # re-enter filename
+
+                            print(' ')
+
+                            # reset filename
+                            filename = ''
+
+                            # return to beginning of filename entry
+                            break
+
+                        elif recourse == 2: # abort
+
+                            print(' ')
+                            
+                            return -1
+
+                        else: # if recourse has an invalid value
+                            
+                            raise FooBarError()
+
+                else: # no filename - should not happen
+
+                    raise FooBarError('Error: No filename in ' + \
+                                      f'_{mode}_file.')
+
+        except BadValueError as err:
+            print(err)
+            return 0
+
+        except FooBarError as err:
+            print('Bad return value from _get_selection function.')
+            print(err.subtext)
+            raise
+
+        except TypeMismatchError as err:
+            print(err)
+            return 0
+
+        except Exception as err:
+            print(f'Unable to {mode} file. ' +
+                  'An unexpected error has occured.')
+            print(err)
+            print(type(err))            
+            return 0
+
+
+
+
+
 
     def _load_file(filename: str = '') -> Union[str, int]:
         """Loads a message from a .txt file.
