@@ -210,8 +210,30 @@ def decrypt(ciphertext: str, key1: str, key2: str, omit_j = True,
         List
 
     """
-    
-    return False  
+
+    try:
+
+        pass
+
+    except BadValueError as err:
+        print(err)
+        return False
+
+    except FooBarError as err:
+        print(err)
+        print(err.subtext)
+        raise
+
+    except Exception as err:
+        from inspect import currentframe as cf
+        print('Unexpected exception type raised during execution:')
+        print(f'In function: {cf().f_code.co_name}') # function name
+        print(type(err))
+        print(err)
+        raise
+
+    else:
+        return False # plaintext 
 
 def display_table(table: Table) -> bool:
     """Print a Playfair table to the screen.
