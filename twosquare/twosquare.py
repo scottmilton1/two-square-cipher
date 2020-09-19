@@ -149,13 +149,65 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
     else:
         return table
 
-def decrypt(ciphertext: str, key1: str, key2: str) -> Union[str, bool]:
+def decrypt(ciphertext: str, key1: str, key2: str, omit_j = True,
+            remove_z = True) -> Union[str, bool]:
     """Decrypts a message using the Twosquare cipher.
 
-    Dependencies:
-        None
+    Decrypts a ciphertext message using the two keys provided.
 
-    TO BE IMPLEMENTED.
+    Keys must each be a valid keyword or key phrase:    
+    a non-empty string with no more than twenty-five letters,
+    ASCII letter characters only; no Unicode characters allowed,
+    no duplicate letters; each letter may be used only once in each key,
+    no digits - numbers must be spelled out,
+    no punctuation or special characters.
+
+    Keys must be identical to the original keys used to encrypt the
+    plaintext message and must be given in the same order or the
+    decryption will not be accurate.
+
+    ciphertext must be a valid string containing one or more alphabetic
+    letters from the ASCII character set. Punctuation, special
+    characters, unicode characters, digits, and white space are not
+    allowed. All letters must be capitalized.
+
+    If present, omit_j and remove_z must be boolean values and have the
+    following effects:
+
+    Setting omit_j to True will change the output of the deciphered
+    message so that I and J characters are no longer combined as one.
+    All J's will be removed so any I or J characters in the original
+    plaintext message will be represented only as an I in the deciphered
+    message output.
+
+    Setting remove_z to True will remove a Z character from the end of
+    the deciphered message, but only if the message has an even number
+    of letters. Any combined IJ characters in the message are counted as
+    one single letter in this tally. This assumes that the Z was added
+    to an original plaintext that had an odd number of characters so
+    that the Z was added to encrypt it.
+
+    Note: Any white space removed from the original plaintext during
+    the encryption process will not be replaced in the decrypted message.
+
+    Returns a string containing the decrypted message if successful.
+    Returns False if the decryption operation is unsuccessful.
+
+    Dependencies:
+    
+    from twosquare:
+        BadValueError
+        create_table
+        # encode
+        FooBarError
+        get_coordinates        
+        Row
+        Table
+        validate_ciphertext
+        validate_key
+
+    from typing:
+        List
 
     """
     
