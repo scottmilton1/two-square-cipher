@@ -1069,14 +1069,8 @@ def __main__():
 
         while True:
 
-            filename: str = ''
-            
-            # prompt user for filename  
-            print('Enter filename below and include the .txt extension.' + \
-                  '\nThe file must be in the current directory.\n' + \
-                  'Leave the field blank and ' + \
-                  'hit <enter> to abort.\n')
-            
+            filename: str = ''            
+           
             while not (filename := input('Enter filename >> ')):
 
                 # if user leaves blank return abort code
@@ -1247,7 +1241,13 @@ def __main__():
    
         """
 
+        file_operation: List[str] = ['load', 'loading', 'loaded']
         filename_included: bool = False
+        instructions: List[str] = [
+            'Enter filename below and include the .txt extension.',
+            'The file must be in the current directory.',
+            'Leave the field blank and hit <enter> to abort.',
+            ]
         options: List[str] = [
             'Proceed',
             'Redo',
@@ -1283,7 +1283,13 @@ def __main__():
 
                 # if filename is empty, get it from user
                 while filename == '':
-                    
+
+                    for line in instructions:
+                        print(line)
+
+                    print(' ')
+
+                    # prompt user for filename                    
                     filename = _get_filename()
 
                     if filename == -1:
@@ -1325,7 +1331,7 @@ def __main__():
                 # loop load file
                 while filename:
 
-                    print('\nLoading file...', end = '')
+                    print(f'\n{file_operation[1].title()} file...', end = '')
 
                     message: str = ''
 
@@ -1347,8 +1353,8 @@ def __main__():
                         else:
                             print('Failed.\n')
                                   
-                            raise Exception(f'\nCould not load ' + \
-                                            f'{filename}')
+                            raise Exception(f'Could not {file_operation[0]}' + \
+                                            f' {filename}')
 
                     except Exception as err:
 
@@ -1394,7 +1400,8 @@ def __main__():
 
                 else: # no filename - should not happen
 
-                    raise FooBarError('Error: No filename in _load_file.')
+                    raise FooBarError('Error: No filename in ' + \
+                                      f'_{file_operation[0]}_file.')
 
         except BadValueError as err:
             print(err)
@@ -1410,7 +1417,7 @@ def __main__():
             return 0
 
         except Exception as err:
-            print('Unable to load from file. ' +
+            print(f'Unable to {file_operation[0]} file. ' +
                   'An unexpected error has occured.')
             print(err)
             print(type(err))            
