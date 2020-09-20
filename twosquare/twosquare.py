@@ -211,9 +211,62 @@ def decrypt(ciphertext: str, key1: str, key2: str, omit_j = True,
 
     """
 
+    # define local variables
+
     try:
 
         pass
+
+        # validate passed variables
+
+            # validate keys
+
+            # validate ciphertext
+
+            # validate omit_j and remove_z
+
+        # create empty plaintext to store decrypted message
+
+        # remove J's from ciphertext string since they
+        # are combined with I's in the encypted text
+
+        # if length of purged ciphertext is odd after removing Js raise error
+
+        # create empty list to store digraphs
+
+        # create digraphs
+
+            # get two letters at a time
+
+            # store the current digraph in the list of all digraphs
+
+        # use keys to create tables
+
+            # create first table with first key
+
+            # create second table with second key
+
+        # create plaintext from ciphertext using the tables
+
+            # unpack digraph
+
+            # get each letter's coordinates in its table (row, column)
+
+            # check to see which of two cases is true
+
+            # case 1: letters are in different columns - swap column numbers
+
+                # fetch letters from table using new coordinates
+
+            # case 2: letters are in same column - leave letters as is
+
+                # do nothing
+
+            # remove J's from output if optional flag set
+
+            # add the two decrypted letters to the ciphertext body
+
+        # remove trailing 'Z' from end of text if optional flag set
 
     except BadValueError as err:
         print(err)
