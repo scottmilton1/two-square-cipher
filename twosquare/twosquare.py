@@ -212,10 +212,13 @@ def decrypt(ciphertext: str, key1: str, key2: str, omit_j = True,
     """
 
     # define local variables
+    MAX_COLUMNS: int = 5
+    MAX_ROWS: int = 5
+
+    plaintext: str = ''
+    digraphs: List[str] = [ ]
 
     try:
-
-        pass
 
         # validate passed variables
 
@@ -225,48 +228,82 @@ def decrypt(ciphertext: str, key1: str, key2: str, omit_j = True,
 
             # validate omit_j and remove_z
 
-        # create empty plaintext to store decrypted message
-
         # remove J's from ciphertext string since they
         # are combined with I's in the encypted text
+        filtered_text: str = ciphertext.strip('J')
 
-        # if length of purged ciphertext is odd after removing Js raise error
+        # if length of purged ciphertext is odd after removing Js raise error     
+        if len(filtered_text) % 2 != 0:
+            raise BadValueError('Error: uneven number of letters in ciphertext')
+       
+        # split ciphertext into digraphs -
+        # get two letters at a time
+        for n in range(0, len(filtered_text), 2):
 
-        # create empty list to store digraphs
-
-        # create digraphs
-
-            # get two letters at a time
+            # create a digraph with the two letters
+            current_digraph: list = [filtered_text[n], filtered_text[n+1]]
 
             # store the current digraph in the list of all digraphs
+            digraphs.append(current_digraph)
 
-        # use keys to create tables
+        # create first table with first key
+        first_table: Table = create_table(key1) 
 
-            # create first table with first key
-
-            # create second table with second key
+        # create second table with second key
+        second_table: Table = create_table(key2)
 
         # create plaintext from ciphertext using the tables
+        for digraph in digraphs:
 
             # unpack digraph
+            letter1, letter2 = digraph
+
+            column1: int = -1
+            column2: int = -1
+            row1: int = -1
+            row2: int = -1
 
             # get each letter's coordinates in its table (row, column)
+            row1, column1 = get_coordinates(first_table, letter1)
+            row2, column2 = get_coordinates(second_table, letter2)
 
-            # check to see which of two cases is true
+            if min(row1, row2, column1, column2) < 0:
+                
+                raise FooBarError('Table mismatch error. Unable to find one' + \
+                                  ' or more letters of the plaintext using' + \
+                                  ' the tables generated during program .')
 
+            # check to see which of two cases is true:
             # case 1: letters are in different columns - swap column numbers
+            if column1 != column2:
+                temp: int = column1
+                column1 = column2
+                column2 = temp
 
                 # fetch letters from table using new coordinates
+                decrypted_letter1 = first_table[row1][column1]
+                decrypted_letter2 = second_table[row2][column2]
 
             # case 2: letters are in same column - leave letters as is
-
-                # do nothing
-
+            else: # nope, that's not lazy, that's what the cipher says to do
+                decrypted_letter1 = letter1
+                decrypted_letter2 = letter2
+                
             # remove J's from output if optional flag set
+            if omit_j == True:
+                
+                if decrypted_letter1 == 'IJ':
+                    decrypted_letter1 = 'I'
+                    
+                if decrypted_letter2 == 'IJ':
+                    decrypted_letter2 = 'I'
 
-            # add the two decrypted letters to the ciphertext body
+            # add the two encrypted letters to the ciphertext body
+            plaintext = plaintext + decrypted_letter1 + decrypted_letter2
 
         # remove trailing 'Z' from end of text if optional flag set
+        if (remove_z == True and plaintext[-1] == 'Z'):
+            plaintext = plaintext[0:-1]
 
     except BadValueError as err:
         print(err)
@@ -286,7 +323,7 @@ def decrypt(ciphertext: str, key1: str, key2: str, omit_j = True,
         raise
 
     else:
-        return False # plaintext 
+        return plaintext 
 
 def display_table(table: Table) -> bool:
     """Print a Playfair table to the screen.

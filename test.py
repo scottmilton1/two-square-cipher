@@ -46,7 +46,7 @@ for item in import_items:
 
 ##### GLOBALS #####
 
-VERBOSE: bool = False # Could expand this to several levels (e.g. - 0, 1, 2)
+VERBOSE: bool = True # Could expand this to several levels (e.g. - 0, 1, 2)
 
 # table data is not of type string
 invalid_table_example_1: Table = [
