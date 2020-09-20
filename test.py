@@ -46,7 +46,7 @@ for item in import_items:
 
 ##### GLOBALS #####
 
-VERBOSE: bool = True # Could expand this to several levels (e.g. - 0, 1, 2)
+VERBOSE: bool = False # Could expand this to several levels (e.g. - 0, 1, 2)
 
 # table data is not of type string
 invalid_table_example_1: Table = [
@@ -384,6 +384,12 @@ tests_create_table: List[str] = [
 
 tests_decrypt: List[str] = [
     "assert decrypt('THISSHOULDPASS', 'key', 'keytwo')",
+    "assert not decrypt('THISSHOULDNOTPASS', 'key', 'keytwo')", # key odd length
+    "assert decrypt('THISSHOULDFAIL', '123', 'keytwo')", # digits in key
+    "assert decrypt('THISSHOULDFAIL', 123, 'keytwo')", # key not string
+    "assert decrypt('InVaLiDcIpHeRtExT!', 'key', 'keytwo')", # bad ciphertext
+    "assert decrypt('IN', 'key', 'keytwo', 0, False)", # wrong type for omit_j   
+    "assert decrypt('IN', 'key', 'keytwo', False, 0)", # wrong type remove_z    
     ]
 
 tests_display_table: List[str] = [
@@ -528,8 +534,6 @@ def __main__(verbose: bool = VERBOSE):
     else:
 
         logging.debug('Unit tests off: __debug__ is set to False.')
-
-
 
 if __name__ == '__main__':
     __main__()
