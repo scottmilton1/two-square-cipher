@@ -1392,10 +1392,6 @@ def __main__():
             print(err)
             raise
 
-
-
-
-
     def _file_io(mode: str, filename: str = '', message: str = '') \
                 -> Union[str, int]:
         """Loads or saves a .txt file message.
