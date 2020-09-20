@@ -203,6 +203,7 @@ def decrypt(ciphertext: str, key1: str, key2: str, omit_j = True,
         get_coordinates        
         Row
         Table
+        TypeMismatchError
         validate_ciphertext
         validate_key
 
@@ -222,11 +223,22 @@ def decrypt(ciphertext: str, key1: str, key2: str, omit_j = True,
 
         # validate passed variables
 
-            # validate keys
+        # validate keys
+        if not (validate_key(key1) and validate_key(key2)):
+            raise BadValueError('Invalid key error. I am the gatekeeper. ' + \
+                                'Are you the keymaster?')
 
-            # validate ciphertext
+        # validate ciphertext
+        if not validate_ciphertext(ciphertext):
+            raise BadValueError('Invalid ciphertext error.')
 
-            # validate omit_j and remove_z
+        # validate omit_j
+        if type(omit_j) is not bool:
+            raise TypeMismatchError('Type for omit_j must be bool.')
+
+        # validate remove_z
+        if type(remove_z) is not bool:
+            raise TypeMismatchError('Type for remove_z must be bool.') 
 
         # remove J's from ciphertext string since they
         # are combined with I's in the encypted text
@@ -313,6 +325,10 @@ def decrypt(ciphertext: str, key1: str, key2: str, omit_j = True,
         print(err)
         print(err.subtext)
         raise
+
+    except TypeMismatchError as err:
+        print(err)
+        return False
 
     except Exception as err:
         from inspect import currentframe as cf

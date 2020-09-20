@@ -385,11 +385,11 @@ tests_create_table: List[str] = [
 tests_decrypt: List[str] = [
     "assert decrypt('THISSHOULDPASS', 'key', 'keytwo')",
     "assert not decrypt('THISSHOULDNOTPASS', 'key', 'keytwo')", # key odd length
-    "assert decrypt('THISSHOULDFAIL', '123', 'keytwo')", # digits in key
-    "assert decrypt('THISSHOULDFAIL', 123, 'keytwo')", # key not string
-    "assert decrypt('InVaLiDcIpHeRtExT!', 'key', 'keytwo')", # bad ciphertext
-    "assert decrypt('IN', 'key', 'keytwo', 0, False)", # wrong type for omit_j   
-    "assert decrypt('IN', 'key', 'keytwo', False, 0)", # wrong type remove_z    
+    "assert not decrypt('THISSHOULDFAIL', '123', 'keytwo')", # digits in key
+    "assert not decrypt('THISSHOULDFAIL', 123, 'keytwo')", # key not string
+    "assert not decrypt('InVaLiDcIpHeRtExT!', 'key', 'keytwo')", # bad cipher
+    "assert not decrypt('IN', 'key', 'keytwo', 0, False)", # bad type omit_j   
+    "assert not decrypt('IN', 'key', 'keytwo', False, 0)", # bad type remove_z    
     ]
 
 tests_display_table: List[str] = [
