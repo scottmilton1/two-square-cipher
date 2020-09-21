@@ -388,22 +388,26 @@ def display_table(table: Table) -> bool:
     else:
         return True
 
-def encode() -> NoReturn:
+def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
+            remove_z = True) -> Union[str, bool]:
     """Encrypts or decrypts a message using the Twosquare cipher.
 
-    Helper function for encrypt and decrypt functions.
+    Backend private function that serves as the workhorse for the public
+    interface provided by the encrypt and decrypt functions.
     
     Will move and place any shared code for both operations here
     to avoid redundancy and to streamline the codebase.
 
+    Parameters:
+
+    Returns:
+
     Dependencies:
         None
 
-    TO BE IMPLEMENTED...
-
     """
     
-    pass
+    return False
 
 def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
     """Encrypts a message using the Twosquare cipher.
@@ -2421,7 +2425,7 @@ def __main__():
             
             # confirm before exiting
             while True:
-                confirm: str = input('\nConfirm: exit program? (Y/N)')
+                confirm: str = input('\nConfirm: exit program? (Y/N) >> ')
                 
                 if confirm.upper() == 'Y':
                     exit_program = True

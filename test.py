@@ -30,13 +30,13 @@ import_items: List[str] = [
     'create_table',
     'decrypt',
     'display_table',
-    'encode',
     'encrypt',
     'validate_ciphertext',
     'validate_key',
     'validate_message',
     'validate_plaintext',
     'validate_table',
+    '_xcrypt',
     ]
 import_path: str = 'twosquare.twosquare'
 
@@ -424,7 +424,9 @@ tests_display_table: List[str] = [
     "assert type(display_table('false return')) is bool",
     ]
 
-##tests_encode: List[str] = ['']
+tests__xcrypt: List[str] = [
+    "assert _xcrypt('e', 'This should pass', 'falcon', 'osprey')",
+    ]
 
 tests_encrypt: List[str] = [
     'assert encrypt("This should pass", "falcon", "osprey")',
