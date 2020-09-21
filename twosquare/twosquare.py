@@ -388,27 +388,6 @@ def display_table(table: Table) -> bool:
     else:
         return True
 
-def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
-            remove_z = True) -> Union[str, bool]:
-    """Encrypts or decrypts a message using the Twosquare cipher.
-
-    Backend private function that serves as the workhorse for the public
-    interface provided by the encrypt and decrypt functions.
-    
-    Will move and place any shared code for both operations here
-    to avoid redundancy and to streamline the codebase.
-
-    Parameters:
-
-    Returns:
-
-    Dependencies:
-        None
-
-    """
-    
-    return False
-
 def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
     """Encrypts a message using the Twosquare cipher.
 
@@ -1088,6 +1067,63 @@ def validate_table(table: Table) -> bool:
     else:
         return True
 
+def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
+            remove_z = True) -> Union[str, bool]:
+    """Encrypts or decrypts a message using the Twosquare cipher.
+
+    Backend private function that serves as the workhorse for the public
+    interface provided by the encrypt and decrypt functions. See the
+    documentation for those two functions for more detailed information
+    about each particular operation type.
+
+    Parameters:
+
+    mode must be a non-empty string.
+    Valid values are:
+        'e' or 'encrypt' for encryption
+        'd' or 'decrypt' for deccryption
+
+    message must be a non-empty string containing the plaintext or
+    ciphertext message to be rendered by the [en/de]cryption process.
+    For the formatting rules required for validation of either message
+    type, see the documentation for the corresponding function (encrypt
+    or decrypt).
+
+    keys must be non-empty strings with valid format. See the
+    documentation for the encrypt function for more information about
+    specific requirements.
+
+    omit_j and remove_z are optional parameters and if included must be
+    bool types. They are used for decryption operations only, and have
+    no effect on message encryption. See the documentation for the
+    decrypt function for more details on their use and effects.
+
+    Returns:
+    
+        *the [en/de]crypted message if the operation is successful        
+        *False if the operation is unsuccessful
+
+    Dependencies:
+
+    from twosquare:
+        BadValueError
+        create_table
+        FooBarError
+        get_coordinates        
+        Row
+        Table
+        TypeMismatchError
+        validate_ciphertext
+        validate_key
+        validate_plaintext    
+
+    from typing:
+        List
+
+    """
+    
+    return False
+
 def __main__():
     """This is the main Twosquare program.
 
@@ -1134,7 +1170,10 @@ def __main__():
                 (e.g. - 'create' a new key or 'update' an existing key)
 
         Dependencies:
-            None
+
+        From twosquare:
+            get_key
+            validate_key
         
         """
 

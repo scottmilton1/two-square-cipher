@@ -424,10 +424,6 @@ tests_display_table: List[str] = [
     "assert type(display_table('false return')) is bool",
     ]
 
-tests__xcrypt: List[str] = [
-    "assert _xcrypt('e', 'This should pass', 'falcon', 'osprey')",
-    ]
-
 tests_encrypt: List[str] = [
     'assert encrypt("This should pass", "falcon", "osprey")',
     'assert not encrypt("One invalid keyword", "keyword", "pythonista")',
@@ -488,7 +484,30 @@ tests_validate_message: List[str] = [
     "assert not type(validate_message('bah')) == int",
     ]
 
-##tests_validate_plaintext: List[str] = ['']
+tests_validate_plaintext: List[str] = [
+    "assert validate_message('astring')",
+    "assert not validate_message('')",
+    "assert not validate_message('      ')",        
+    "assert not validate_message('    3   ')",     
+    "assert validate_message('  c     ')",        
+    "assert not validate_message('12345')",        
+    "assert not validate_message('!$%*')",
+    "assert not validate_message('    1   ')",
+    'assert validate_message("This should pass")',
+    'assert not validate_message("1.234")',
+    'assert not validate_message("accént")',
+    'assert not validate_message("umläütö")', 
+    'assert not validate_message("文字")',
+    "assert not validate_message(['list', 2])",
+    "assert not validate_message(123)",
+    "assert not validate_message(True)",
+    "assert not validate_message(None)",
+    "assert not validate_message({})",
+    "assert type(validate_message('foo')) is bool",
+    "assert not type(validate_message('bar')) == None",
+    "assert not type(validate_message('baz')) == str",
+    "assert not type(validate_message('bah')) == int",
+    ]
 
 tests_validate_table: List[str] = [
     "assert validate_table(valid_table_example)",
@@ -509,6 +528,10 @@ tests_validate_table: List[str] = [
     "assert type(validate_table('keyword')) in [list, bool]",
     "assert type(validate_table('keyword')) not in [str, int, tuple, dict]",
     "assert type(validate_table('keyword')) not in [True, None, [ ], '']",
+    ]
+
+tests__xcrypt: List[str] = [
+    "assert _xcrypt('e', 'This should pass', 'falcon', 'osprey')",
     ]
 
 ##### Inner functions in Twosquare main program #####
