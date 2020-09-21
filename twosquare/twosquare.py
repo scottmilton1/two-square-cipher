@@ -242,7 +242,7 @@ def decrypt(ciphertext: str, key1: str, key2: str, omit_j = True,
 
         # remove J's from ciphertext string since they
         # are combined with I's in the encypted text
-        filtered_text: str = ciphertext.strip('J')
+        filtered_text: str = ciphertext.replace('J', '')
 
         # if length of purged ciphertext is odd after removing Js raise error     
         if len(filtered_text) % 2 != 0:
