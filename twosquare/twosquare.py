@@ -1131,7 +1131,6 @@ def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
     MAX_ROWS: int = 5
 
     digraphs: List[str] = [ ]
-##    letters_only: List[str] = [ ]
     filtered_text: str = ''
     processed_text: str = ''  
 
@@ -1285,6 +1284,10 @@ def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
         print(err)
         print(err.subtext)
         raise
+
+    except TypeMismatchError as err:
+        print(err)
+        return False
 
     except Exception as err:
         from inspect import currentframe as cf

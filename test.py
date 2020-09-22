@@ -532,6 +532,30 @@ tests_validate_table: List[str] = [
 
 tests__xcrypt: List[str] = [
     "assert _xcrypt('e', 'This should pass', 'falcon', 'osprey')",
+    "assert _xcrypt('e', 'This should pass', 'falcon', 'osprey')",
+    "assert not _xcrypt('e', 'One invalid keyword', 'keyword', 'pythonista')",
+    "assert not _xcrypt('e', 123, 'not', 'string')",
+    "assert not _xcrypt('e', '', 'empty', 'plaintex')",
+    "assert not _xcrypt('e', '$^&@.', 'only', 'symbol')",
+    "assert not _xcrypt('e', '1234', 'only', 'digts')", 
+    "assert not _xcrypt('e', '1.234', 'only', 'numbers')",
+    "assert not _xcrypt('e', '    ', 'only', 'whitespac')",
+    "assert not _xcrypt('e', 'accént', 'foreign', 'chars')",
+    "assert not _xcrypt('e', 'umläütö', 'foreign', 'chars')", 
+    "assert not _xcrypt('e', '文字', 'foreign', 'chars')",
+    "assert type(_xcrypt('e', 'This should pass', 'falcon', 'osprey')) == str",
+    "assert type(_xcrypt('e', 'Retürns Fälse', 'python', 'tricks')) is bool",
+    "assert _xcrypt('d', 'THISSHOULDPASS', 'key', 'keytwo')",
+    "assert not _xcrypt('d', 'THISSHOULDNOTPASS', 'key', 'keytwo')", # key odd length
+    "assert not _xcrypt('d', 'THISSHOULDFAIL', '123', 'keytwo')", # digits in key
+    "assert not _xcrypt('d', 'THISSHOULDFAIL', 123, 'keytwo')", # key not string
+    "assert not _xcrypt('d', 'InVaLiDcIpHeRtExT!', 'key', 'keytwo')", # bad cipher
+    "assert not _xcrypt('d', 'IN', 'key', 'keytwo', 0, False)", # bad type omit_j   
+    "assert not _xcrypt('d', 'IN', 'key', 'keytwo', False, 0)", # bad type remove_z
+    # make sure decoded output correctly matches expected results
+    "assert _xcrypt('d', 'BHATOKTEDZ','python', 'algo') == 'DECRYPTED'",
+    "assert _xcrypt('d', 'ENQKOW', 'python', 'algo', False) == 'IJIJMMY'",
+    "assert _xcrypt('d', 'ENQKOW', 'python', 'algo', True, False) == 'IIMMYZ'",
     ]
 
 ##### Inner functions in Twosquare main program #####
