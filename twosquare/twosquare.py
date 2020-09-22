@@ -1105,6 +1105,9 @@ def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
 
     Dependencies:
 
+    From string:
+        ascii_uppercase
+
     from twosquare:
         BadValueError
         create_table
@@ -1122,11 +1125,14 @@ def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
 
     """
 
+    from string import ascii_uppercase
+
     MAX_COLUMNS: int = 5
     MAX_ROWS: int = 5
 
-    digraphs: list = [ ]
-    letters_only: list = [ ]
+    digraphs: List[str] = [ ]
+##    letters_only: List[str] = [ ]
+    filtered_text: str = ''
     processed_text: str = ''  
 
     try:
@@ -1159,23 +1165,50 @@ def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
         if not validate_message(message, message_type):
             raise BadValueError(f'Invalid {message_type}text error.')
 
-        # capitalize all letters in plaintext
-        capitalized: str = message.upper()
-        
-        # filter to remove non-alpha characters
-        for character in capitalized:
-            if character.isalpha():
-                letters_only.append(character)
+        # validate omit_j
+        if type(omit_j) is not bool:
+            raise TypeMismatchError('Type for omit_j must be bool.')
 
-        # if length of odd add 'Z' to end to make it even
-        if len(letters_only) % 2 != 0:
-            letters_only.append('Z')
+        # validate remove_z
+        if type(remove_z) is not bool:
+            raise TypeMismatchError('Type for remove_z must be bool.') 
 
-        # get two letters at a time 
-        for n in range(0, len(letters_only), 2):
+        if mode == 'encrypt':
+            
+            # capitalize all letters in plaintext
+            capitalized: str = message.upper()
+            
+            # filter to remove everything but ASCII letter characters
+            for character in capitalized:
+                if character in ascii_uppercase: # ignore Unicode letters
+                    filtered_text += character
+
+            # if length is odd add a 'Z' to end to make it even
+            if len(filtered_text) % 2 != 0:
+                filtered_text += 'Z'
+
+        elif mode == 'decrypt':
+
+            # remove J's from ciphertext string since they
+            # are combined with I's in the encypted text
+            filtered_text: str = message.replace('J', '')
+
+            # if length of purged ciphertext is odd after removing Js raise  
+            if len(filtered_text) % 2 != 0:
+                
+                raise BadValueError('Error: uneven number of letters in ' + \
+                                    f'{message_type}text.')
+
+        else:
+
+            raise FooBarError('Error: Invalid mode value.')
+
+        # split ciphertext into digraphs -
+        # get two letters at a time
+        for n in range(0, len(filtered_text), 2):
 
             # create a digraph with the two letters
-            current_digraph: list = [letters_only[n], letters_only[n+1]]
+            current_digraph: list = [filtered_text[n], filtered_text[n+1]]
 
             # store the current digraph in the list of all digraphs
             digraphs.append(current_digraph)
@@ -1224,9 +1257,25 @@ def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
                 processed_letter1 = letter1
                 processed_letter2 = letter2
 
+            # remove J's from output if optional flag set
+            if (mode == 'decrypt' and omit_j == True):
+                
+                if processed_letter1 == 'IJ':
+                    processed_letter1 = 'I'
+                    
+                if processed_letter2 == 'IJ':
+                    processed_letter2 = 'I'
+
             # add the two processed letters to the processed_text
             processed_text = processed_text + processed_letter1 + \
                              processed_letter2
+
+        # remove trailing 'Z' from end of text if decrypt and optional flag set
+        if mode == 'decrypt':
+            
+            if (remove_z == True and processed_text[-1] == 'Z'):
+                
+                processed_text = processed_text[0:-1]
 
     except BadValueError as err:
         print(err)
@@ -1245,7 +1294,7 @@ def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
         print(err)
         raise
 
-    else:
+    else:        
         return processed_text
 
 def __main__():
