@@ -196,150 +196,159 @@ def decrypt(ciphertext: str, key1: str, key2: str, omit_j = True,
     Dependencies:
     
     from twosquare:
-        BadValueError
-        create_table
-        # encode
-        FooBarError
-        get_coordinates        
-        Row
-        Table
-        TypeMismatchError
-        validate_ciphertext
-        validate_key
+        _xcrypt
+    
+##        BadValueError
+##        create_table
+##        # encode
+##        FooBarError
+##        get_coordinates        
+##        Row
+##        Table
+##        TypeMismatchError
+##        validate_ciphertext
+##        validate_key
+##
+##    from typing:
+##        List
 
-    from typing:
-        List
+
+
+    Thin wrapper and public interface for _xcrypt function.
+
 
     """
 
-    # define local variables
-    MAX_COLUMNS: int = 5
-    MAX_ROWS: int = 5
+    return _xcrypt('decrypt', ciphertext, key1, key2, omit_j, remove_z)
 
-    plaintext: str = ''
-    digraphs: List[str] = [ ]
-
-    try:
-
-        # validate passed variables
-
-        # validate keys
-        if not (validate_key(key1) and validate_key(key2)):
-            raise BadValueError('Invalid key error. I am the gatekeeper. ' + \
-                                'Are you the keymaster?')
-
-        # validate ciphertext
-        if not validate_ciphertext(ciphertext):
-            raise BadValueError('Invalid ciphertext error.')
-
-        # validate omit_j
-        if type(omit_j) is not bool:
-            raise TypeMismatchError('Type for omit_j must be bool.')
-
-        # validate remove_z
-        if type(remove_z) is not bool:
-            raise TypeMismatchError('Type for remove_z must be bool.') 
-
-        # remove J's from ciphertext string since they
-        # are combined with I's in the encypted text
-        filtered_text: str = ciphertext.replace('J', '')
-
-        # if length of purged ciphertext is odd after removing Js raise error     
-        if len(filtered_text) % 2 != 0:
-            raise BadValueError('Error: uneven number of letters in ciphertext')
-       
-        # split ciphertext into digraphs -
-        # get two letters at a time
-        for n in range(0, len(filtered_text), 2):
-
-            # create a digraph with the two letters
-            current_digraph: list = [filtered_text[n], filtered_text[n+1]]
-
-            # store the current digraph in the list of all digraphs
-            digraphs.append(current_digraph)
-
-        # create first table with first key
-        first_table: Table = create_table(key1) 
-
-        # create second table with second key
-        second_table: Table = create_table(key2)
-
-        # create plaintext from ciphertext using the tables
-        for digraph in digraphs:
-
-            # unpack digraph
-            letter1, letter2 = digraph
-
-            column1: int = -1
-            column2: int = -1
-            row1: int = -1
-            row2: int = -1
-
-            # get each letter's coordinates in its table (row, column)
-            row1, column1 = get_coordinates(first_table, letter1)
-            row2, column2 = get_coordinates(second_table, letter2)
-
-            if min(row1, row2, column1, column2) < 0:
-                
-                raise FooBarError('Table mismatch error. Unable to find one' + \
-                                  ' or more letters of the plaintext using' + \
-                                  ' the tables generated during program .')
-
-            # check to see which of two cases is true:
-            # case 1: letters are in different columns - swap column numbers
-            if column1 != column2:
-                temp: int = column1
-                column1 = column2
-                column2 = temp
-
-                # fetch letters from table using new coordinates
-                decrypted_letter1 = first_table[row1][column1]
-                decrypted_letter2 = second_table[row2][column2]
-
-            # case 2: letters are in same column - leave letters as is
-            else: # nope, that's not lazy, that's what the cipher says to do
-                decrypted_letter1 = letter1
-                decrypted_letter2 = letter2
-                
-            # remove J's from output if optional flag set
-            if omit_j == True:
-                
-                if decrypted_letter1 == 'IJ':
-                    decrypted_letter1 = 'I'
-                    
-                if decrypted_letter2 == 'IJ':
-                    decrypted_letter2 = 'I'
-
-            # add the two encrypted letters to the ciphertext body
-            plaintext = plaintext + decrypted_letter1 + decrypted_letter2
-
-        # remove trailing 'Z' from end of text if optional flag set
-        if (remove_z == True and plaintext[-1] == 'Z'):
-            plaintext = plaintext[0:-1]
-
-    except BadValueError as err:
-        print(err)
-        return False
-
-    except FooBarError as err:
-        print(err)
-        print(err.subtext)
-        raise
-
-    except TypeMismatchError as err:
-        print(err)
-        return False
-
-    except Exception as err:
-        from inspect import currentframe as cf
-        print('Unexpected exception type raised during execution:')
-        print(f'In function: {cf().f_code.co_name}') # function name
-        print(type(err))
-        print(err)
-        raise
-
-    else:
-        return plaintext 
+##    # define local variables
+##    MAX_COLUMNS: int = 5
+##    MAX_ROWS: int = 5
+##
+##    plaintext: str = ''
+##    digraphs: List[str] = [ ]
+##
+##    try:
+##
+##        # validate passed variables
+##
+##        # validate keys
+##        if not (validate_key(key1) and validate_key(key2)):
+##            raise BadValueError('Invalid key error. I am the gatekeeper. ' + \
+##                                'Are you the keymaster?')
+##
+##        # validate ciphertext
+##        if not validate_ciphertext(ciphertext):
+##            raise BadValueError('Invalid ciphertext error.')
+##
+##        # validate omit_j
+##        if type(omit_j) is not bool:
+##            raise TypeMismatchError('Type for omit_j must be bool.')
+##
+##        # validate remove_z
+##        if type(remove_z) is not bool:
+##            raise TypeMismatchError('Type for remove_z must be bool.') 
+##
+##        # remove J's from ciphertext string since they
+##        # are combined with I's in the encypted text
+##        filtered_text: str = ciphertext.replace('J', '')
+##
+##        # if length of purged ciphertext is odd after removing Js raise error     
+##        if len(filtered_text) % 2 != 0:
+##            raise BadValueError('Error: uneven number of letters in ciphertext')
+##       
+##        # split ciphertext into digraphs -
+##        # get two letters at a time
+##        for n in range(0, len(filtered_text), 2):
+##
+##            # create a digraph with the two letters
+##            current_digraph: list = [filtered_text[n], filtered_text[n+1]]
+##
+##            # store the current digraph in the list of all digraphs
+##            digraphs.append(current_digraph)
+##
+##        # create first table with first key
+##        first_table: Table = create_table(key1) 
+##
+##        # create second table with second key
+##        second_table: Table = create_table(key2)
+##
+##        # create plaintext from ciphertext using the tables
+##        for digraph in digraphs:
+##
+##            # unpack digraph
+##            letter1, letter2 = digraph
+##
+##            column1: int = -1
+##            column2: int = -1
+##            row1: int = -1
+##            row2: int = -1
+##
+##            # get each letter's coordinates in its table (row, column)
+##            row1, column1 = get_coordinates(first_table, letter1)
+##            row2, column2 = get_coordinates(second_table, letter2)
+##
+##            if min(row1, row2, column1, column2) < 0:
+##                
+##                raise FooBarError('Table mismatch error. Unable to find one' + \
+##                                  ' or more letters of the plaintext using' + \
+##                                  ' the tables generated during program .')
+##
+##            # check to see which of two cases is true:
+##            # case 1: letters are in different columns - swap column numbers
+##            if column1 != column2:
+##                temp: int = column1
+##                column1 = column2
+##                column2 = temp
+##
+##                # fetch letters from table using new coordinates
+##                decrypted_letter1 = first_table[row1][column1]
+##                decrypted_letter2 = second_table[row2][column2]
+##
+##            # case 2: letters are in same column - leave letters as is
+##            else: # nope, that's not lazy, that's what the cipher says to do
+##                decrypted_letter1 = letter1
+##                decrypted_letter2 = letter2
+##                
+##            # remove J's from output if optional flag set
+##            if omit_j == True:
+##                
+##                if decrypted_letter1 == 'IJ':
+##                    decrypted_letter1 = 'I'
+##                    
+##                if decrypted_letter2 == 'IJ':
+##                    decrypted_letter2 = 'I'
+##
+##            # add the two encrypted letters to the ciphertext body
+##            plaintext = plaintext + decrypted_letter1 + decrypted_letter2
+##
+##        # remove trailing 'Z' from end of text if optional flag set
+##        if (remove_z == True and plaintext[-1] == 'Z'):
+##            plaintext = plaintext[0:-1]
+##
+##    except BadValueError as err:
+##        print(err)
+##        return False
+##
+##    except FooBarError as err:
+##        print(err)
+##        print(err.subtext)
+##        raise
+##
+##    except TypeMismatchError as err:
+##        print(err)
+##        return False
+##
+##    except Exception as err:
+##        from inspect import currentframe as cf
+##        print('Unexpected exception type raised during execution:')
+##        print(f'In function: {cf().f_code.co_name}') # function name
+##        print(type(err))
+##        print(err)
+##        raise
+##
+##    else:
+##        return plaintext 
 
 def display_table(table: Table) -> bool:
     """Print a Playfair table to the screen.
@@ -441,125 +450,131 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
     Dependencies:
     
     from twosquare:
-        BadValueError
-        create_table
-        # encode
-        FooBarError
-        get_coordinates        
-        Row
-        Table
-        validate_key
-        validate_plaintext    
-
-    from typing:
-        List
+        _xcrypt
+    
+##        BadValueError
+##        create_table
+##        # encode
+##        FooBarError
+##        get_coordinates        
+##        Row
+##        Table
+##        validate_key
+##        validate_plaintext    
+##
+##    from typing:
+##        List
+        
+    Thin wrapper and public interface for _xcrypt function.
 
     """
 
-    MAX_COLUMNS: int = 5
-    MAX_ROWS: int = 5
+    return _xcrypt('encrypt', plaintext, key1, key2)
 
-    ciphertext: str = ''
-    digraphs: list = [ ]
-    letters_only: list = [ ]
-
-    try:
-
-        # validate keys
-        if not (validate_key(key1) and validate_key(key2)):
-            raise BadValueError('Invalid key error. I am the gatekeeper. ' + \
-                                'Are you the keymaster?')
-
-        # validate plaintext
-        if not validate_plaintext(plaintext):
-            raise BadValueError('Invalid plaintext error.')
-
-        # capitalize all letters in plaintext
-        capitalized: str = plaintext.upper()
-        
-        # filter to remove non-alpha characters
-        for character in capitalized:
-            if character.isalpha():
-                letters_only.append(character)
-
-        # if length of odd add 'Z' to end to make it even
-        if len(letters_only) % 2 != 0:
-            letters_only.append('Z')
-
-        # get two letters at a time 
-        for n in range(0, len(letters_only), 2):
-
-            # create a digraph with the two letters
-            current_digraph: list = [letters_only[n], letters_only[n+1]]
-
-            # store the current digraph in the list of all digraphs
-            digraphs.append(current_digraph)
-
-        # create first table with first key
-        first_table: Table = create_table(key1) 
-
-        # create second table with second key
-        second_table: Table = create_table(key2)
-
-        # create ciphertext from plaintext using the tables
-        for digraph in digraphs:
-
-            # unpack digraph
-            letter1, letter2 = digraph
-
-            column1: int = -1
-            column2: int = -1
-            row1: int = -1
-            row2: int = -1
-
-            # get each letter's coordinates in its table (row, column)
-            row1, column1 = get_coordinates(first_table, letter1)
-            row2, column2 = get_coordinates(second_table, letter2)
-
-            if min(row1, row2, column1, column2) < 0:
-                
-                raise FooBarError('Table mismatch error. Unable to find one' + \
-                                  ' or more letters of the plaintext using' + \
-                                  ' the tables generated during program .')
-
-            # check to see which of two cases is true:
-            # case 1: letters are in different columns - swap column numbers
-            if column1 != column2:
-                temp: int = column1
-                column1 = column2
-                column2 = temp
-
-                # fetch letters from table using new coordinates
-                encrypted_letter1 = first_table[row1][column1]
-                encrypted_letter2 = second_table[row2][column2]
-
-            # case 2: letters are in same column - leave letters as is
-            else: # nope, that's not lazy, that's what the cipher says to do
-                encrypted_letter1 = letter1
-                encrypted_letter2 = letter2
-
-            # add the two encrypted letters to the ciphertext body
-            ciphertext = ciphertext + encrypted_letter1 + encrypted_letter2
-
-    except BadValueError as err:
-        print(err)
-        return False
-
-    except FooBarError as err:
-        print(err)
-        print(err.subtext)
-        raise
-
-    except Exception as err:
-        from inspect import currentframe as cf
-        print('Unexpected exception type raised during execution:')
-        print(f'In function: {cf().f_code.co_name}') # function name
-        print(type(err))
-        print(err)
-        raise
-
-    else:
-        return ciphertext
+##    MAX_COLUMNS: int = 5
+##    MAX_ROWS: int = 5
+##
+##    ciphertext: str = ''
+##    digraphs: list = [ ]
+##    letters_only: list = [ ]
+##
+##    try:
+##
+##        # validate keys
+##        if not (validate_key(key1) and validate_key(key2)):
+##            raise BadValueError('Invalid key error. I am the gatekeeper. ' + \
+##                                'Are you the keymaster?')
+##
+##        # validate plaintext
+##        if not validate_plaintext(plaintext):
+##            raise BadValueError('Invalid plaintext error.')
+##
+##        # capitalize all letters in plaintext
+##        capitalized: str = plaintext.upper()
+##        
+##        # filter to remove non-alpha characters
+##        for character in capitalized:
+##            if character.isalpha():
+##                letters_only.append(character)
+##
+##        # if length of odd add 'Z' to end to make it even
+##        if len(letters_only) % 2 != 0:
+##            letters_only.append('Z')
+##
+##        # get two letters at a time 
+##        for n in range(0, len(letters_only), 2):
+##
+##            # create a digraph with the two letters
+##            current_digraph: list = [letters_only[n], letters_only[n+1]]
+##
+##            # store the current digraph in the list of all digraphs
+##            digraphs.append(current_digraph)
+##
+##        # create first table with first key
+##        first_table: Table = create_table(key1) 
+##
+##        # create second table with second key
+##        second_table: Table = create_table(key2)
+##
+##        # create ciphertext from plaintext using the tables
+##        for digraph in digraphs:
+##
+##            # unpack digraph
+##            letter1, letter2 = digraph
+##
+##            column1: int = -1
+##            column2: int = -1
+##            row1: int = -1
+##            row2: int = -1
+##
+##            # get each letter's coordinates in its table (row, column)
+##            row1, column1 = get_coordinates(first_table, letter1)
+##            row2, column2 = get_coordinates(second_table, letter2)
+##
+##            if min(row1, row2, column1, column2) < 0:
+##                
+##                raise FooBarError('Table mismatch error. Unable to find one' + \
+##                                  ' or more letters of the plaintext using' + \
+##                                  ' the tables generated during program .')
+##
+##            # check to see which of two cases is true:
+##            # case 1: letters are in different columns - swap column numbers
+##            if column1 != column2:
+##                temp: int = column1
+##                column1 = column2
+##                column2 = temp
+##
+##                # fetch letters from table using new coordinates
+##                encrypted_letter1 = first_table[row1][column1]
+##                encrypted_letter2 = second_table[row2][column2]
+##
+##            # case 2: letters are in same column - leave letters as is
+##            else: # nope, that's not lazy, that's what the cipher says to do
+##                encrypted_letter1 = letter1
+##                encrypted_letter2 = letter2
+##
+##            # add the two encrypted letters to the ciphertext body
+##            ciphertext = ciphertext + encrypted_letter1 + encrypted_letter2
+##
+##    except BadValueError as err:
+##        print(err)
+##        return False
+##
+##    except FooBarError as err:
+##        print(err)
+##        print(err.subtext)
+##        raise
+##
+##    except Exception as err:
+##        from inspect import currentframe as cf
+##        print('Unexpected exception type raised during execution:')
+##        print(f'In function: {cf().f_code.co_name}') # function name
+##        print(type(err))
+##        print(err)
+##        raise
+##
+##    else:
+##        return ciphertext
 
 def get_coordinates(table: Table, letter: str) -> Tuple[int, int]:
     """Gets a letters coordinates from a Playfair table.
@@ -1423,8 +1438,7 @@ def __main__():
             print('Unable to print program menu. ' +
                   'An unexpected error has occured.')
             print(err)
-            print(type(err))
-            
+            print(type(err))            
             return False
 
         else:
@@ -1604,9 +1618,8 @@ def __main__():
             return -1
 
         except Exception as err:
-            from inspect import currentframe as cf
             print('Unexpected exception type raised during execution:')
-            print(f'In function: {cf().f_code.co_name}') # function name
+            print('In function: _get_selection') # function name
             print(type(err))
             print(err)
             raise
@@ -1899,6 +1912,7 @@ def __main__():
             return 0
 
         except FooBarError as err:
+            print(f'In function: _file_io')
             print('Bad return value from _get_selection function.')
             print(err.subtext)
             raise
@@ -1908,6 +1922,7 @@ def __main__():
             return 0
 
         except Exception as err:
+            print(f'In function: _file_io')
             print(f'Unable to {mode} file. ' +
                   'An unexpected error has occured.')
             print(err)
@@ -2175,7 +2190,7 @@ def __main__():
                         print('\nOperation succcessful.')
 
                     else:
-                        raise FooBarError()
+                        raise BadValueError()
 
                     display_message_actions: bool = True
 
@@ -2258,19 +2273,21 @@ def __main__():
 
                         continue
 
-                except BadValueError as err:
+                except BadValueError:
                     print('Unable to complete operation.')
-                    print(err)
 
                 except FooBarError as err:
                     print('Unable to complete operation.')
-                    print(err)
+                    print('\nAn unexpected error occurred.')
+                    print(f'In __main__ function: menu selection [1/2]')
                     print(type(err))
+                    print(err)
                     print(err.subtext)
                     
                 except Exception as err:
                     print('Unable to complete operation.')
                     print('\nAn unexpected error occurred.')
+                    print(f'In __main__ function: menu selection [1/2]')
                     print(err)
                     print(type(err))
                     raise
@@ -2571,13 +2588,16 @@ def __main__():
 
                 except FooBarError as err:
                     print('Unable to complete operation.')
+                    print('\nAn unexpected error occurred.')
+                    print(f'In __main__ function: menu selection 7')
                     print(err)
                     print(type(err))
                     print(err.subtext)
-                    
+                   
                 except Exception as err:
                     print('Unable to complete operation.')
                     print('\nAn unexpected error occurred.')
+                    print(f'In __main__ function: menu selection 7')
                     print(err)
                     print(type(err))
                     raise
