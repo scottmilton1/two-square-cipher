@@ -25,6 +25,8 @@ logging.basicConfig(level=logging.DEBUG, format = '%(message)s',)
 
 # create list of all units to import
 import_items: List[str] = [
+    '_get_coordinates',
+    '_xcrypt',
     'Row',
     'Table',
     'create_table',
@@ -36,7 +38,6 @@ import_items: List[str] = [
     'validate_message',
     'validate_plaintext',
     'validate_table',
-    '_xcrypt',
     ]
 import_path: str = 'twosquare.twosquare'
 
@@ -440,9 +441,7 @@ tests_encrypt: List[str] = [
     'assert type(encrypt("Retürns Fälse", "python", "tricks")) is bool', 
     ]
 
-##tests_get_coordinates: List[str] = ['']
-
-##tests_get_key: List[str] = ['']
+##tests__get_coordinates: List[str] = ['']
 
 ##tests_validate_ciphertext: List[str] = ['']
 
@@ -562,6 +561,7 @@ tests__xcrypt: List[str] = [
 
 ### CAN'T AUTO TEST THESE ONES - REQUIRE USER INTERACTION
 ##tests__create_key: List[str] = ['']
+##tests__get_key: List[str] = ['']
 ##tests__get_response: List[str] = ['']
 ##tests__get_selection: List[str] = ['']
 ##tests__load_file: List[str] = ['']

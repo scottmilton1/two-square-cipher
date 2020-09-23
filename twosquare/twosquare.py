@@ -48,6 +48,292 @@ Table = List[Row]
 # set all print statements globally with setting flush = True
 print = partial(print, flush = True)
 
+def _get_coordinates(table: Table, letter: str) -> Tuple[int, int]:
+    """Gets a letters coordinates from a Playfair table.
+
+    Helper function for _xcrypt function.
+
+    Letter should be a str containing a single ASCII letter character.
+    Table must be prepopulated and have a valid format.
+    
+    Returns a tuple of two integers: (row_number, column_number) if
+    successful or returns a a tuple of two integer values of (-1, -1)
+    if unsuccessful.
+
+    Dependencies:
+        None
+    
+    """
+
+    try:
+
+        # create row counter
+        row_number: int = 0
+
+        if letter == 'I' or letter == 'J':
+            letter = "IJ"
+
+        # check each row of the table for the letter
+        for row in table:
+            
+            # if the letter is found in current row
+            if letter in row:
+                
+                # get the column number for the letter
+                column_number: int = row.index(letter)
+
+                # return the position of the letter in the table
+                return (row_number, column_number)
+
+            # if not found, increment the row counter for the next row
+            row_number += 1
+
+    except Exception as err:
+        from inspect import currentframe as cf
+        print('Unexpected exception type raised during execution:')
+        print(f'In function: {cf().f_code.co_name}') # function name
+        print(type(err))
+        print(err)
+        raise
+
+    else:
+        # if letter not found in table, return tuple with negative indices
+        # to indicate that a non-fatal error has occured
+        return (-1, -1)
+
+def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
+            remove_z = True) -> Union[str, bool]:
+    """Encrypts or decrypts a message using the Twosquare cipher.
+
+    Backend private function that serves as the workhorse for the public
+    interface provided by the encrypt and decrypt functions. See the
+    documentation for those two functions for more detailed information
+    about each particular operation type.
+
+    Parameters:
+
+    mode must be a non-empty string.
+    Valid values are:
+        'e' or 'encrypt' for encryption
+        'd' or 'decrypt' for decryption
+
+    message must be a non-empty string containing the plaintext or
+    ciphertext message to be rendered by the [en/de]cryption process.
+    For the formatting rules required for validation of either message
+    type, see the documentation for the corresponding function (encrypt
+    or decrypt).
+
+    keys must be non-empty strings with valid format. See the
+    documentation for the encrypt function for more information about
+    specific requirements.
+
+    omit_j and remove_z are optional parameters and if included must be
+    bool types. They are used for decryption operations only, and have
+    no effect on message encryption. See the documentation for the
+    decrypt function for more details on their use and effects.
+
+    Returns:
+    
+        *the [en/de]crypted message if the operation is successful        
+        *False if the operation is unsuccessful
+
+    Dependencies:
+
+    From string:
+        ascii_uppercase
+
+    from twosquare:
+        _get_coordinates  
+        BadValueError
+        create_table
+        FooBarError    
+        Row
+        Table
+        TypeMismatchError
+        validate_ciphertext
+        validate_key
+        validate_plaintext    
+
+    from typing:
+        List
+
+    """
+
+    from string import ascii_uppercase
+
+    MAX_COLUMNS: int = 5
+    MAX_ROWS: int = 5
+
+    digraphs: List[str] = [ ]
+    filtered_text: str = ''
+    processed_text: str = ''  
+
+    try:
+
+        # validate mode
+        if type(mode) is not str:
+
+            raise TypeMismatchError('Mode must be a string.')
+
+        if mode in ['e', 'encrypt']:
+
+            mode = 'encrypt'
+
+        elif mode in ['d', 'decrypt']:
+
+            mode = 'decrypt'
+
+        else:
+
+            raise BadValueError('Error: Invalid mode.')
+
+        # validate keys
+        if not (validate_key(key1) and validate_key(key2)):
+            raise BadValueError('Invalid key error. I am the gatekeeper. ' + \
+                                'Are you the keymaster?')
+        
+        # validate message
+        message_type = 'plain' if mode == 'encrypt' else 'cipher'
+        
+        if not validate_message(message, message_type):
+            raise BadValueError(f'Invalid {message_type}text error.')
+
+        # validate omit_j
+        if type(omit_j) is not bool:
+            raise TypeMismatchError('Type for omit_j must be bool.')
+
+        # validate remove_z
+        if type(remove_z) is not bool:
+            raise TypeMismatchError('Type for remove_z must be bool.') 
+
+        if mode == 'encrypt':
+            
+            # capitalize all letters in plaintext
+            capitalized: str = message.upper()
+            
+            # filter to remove everything but ASCII letter characters
+            for character in capitalized:
+                if character in ascii_uppercase: # ignore Unicode letters
+                    filtered_text += character
+
+            # if length is odd add a 'Z' to end to make it even
+            if len(filtered_text) % 2 != 0:
+                filtered_text += 'Z'
+
+        elif mode == 'decrypt':
+
+            # remove J's from ciphertext string since they
+            # are combined with I's in the encypted text
+            filtered_text: str = message.replace('J', '')
+
+            # if length of purged ciphertext is odd after removing Js raise  
+            if len(filtered_text) % 2 != 0:
+                
+                raise BadValueError('Error: uneven number of letters in ' + \
+                                    f'{message_type}text.')
+
+        else:
+
+            raise FooBarError('Error: Invalid mode value.')
+
+        # split ciphertext into digraphs -
+        # get two letters at a time
+        for n in range(0, len(filtered_text), 2):
+
+            # create a digraph with the two letters
+            current_digraph: list = [filtered_text[n], filtered_text[n+1]]
+
+            # store the current digraph in the list of all digraphs
+            digraphs.append(current_digraph)
+
+        # create first table with first key
+        first_table: Table = create_table(key1) 
+
+        # create second table with second key
+        second_table: Table = create_table(key2)
+
+        # create processed_text from message using the tables
+        for digraph in digraphs:
+
+            # unpack digraph
+            letter1, letter2 = digraph
+
+            column1: int = -1
+            column2: int = -1
+            row1: int = -1
+            row2: int = -1
+
+            # get each letter's coordinates in its table (row, column)
+            row1, column1 = _get_coordinates(first_table, letter1)
+            row2, column2 = _get_coordinates(second_table, letter2)
+
+            if min(row1, row2, column1, column2) < 0:
+                
+                raise FooBarError('Table mismatch error. Unable to find ' + \
+                                  'one or more letters of the ' + \
+                                  f'{message_type}text using the tables ' + \
+                                  'generated by the program.')
+
+            # check to see which of two cases is true:
+            # case 1: letters are in different columns - swap column numbers
+            if column1 != column2:
+                temp: int = column1
+                column1 = column2
+                column2 = temp
+
+                # fetch letters from table using new coordinates
+                processed_letter1 = first_table[row1][column1]
+                processed_letter2 = second_table[row2][column2]
+
+            # case 2: letters are in same column - leave letters as is
+            else: # nope, that's not lazy, that's what the cipher says to do
+                processed_letter1 = letter1
+                processed_letter2 = letter2
+
+            # remove J's from output if optional flag set
+            if (mode == 'decrypt' and omit_j == True):
+                
+                if processed_letter1 == 'IJ':
+                    processed_letter1 = 'I'
+                    
+                if processed_letter2 == 'IJ':
+                    processed_letter2 = 'I'
+
+            # add the two processed letters to the processed_text
+            processed_text = processed_text + processed_letter1 + \
+                             processed_letter2
+
+        # remove trailing 'Z' from end of text if decrypt and optional flag set
+        if mode == 'decrypt':
+            
+            if (remove_z == True and processed_text[-1] == 'Z'):
+                
+                processed_text = processed_text[0:-1]
+
+    except BadValueError as err:
+        print(err)
+        return False
+
+    except FooBarError as err:
+        print(err)
+        print(err.subtext)
+        raise
+
+    except TypeMismatchError as err:
+        print(err)
+        return False
+
+    except Exception as err:
+        from inspect import currentframe as cf
+        print('Unexpected exception type raised during execution:')
+        print(f'In function: {cf().f_code.co_name}') # function name
+        print(type(err))
+        print(err)
+        raise
+
+    else:        
+        return processed_text
+
 def create_table(key: str) -> Union[Table, bool]: # return either Table or False
     """Create a Playfair table.
 
@@ -64,6 +350,7 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
 
     Dependencies:
         BadValueError
+        validate_key
 
     """
 
@@ -72,8 +359,12 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
     MAX_COLUMNS: int = 5
 
     try:
-        if type(key) is not str or key.isalpha() == False:
+
+        if not validate_key(key):
             raise BadValueError('Invalid key format.')
+        
+##        if type(key) is not str or key.isalpha() == False:
+##            raise BadValueError('Invalid key format.')
 
         # capitalize all letters in the key
         key: str = key.upper()
@@ -326,102 +617,6 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
     """
 
     return _xcrypt('encrypt', plaintext, key1, key2)
-
-def get_coordinates(table: Table, letter: str) -> Tuple[int, int]:
-    """Gets a letters coordinates from a Playfair table.
-
-    Helper function for encrypt and decrypt functions.
-
-    Letter should be a str containing a single ASCII letter character.
-    Table must be prepopulated and have a valid format.
-    
-    Returns a tuple of two integers: (row_number, column_number) if
-    successful or returns a a tuple of two integer values of (-1, -1)
-    if unsuccessful.
-
-    Dependencies:
-        None
-    
-    """
-
-    try:
-
-        # create row counter
-        row_number: int = 0
-
-        if letter == 'I' or letter == 'J':
-            letter = "IJ"
-
-        # check each row of the table for the letter
-        for row in table:
-            
-            # if the letter is found in current row
-            if letter in row:
-                
-                # get the column number for the letter
-                column_number: int = row.index(letter)
-
-                # return the position of the letter in the table
-                return (row_number, column_number)
-
-            # if not found, increment the row counter for the next row
-            row_number += 1
-
-    except Exception as err:
-        from inspect import currentframe as cf
-        print('Unexpected exception type raised during execution:')
-        print(f'In function: {cf().f_code.co_name}') # function name
-        print(type(err))
-        print(err)
-        raise
-
-    else:
-        # if letter not found in table, return tuple with negative indices
-        # to indicate that a non-fatal error has occured
-        return (-1, -1)
-
-def get_key(ordinal: str = '') -> str:
-    """Gets key from user and returns it.
-
-    Prompts user for keyword or key phrase. Does not perform any
-    validity checks of user input for proper key formatting
-    restrictions, which is left to validate_key() function.
-
-    The arg ordinal is optional string value for print formatting. If
-    provided, it should be an ordinal number (e.g. - 'first', 'second').
-
-    Returns the string value entered by the user.
-
-    Dependencies:
-        None
-
-    """
-
-    try:
-        if type(ordinal) is not str:
-            raise TypeMismatchError('ordinal must be a string')
-
-        if len(ordinal) > 0:
-            ordinal += " "
-            
-        while not (key := input("Enter %skeyword or key phrase >> " % ordinal)):
-
-            print("Invalid entry. Please try again.")
-
-    except TypeMismatchError as err:
-        print(err)
-        return False
-
-    except Exception as err:
-        from inspect import currentframe as cf
-        print('Unexpected exception type raised during execution:')
-        print(f'In function: {cf().f_code.co_name}') # function name
-        print(type(err))
-        print(err)
-        raise
-
-    else:
-        return key
 
 def validate_ciphertext(message: str) -> bool:
     """Validates a ciphertext message for the Twosquare cipher.
@@ -715,12 +910,7 @@ def validate_plaintext(message: str) -> bool:
     From twosquare:
         BadValueError
         TypeMismatchError
-
-
-    ONE SEEMINGLY LOGICAL GENERAL APPROACH TO VALIDATION:
-        From greatest violations of requirements to least violations
-        Perhaps review all validation functions and sections against this order
-    
+   
     """
 
     from string import printable
@@ -796,7 +986,10 @@ def validate_table(table: Table) -> bool:
     Returns True if the table is valid or returns False otherwise.
 
     Dependencies:
-        None
+
+    From twosquare:
+        BadValueError
+        TypeMismatchError
 
     """
 
@@ -857,239 +1050,6 @@ def validate_table(table: Table) -> bool:
     else:
         return True
 
-def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
-            remove_z = True) -> Union[str, bool]:
-    """Encrypts or decrypts a message using the Twosquare cipher.
-
-    Backend private function that serves as the workhorse for the public
-    interface provided by the encrypt and decrypt functions. See the
-    documentation for those two functions for more detailed information
-    about each particular operation type.
-
-    Parameters:
-
-    mode must be a non-empty string.
-    Valid values are:
-        'e' or 'encrypt' for encryption
-        'd' or 'decrypt' for deccryption
-
-    message must be a non-empty string containing the plaintext or
-    ciphertext message to be rendered by the [en/de]cryption process.
-    For the formatting rules required for validation of either message
-    type, see the documentation for the corresponding function (encrypt
-    or decrypt).
-
-    keys must be non-empty strings with valid format. See the
-    documentation for the encrypt function for more information about
-    specific requirements.
-
-    omit_j and remove_z are optional parameters and if included must be
-    bool types. They are used for decryption operations only, and have
-    no effect on message encryption. See the documentation for the
-    decrypt function for more details on their use and effects.
-
-    Returns:
-    
-        *the [en/de]crypted message if the operation is successful        
-        *False if the operation is unsuccessful
-
-    Dependencies:
-
-    From string:
-        ascii_uppercase
-
-    from twosquare:
-        BadValueError
-        create_table
-        FooBarError
-        get_coordinates        
-        Row
-        Table
-        TypeMismatchError
-        validate_ciphertext
-        validate_key
-        validate_plaintext    
-
-    from typing:
-        List
-
-    """
-
-    from string import ascii_uppercase
-
-    MAX_COLUMNS: int = 5
-    MAX_ROWS: int = 5
-
-    digraphs: List[str] = [ ]
-    filtered_text: str = ''
-    processed_text: str = ''  
-
-    try:
-
-        # validate mode
-        if type(mode) is not str:
-
-            raise TypeMismatchError('Mode must be a string.')
-
-        if mode in ['e', 'encrypt']:
-
-            mode = 'encrypt'
-
-        elif mode in ['d', 'decrypt']:
-
-            mode = 'decrypt'
-
-        else:
-
-            raise BadValueError('Error: Invalid mode.')
-
-        # validate keys
-        if not (validate_key(key1) and validate_key(key2)):
-            raise BadValueError('Invalid key error. I am the gatekeeper. ' + \
-                                'Are you the keymaster?')
-        
-        # validate message
-        message_type = 'plain' if mode == 'encrypt' else 'cipher'
-        
-        if not validate_message(message, message_type):
-            raise BadValueError(f'Invalid {message_type}text error.')
-
-        # validate omit_j
-        if type(omit_j) is not bool:
-            raise TypeMismatchError('Type for omit_j must be bool.')
-
-        # validate remove_z
-        if type(remove_z) is not bool:
-            raise TypeMismatchError('Type for remove_z must be bool.') 
-
-        if mode == 'encrypt':
-            
-            # capitalize all letters in plaintext
-            capitalized: str = message.upper()
-            
-            # filter to remove everything but ASCII letter characters
-            for character in capitalized:
-                if character in ascii_uppercase: # ignore Unicode letters
-                    filtered_text += character
-
-            # if length is odd add a 'Z' to end to make it even
-            if len(filtered_text) % 2 != 0:
-                filtered_text += 'Z'
-
-        elif mode == 'decrypt':
-
-            # remove J's from ciphertext string since they
-            # are combined with I's in the encypted text
-            filtered_text: str = message.replace('J', '')
-
-            # if length of purged ciphertext is odd after removing Js raise  
-            if len(filtered_text) % 2 != 0:
-                
-                raise BadValueError('Error: uneven number of letters in ' + \
-                                    f'{message_type}text.')
-
-        else:
-
-            raise FooBarError('Error: Invalid mode value.')
-
-        # split ciphertext into digraphs -
-        # get two letters at a time
-        for n in range(0, len(filtered_text), 2):
-
-            # create a digraph with the two letters
-            current_digraph: list = [filtered_text[n], filtered_text[n+1]]
-
-            # store the current digraph in the list of all digraphs
-            digraphs.append(current_digraph)
-
-        # create first table with first key
-        first_table: Table = create_table(key1) 
-
-        # create second table with second key
-        second_table: Table = create_table(key2)
-
-        # create processed_text from message using the tables
-        for digraph in digraphs:
-
-            # unpack digraph
-            letter1, letter2 = digraph
-
-            column1: int = -1
-            column2: int = -1
-            row1: int = -1
-            row2: int = -1
-
-            # get each letter's coordinates in its table (row, column)
-            row1, column1 = get_coordinates(first_table, letter1)
-            row2, column2 = get_coordinates(second_table, letter2)
-
-            if min(row1, row2, column1, column2) < 0:
-                
-                raise FooBarError('Table mismatch error. Unable to find ' + \
-                                  'one or more letters of the ' + \
-                                  f'{message_type}text using the tables ' + \
-                                  'generated by the program.')
-
-            # check to see which of two cases is true:
-            # case 1: letters are in different columns - swap column numbers
-            if column1 != column2:
-                temp: int = column1
-                column1 = column2
-                column2 = temp
-
-                # fetch letters from table using new coordinates
-                processed_letter1 = first_table[row1][column1]
-                processed_letter2 = second_table[row2][column2]
-
-            # case 2: letters are in same column - leave letters as is
-            else: # nope, that's not lazy, that's what the cipher says to do
-                processed_letter1 = letter1
-                processed_letter2 = letter2
-
-            # remove J's from output if optional flag set
-            if (mode == 'decrypt' and omit_j == True):
-                
-                if processed_letter1 == 'IJ':
-                    processed_letter1 = 'I'
-                    
-                if processed_letter2 == 'IJ':
-                    processed_letter2 = 'I'
-
-            # add the two processed letters to the processed_text
-            processed_text = processed_text + processed_letter1 + \
-                             processed_letter2
-
-        # remove trailing 'Z' from end of text if decrypt and optional flag set
-        if mode == 'decrypt':
-            
-            if (remove_z == True and processed_text[-1] == 'Z'):
-                
-                processed_text = processed_text[0:-1]
-
-    except BadValueError as err:
-        print(err)
-        return False
-
-    except FooBarError as err:
-        print(err)
-        print(err.subtext)
-        raise
-
-    except TypeMismatchError as err:
-        print(err)
-        return False
-
-    except Exception as err:
-        from inspect import currentframe as cf
-        print('Unexpected exception type raised during execution:')
-        print(f'In function: {cf().f_code.co_name}') # function name
-        print(type(err))
-        print(err)
-        raise
-
-    else:        
-        return processed_text
-
 def __main__():
     """This is the main Twosquare program.
 
@@ -1138,7 +1098,7 @@ def __main__():
         Dependencies:
 
         From twosquare:
-            get_key
+            _get_key
             validate_key
         
         """
@@ -1146,11 +1106,11 @@ def __main__():
         try:
 
             # prompt user for a key      
-            key: str = get_key(ordinal[index])
+            key: str = _get_key(ordinal[index])
 
             # validate key and get again if not valid
             while not validate_key(key):
-                key: str = get_key()
+                key: str = _get_key()
 
             # replace existing key with new key value
             key_list.pop(index)
@@ -1280,6 +1240,49 @@ def __main__():
             else: # if file type valid
 
                 return filename
+
+    def _get_key(ordinal: str = '') -> str:
+        """Gets key from user and returns it.
+
+        Prompts user for keyword or key phrase. Does not perform any
+        validity checks of user input for proper key formatting
+        restrictions, which is left to validate_key() function.
+
+        The arg ordinal is optional string value for print formatting. If
+        provided, it should be an ordinal number (e.g. - 'first', 'second').
+
+        Returns the string value entered by the user.
+
+        Dependencies:
+            None
+
+        """
+
+        try:
+            if type(ordinal) is not str:
+                raise TypeMismatchError('ordinal must be a string')
+
+            if len(ordinal) > 0:
+                ordinal += " "
+                
+            while not (key := input("Enter %skeyword or key phrase >> " % ordinal)):
+
+                print("Invalid entry. Please try again.")
+
+        except TypeMismatchError as err:
+            print(err)
+            return False
+
+        except Exception as err:
+            from inspect import currentframe as cf
+            print('Unexpected exception type raised during execution:')
+            print(f'In function: {cf().f_code.co_name}') # function name
+            print(type(err))
+            print(err)
+            raise
+
+        else:
+            return key
 
     def _get_response(action: str) -> bool:
         """Gets a yes or no response from the user.
