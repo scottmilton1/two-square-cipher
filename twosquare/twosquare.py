@@ -161,12 +161,14 @@ def decrypt(ciphertext: str, key1: str, key2: str, omit_j = True,
 
     Parameters:
 
-    Keys must each be a valid keyword or key phrase:    
+    Each key must be a valid keyword or key phrase:  
     a non-empty string with no more than twenty-five letters,
     ASCII letter characters only; no Unicode characters allowed,
     no duplicate letters; each letter may be used only once in each key,
-    no digits - numbers must be spelled out,
-    no punctuation or special characters.
+    a key may not contain both 'I' and 'J' as these are combined
+    by this cipher and are therefore counted as the same letter,
+    no digits allowed - any numbers must be spelled out,
+    no white space, punctuation, or special characters.
 
     Keys must be identical to the original keys used to encrypt the
     plaintext message and must be given in the same order or the
@@ -270,13 +272,14 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
 
     Parameters:
 
-    Each key must be a valid keyword or key phrase:
-    a non-empty string with no more than twenty-five letters
-    no white space,
-    no special characters,
-    no digits - numbers must be spelled out,
-    no duplicate letters (i.e. - the same letter cannot be used twice in
-        the same key)
+    Each key must be a valid keyword or key phrase:  
+    a non-empty string with no more than twenty-five letters,
+    ASCII letter characters only; no Unicode characters allowed,
+    no duplicate letters; each letter may be used only once in each key,
+    a key may not contain both 'I' and 'J' as these are combined
+    by this cipher and are therefore counted as the same letter,
+    no digits allowed - any numbers must be spelled out,
+    no white space, punctuation, or special characters.
 
     The value of plaintext must be a non-empty string. Please note the
     following: All white space, special characters, and digits will be
@@ -519,16 +522,30 @@ def validate_key(key: str) -> bool:
     Takes a string as input and validates it against the formatting
     specifications of a keyword or key phrase for a Playfair table.
 
+    To pass, a key must be a valid keyword or key phrase:  
+    a non-empty string with no more than twenty-five letters,
+    ASCII letter characters only; no Unicode characters allowed,
+    no duplicate letters; each letter may be used only once in each key,
+    a key may not contain both 'I' and 'J' as these are combined
+    by this cipher and are therefore counted as the same letter,
+    no digits allowed - any numbers must be spelled out,
+    no white space, punctuation, or special characters.
+
     Returns True if key passes all checks.
     Prints a failure message and returns False if key is invalid.
 
     Dependencies:
+
+    From string:
+        ascii_uppercase
 
     From twosquare:
         BadValueError
         TypeMismatchError
 
     """
+
+    from string import ascii_uppercase
 
     try:
         # check that key is a string
@@ -566,9 +583,19 @@ def validate_key(key: str) -> bool:
             if character in letters_in_key:
                 raise BadValueError('Key must not contain duplicate letters.')
 
-            # if character is a letter add it to the list to track it
-            elif character.isalpha():
+            # make sure letters are ASCII only, not unicode
+            if character in ascii_uppercase:
+
+                # add letter to the list to track it
                 letters_in_key.append(character)
+            
+            else:
+                raise BadValueError('Only ASCII letters are allowed in key.' + \
+                                    ' No Unicode.')
+
+        # make sure key does not contain both 'I' and 'J'   
+        if all(letter in letters_in_key for letter in ['I', 'J']):
+            raise BadValueError("Key may contain 'I' or 'J', but not both.")
 
         # make sure key does not contain more than twenty five letters
         if len(key) > 25:
@@ -1720,8 +1747,10 @@ def __main__():
         ' ',
         '>Each key can be a key word or phrase:',
         '* Up to twenty-five letters in length',
+        '* ASCII letter characters only; no Unicode allowed',
         '* Each letter may not be used more than once in a key',
-        '* Digits are not allowed so all numbers must be spelled out',
+        "* A key may contain either 'I' or 'J', but not both",
+        '* Digits are not allowed so any numbers must be spelled out',
         '* No white space, punctuation, or special characters',
         ]
     keys: Union[List[str], bool] = ['', '']
