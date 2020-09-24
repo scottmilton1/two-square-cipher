@@ -8,9 +8,6 @@ and horizontal, depending on how the two Playfair tables are arranged.
 This implementation uses the first variation, so the two tables are
 placed vertically.
 
-The functions in the global scope of this implementation can also be
-used as a module.
-
 """ 
 
 # globals
@@ -24,13 +21,13 @@ from typing import Tuple
 from typing import Union
 
 if __name__ == 'twosquare.twosquare':
-    import_path = 'twosquare.exceptions'
+    _import_path = 'twosquare.exceptions'
     
 else:
-    import_path = 'exceptions' 
+    _import_path = 'exceptions' 
 
 # user-defined error class names
-custom_error_classes = [
+_custom_error_classes = [
     'BadValueError',
     'FooBarError',
     'StakesTooHighError',
@@ -38,8 +35,8 @@ custom_error_classes = [
     ]
 
 # import the custom error classes from resolved path
-for error_class in custom_error_classes:
-    exec(f'from {import_path} import {error_class}') 
+for _error_class in _custom_error_classes:
+    exec(f'from {_import_path} import {_error_class}') 
 
 # use type aliases for type hints on complex types
 Row = List[str]
@@ -133,29 +130,29 @@ def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
     decrypt function for more details on their use and effects.
 
     Returns:
-    
-        *the [en/de]crypted message if the operation is successful        
-        *False if the operation is unsuccessful
+
+    the [en/de]crypted message if the operation is successful        
+    False if the operation is unsuccessful
 
     Dependencies:
 
     From string:
-        ascii_uppercase
+    ascii_uppercase
 
     from twosquare:
-        _get_coordinates  
-        BadValueError
-        create_table
-        FooBarError    
-        Row
-        Table
-        TypeMismatchError
-        validate_ciphertext
-        validate_key
-        validate_plaintext    
+    _get_coordinates  
+    BadValueError
+    create_table
+    FooBarError    
+    Row
+    Table
+    TypeMismatchError
+    validate_ciphertext
+    validate_key
+    validate_plaintext    
 
     from typing:
-        List
+    List
 
     """
 
@@ -349,8 +346,10 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
     prints a failure message and returns False if unsuccessful.
 
     Dependencies:
-        BadValueError
-        validate_key
+
+    From twosquare:
+    BadValueError
+    validate_key
 
     """
 
@@ -363,9 +362,6 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
         if not validate_key(key):
             raise BadValueError('Invalid key format.')
         
-##        if type(key) is not str or key.isalpha() == False:
-##            raise BadValueError('Invalid key format.')
-
         # capitalize all letters in the key
         key: str = key.upper()
 
@@ -493,13 +489,13 @@ def decrypt(ciphertext: str, key1: str, key2: str, omit_j = True,
 
     Returns:
 
-        a string containing the decrypted message if successful
-        False if the decryption operation is unsuccessful
+    a string containing the decrypted message if successful
+    False if the decryption operation is unsuccessful
 
     Dependencies:
     
     from twosquare:
-        _xcrypt
+    _xcrypt
   
     """
 
@@ -515,8 +511,8 @@ def display_table(table: Table) -> bool:
     Dependencies:
 
     from twosquare:
-        BadValueError
-        validate_table
+    BadValueError
+    validate_table
     
     """
 
@@ -606,13 +602,13 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
 
     Returns:
 
-        a string containing the encoded ciphertext if successful
-        False if the operation is unsuccessful
+    a string containing the encoded ciphertext if successful
+    False if the operation is unsuccessful
 
     Dependencies:
     
     From twosquare:
-        _xcrypt
+    _xcrypt
     
     """
 
@@ -638,11 +634,11 @@ def validate_ciphertext(message: str) -> bool:
     Dependencies:
 
     From String:
-        ascii_uppercase
+    ascii_uppercase
 
     From Twosquare:
-        BadValueError
-        TypeMismatchError
+    BadValueError
+    TypeMismatchError
 
     """
 
@@ -732,11 +728,11 @@ def validate_key(key: str) -> bool:
     Dependencies:
 
     From string:
-        ascii_uppercase
+    ascii_uppercase
 
     From twosquare:
-        BadValueError
-        TypeMismatchError
+    BadValueError
+    TypeMismatchError
 
     """
 
@@ -841,12 +837,12 @@ def validate_message(message: str, mode: str = 'plain') -> bool:
     Dependencies:
 
     From string:
-        printable        
+    printable        
 
     From twosquare:
-        TypeMismatchError
-        validate_ciphertext
-        validate_plaintext
+    TypeMismatchError
+    validate_ciphertext
+    validate_plaintext
 
     """
 
@@ -905,11 +901,11 @@ def validate_plaintext(message: str) -> bool:
     Dependencies:
 
     From string:
-        printable        
+    printable        
 
     From twosquare:
-        BadValueError
-        TypeMismatchError
+    BadValueError
+    TypeMismatchError
    
     """
 
@@ -988,8 +984,8 @@ def validate_table(table: Table) -> bool:
     Dependencies:
 
     From twosquare:
-        BadValueError
-        TypeMismatchError
+    BadValueError
+    TypeMismatchError
 
     """
 
@@ -1056,16 +1052,10 @@ def __main__():
     The functions placed in the global scope of this implementation can
     also be used as a module.
 
-    The inner functions below are intended for use only as helper
-    functions for the main program and are thus merely internal
-    implementation details.
-
     """
 
     def _coming_soon() -> NoReturn:
         """Prints a message indicating that a program's feature is coming soon.
-
-        Inner helper function for the main twosquare program.
 
         """
 
@@ -1077,29 +1067,28 @@ def __main__():
          index: int, action: str = 'create') -> NoReturn:
         """Gets a valid key from the user and adds it to the list of keys.
 
-        Inner helper function for the main twosquare program.
-
         Prompts the user for a keyword or keyphrase, passes it to the
         validate_key function for validation, and inserts it in the
         key_list at the insertion point specified by the value of the
         index parameter.
 
         Parameters:
-            key_list: list with values of type str prepopulated with values;
-                empty strings are okay.
-            ordinal: list of strings used for print formatting. It should
-                contain values that are the ordinal numbers for the keys
-                being created ('first', 'second').
-            index: int value that must point to a valid index in the key_list
-                and the list of ordinal numbers
-            action: optional string value that indicates what is being done
-                (e.g. - 'create' a new key or 'update' an existing key)
+        
+        key_list: list with values of type str prepopulated with values;
+            empty strings are okay.
+        ordinal: list of strings used for print formatting. It should
+            contain values that are the ordinal numbers for the keys
+            being created ('first', 'second').
+        index: int value that must point to a valid index in the key_list
+            and the list of ordinal numbers
+        action: optional string value that indicates what is being done
+            (e.g. - 'create' a new key or 'update' an existing key)
 
         Dependencies:
 
         From twosquare:
-            _get_key
-            validate_key
+        _get_key
+        validate_key
         
         """
 
@@ -1129,10 +1118,8 @@ def __main__():
     def _display_keys() -> NoReturn:
         """Displays the current keys, if any.
 
-        Inner helper function for the main twosquare program.
-
         Dependencies:
-            None
+        None
 
         """
     
@@ -1150,14 +1137,12 @@ def __main__():
     def _display_menu(menu_options: list) -> Union[int, bool]:
         """Print a formatted list of program options.
 
-        Inner helper function for the main twosquare program.
-
         Returns number of menu_options in list if successful
         or returns False if an exception occurs. Keep this in mind,
         and handle potential Exceptions accordingly.
 
         Dependencies:
-            None
+        None
 
         """
 
@@ -1183,13 +1168,11 @@ def __main__():
             -> NoReturn:
         """Displays a pretty formatted title and byline.
 
-        Inner helper function for the main twosquare program.
-
         Dependencies:
-            None
+        None
 
         TODOs - Ideas for additional features:
-            Add keyword arg for text_alignment with default = 'center'
+        Add keyword arg for text_alignment with default = 'center'
 
         """
         
@@ -1206,13 +1189,11 @@ def __main__():
     def _get_filename() -> Union[str, int]:
         """Prompts the user for a filename.
 
-        Inner helper function for the main Twosquare program.
-
         Returns a string containing the filename entered by the user if
         successful or returns a value of -1 if the user aborts.
 
         Dependencies:
-            None
+        None
 
         """
 
@@ -1254,7 +1235,7 @@ def __main__():
         Returns the string value entered by the user.
 
         Dependencies:
-            None
+        None
 
         """
 
@@ -1287,19 +1268,17 @@ def __main__():
     def _get_response(action: str) -> bool:
         """Gets a yes or no response from the user.
 
-        Inner helper function for the main twosquare program.
-
         Prompts the user for input. The input validation only accepts
         [upper/lower]case variants of 'Y' and 'N'.
+
+        Example use case: to check whether or not the user wants to perform
+        another action in a loop or exit (to main menu / quit program, etc.).
 
         Returns True if user selects 'Y'
         Returns False if user selects 'N'
         
-        Example use case: to check whether or not the user wants to perform
-        another action in a loop or exit (to main menu / quit program, etc.).
-
         Dependencies:
-            None
+        None
 
         """
     
@@ -1328,8 +1307,6 @@ def __main__():
                            'Please try again.') -> int:
         """Prompts the user to make a selection from a list of options.
 
-        Inner helper function for the main twosquare program.
-
         Returns an int corresponding to the index of the options list item
         selected by the user if successful.
         Returns an int value of -1 if an expected error occurs during
@@ -1338,7 +1315,7 @@ def __main__():
         Dependencies:
 
         From twosquare:
-            TypeMismatchError
+        TypeMismatchError
 
         """
 
@@ -1406,8 +1383,6 @@ def __main__():
                 -> Union[str, int]:
         """Loads or saves a .txt file message.
 
-        Inner helper function for the main Twosquare program.
-
         Loads or saves a plaintext or ciphertext message. Only .txt files
         are supported. To load a file, the file must exist in the current
         directory. To save a file, the file must not already exist in the
@@ -1417,8 +1392,8 @@ def __main__():
         
         mode must be a non-empty string.
         Valid values are:
-            'l' or 'load' for file input operations
-            's' or 'save' for file output operations.
+        'l' or 'load' for file input operations
+        's' or 'save' for file output operations.
 
         filename, if included, must be a string representing a valid
         filename and must include the .txt file type extension in the
@@ -1430,22 +1405,22 @@ def __main__():
 
         Returns:
         
-            the message if loaded successfully OR
-            an int value of 1 if file saved successfully
-            an int value of 0 if unsuccessful
-            an int value of -1 if user aborts operation
+        the message if loaded successfully OR
+        an int value of 1 if file saved successfully
+        an int value of 0 if unsuccessful
+        an int value of -1 if user aborts operation
 
         Dependencies:
 
         From os:
-            path.exists
+        path.exists
 
         From twosquare:
-            BadValueError
-            FooBarError
-            _get_filename
-            _get_selection
-            TypeMismatchError
+        BadValueError
+        FooBarError
+        _get_filename
+        _get_selection
+        TypeMismatchError
    
         """
 
