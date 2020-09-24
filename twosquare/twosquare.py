@@ -26,6 +26,8 @@ if __name__ == 'twosquare.twosquare':
 else:
     _import_path = 'exceptions' 
 
+VERSION = '1.0.0'
+
 # user-defined error class names
 _custom_error_classes = [
     'BadValueError',
@@ -1046,13 +1048,70 @@ def validate_table(table: Table) -> bool:
     else:
         return True
 
-def __main__():
+
+
+
+##import getopt
+import sys
+
+def __main__(argv):
     """This is the main Twosquare program.
 
     The functions placed in the global scope of this implementation can
     also be used as a module.
 
     """
+
+    # check for command-line arguments
+    if len(argv) > 0:
+        
+        print(' ')
+        
+        for i, arg in enumerate(argv, start = 1):
+            print(f'sys.arg[{i}]: ', argv)
+
+        print(' ')
+
+        # if user requests help, explain command line usage
+        if any(arg in argv for arg in ['-h', '--help']):
+
+            print('Usage: twosquare [OPTION] MESSAGE KEY1 KEY2')
+##            print('  or:  twosquare [OPTION]')
+##            print('  or:  twosquare')           
+            print(' ')
+            print('   OPTIONS: ')
+            print('   -e, --encrypt  encrypt MESSAGE using KEY1 and KEY2')
+            print('   -d, --decrypt  decrypt MESSAGE using KEY1 and KEY2')
+            print('   -z, --remove_z remove trailing Z from decrypted message')
+            print('   -j, --omit_j   remove letter J\'s from decrypted message')
+            print('   -h, --help     display this help and exit')
+            print('   -v, --version  output version information and exit')
+            print(' ')
+            print('   For interactive mode with a full in-program menu,')
+            print('   run the program without adding arguments.')
+
+        elif any(arg in argv for arg in ['-v', '--version']):
+            print(f'Twosquare {VERSION}')
+
+        # encrypt
+
+        # decrypt
+
+        # create_table
+
+        # display_table
+
+        # validate_ciphertext
+
+        # validate_key
+
+        # validate_message
+
+        # validate_plaintext
+
+        # exit program
+        exit()   
+          
 
     def _coming_soon() -> NoReturn:
         """Prints a message indicating that a program's feature is coming soon.
@@ -2439,4 +2498,4 @@ def __main__():
     return
 
 if __name__ == '__main__':
-    __main__()
+    __main__(sys.argv[1:])
