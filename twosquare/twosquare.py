@@ -1844,11 +1844,14 @@ def __main__(argv):
 
     # check for command-line arguments
     if len(argv) > 0:
+
+        invalid: bool = False
+        text: str = ''
         
-        print(' ')
-        
-        for i, arg in enumerate(argv, start = 1):
-            print(f'sys.arg[{i}]: ', arg)
+##        print(' ')
+##        
+##        for i, arg in enumerate(argv, start = 1):
+##            print(f'sys.arg[{i}]: ', arg)
 
         # if user requests help, explain command line usage
         if any(arg in argv for arg in ['-h', '--help']):
@@ -1881,10 +1884,115 @@ def __main__(argv):
             print(text)
 
         # decrypt
+        elif (any(arg in argv for arg in ['-d', '--decrypt']) or \
+            (argv[0].startswith('-') and 'd' in argv[0])):
+
+            invalid: bool = True
+
+            # if invalid number of arguments passed
+            if len(argv) < 4 or len(argv) > 6:
+              
+                pass
+
+##                text = 'Invalid number of command line arguments.'
+              
+            # if options in wrong position
+            elif any(arg.startswith('-') for arg in argv[-3:]):
+
+                pass
+            
+##                text = 'Message and keys cannot start with a dash character'            
+
+            elif any(arg.startswith('-')
+                     and len(arg) < 2
+                         for arg in argv[0:-3]):
+
+                pass
+            
+##                text = 'Invalid command line argument'
+
+            elif any(arg.startswith('--') and
+                     arg != '--decrypt'
+                         for arg in argv[0:-3]):
+
+                pass
+            
+##                text = 'Invalid command line argument'
+
+            elif any(arg != '--decrypt' and 
+                arg.startswith('-')
+                     and len(arg) > 4
+                         for arg in argv[0:-3]):
+
+                pass
+
+##                text = 'Invalid command line argument'
+
+            # check for invalid letters in options
+            elif any(arg != '--decrypt' and 
+                any(letter not in ['-', 'd', 'j', 'z'] for letter in arg)
+                     for arg in argv[0:-3]):
+
+                pass
+            
+##                text = 'Invalid command line argument'
+
+            # check for duplicate letters in options
+            elif max([max([arg.count(letter) for letter in arg])
+                    for arg in argv[0:-3] if arg != '--decrypt']) > 1:
+           
+                pass
+            
+##                text = 'Duplicate letters in command line option'
+
+            else: # if passed validation checks, proceed...
+
+                invalid: bool = False
+                omit_j: bool = False
+                remove_z: bool = False
+
+                # check for omit_j option
+                if any(arg in ['-j', '-dj', '-jz', '-zj', 'jdz', \
+                            '-jzd', '-djz', '-zjd', '-dzj', '-zdj']
+                                for arg in argv[0:-3]):
+
+                    omit_j = True
+
+                # check for remove_z option
+                if any(arg in ['-z', '-dz', '-zj', '-jz', 'zdj', \
+                            '-zjd', '-dzj', '-jzd', '-djz', '-jdz']
+                                for arg in argv[0:-3]):
+
+                    remove_z = True
+              
+                # load text from file if filename provided
+                if argv[-3].endswith('.txt'):
+
+                    text: str = _file_io('load', argv[-3])
+
+                    if not text:
+
+                        text = 'Error: Unable to load .txt file.'
+
+                    else:
+
+                        text: str = decrypt(text, argv[-2], argv[-1], omit_j,
+                                            remove_z)
+
+                else: # decrypt string message
+                
+                    text: str = decrypt(argv[-3], argv[-2], argv[-1], omit_j,
+                                        remove_z)
+
+            print(text, end = '')
 
         else:
-            print('\nInvalid format for command line usage.')
-            print('For help run again with --help option.\n')
+                invalid: bool = True
+
+        if invalid:
+            
+            print('Invalid format for command line usage.')
+            print('For help run again with --help option.')
             
         # exit program
         exit()
