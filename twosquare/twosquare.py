@@ -1847,11 +1847,6 @@ def __main__(argv):
 
         invalid: bool = False
         text: str = ''
-        
-##        print(' ')
-##        
-##        for i, arg in enumerate(argv, start = 1):
-##            print(f'sys.arg[{i}]: ', arg)
 
         # if user requests help, explain command line usage
         if any(arg in argv for arg in ['-h', '--help']):
@@ -1893,31 +1888,23 @@ def __main__(argv):
             if len(argv) < 4 or len(argv) > 6:
               
                 pass
-
-##                text = 'Invalid number of command line arguments.'
-              
+            
             # if options in wrong position
             elif any(arg.startswith('-') for arg in argv[-3:]):
 
                 pass
-            
-##                text = 'Message and keys cannot start with a dash character'            
 
             elif any(arg.startswith('-')
                      and len(arg) < 2
                          for arg in argv[0:-3]):
 
                 pass
-            
-##                text = 'Invalid command line argument'
 
             elif any(arg.startswith('--') and
                      arg != '--decrypt'
                          for arg in argv[0:-3]):
 
                 pass
-            
-##                text = 'Invalid command line argument'
 
             elif any(arg != '--decrypt' and 
                 arg.startswith('-')
@@ -1926,24 +1913,18 @@ def __main__(argv):
 
                 pass
 
-##                text = 'Invalid command line argument'
-
             # check for invalid letters in options
             elif any(arg != '--decrypt' and 
                 any(letter not in ['-', 'd', 'j', 'z'] for letter in arg)
                      for arg in argv[0:-3]):
 
                 pass
-            
-##                text = 'Invalid command line argument'
 
             # check for duplicate letters in options
             elif max([max([arg.count(letter) for letter in arg])
                     for arg in argv[0:-3] if arg != '--decrypt']) > 1:
            
                 pass
-            
-##                text = 'Duplicate letters in command line option'
 
             else: # if passed validation checks, proceed...
 
