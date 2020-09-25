@@ -1050,25 +1050,20 @@ def validate_table(table: Table) -> bool:
     else:
         return True
 
-
-
-
-
-
-
 def __main__(argv):
     """This is the main Twosquare program.
 
     The functions placed in the global scope of this implementation can
     also be used as a module.
 
-    Command-line usage: twosquare [OPTION] MESSAGE KEY1 KEY2       
+    Command-line usage: twosquare [OPTION] FILENAME KEY1 KEY2
+                    or: twosquare [OPTION] "MESSAGE" KEY1 KEY2
     
        OPTIONS: 
        -e, --encrypt  encrypt MESSAGE using KEY1 and KEY2
        -d, --decrypt  decrypt MESSAGE using KEY1 and KEY2
-       -z, --remove_z remove trailing Z from decrypted message
-       -j, --omit_j   remove letter J's from decrypted message
+       -z, --remove_z remove trailing Z from MESSAGE :: decryption only
+       -j, --omit_j   omit the letter J from MESSAGE :: decryption only
        -h, --help     display this help and exit
        -v, --version  output version information and exit
     
@@ -1719,13 +1714,14 @@ def __main__(argv):
         ]
     info_command_line: List[str] = [
         ' ',
-        'Usage: twosquare [OPTION] MESSAGE KEY1 KEY2',       
+        'Usage: twosquare [OPTION] "MESSAGE" KEY1 KEY2',
+        '  or:  twosquare [OPTION] FILENAME.TXT KEY1 KEY2',
         ' ',
         '   OPTIONS: ',
         '   -e, --encrypt  encrypt MESSAGE using KEY1 and KEY2',
         '   -d, --decrypt  decrypt MESSAGE using KEY1 and KEY2',
-        '   -z, --remove_z remove trailing Z from decrypted message',
-        "   -j, --omit_j   remove letter J's from decrypted message",
+        '   -z, --remove_z remove trailing Z from MESSAGE :: decryption only',
+        '   -j, --omit_j   omit the letter J from MESSAGE :: decryption only',
         '   -h, --help     display this help and exit',
         '   -v, --version  output version information and exit',
         ' ',
@@ -1852,7 +1848,7 @@ def __main__(argv):
         print(' ')
         
         for i, arg in enumerate(argv, start = 1):
-            print(f'sys.arg[{i}]: ', argv)
+            print(f'sys.arg[{i}]: ', arg)
 
         # if user requests help, explain command line usage
         if any(arg in argv for arg in ['-h', '--help']):
@@ -1862,8 +1858,27 @@ def __main__(argv):
 
         elif any(arg in argv for arg in ['-v', '--version']):
             print(f'Twosquare {VERSION}')
-
+            
         # encrypt
+        elif argv[0] in ['-e', '--encrypt'] and len(argv) == 4:
+
+            if argv[1].endswith('.txt'):
+
+                text: str = _file_io('load', argv[1])
+
+                if not text:
+
+                    text = 'Error: Unable to load .txt file.'
+
+                else:
+
+                    text: str = encrypt(text, argv[2], argv[3])
+
+            else:
+            
+                text: str = encrypt(argv[1], argv[2], argv[3])
+
+            print(text)
 
         # decrypt
 
