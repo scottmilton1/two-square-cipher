@@ -10,9 +10,12 @@ abstract away the basic underlying processes involved.
 
 Feel free to replace this test suite with your test runner of choice.
 
-Set VERBOSE to True for more detailed logging and print output during testing.
+Set VERBOSE to True for more detailed logging and print output during
+testing.
 
 """
+
+VERBOSE: bool = True # Could expand this to several levels (e.g. - 0, 1, 2)
 
 # import general types (optional: for type hint checking)
 from typing import List
@@ -46,8 +49,6 @@ for item in import_items:
     exec(f'from {import_path} import {item}')
 
 ##### GLOBALS #####
-
-VERBOSE: bool = False # Could expand this to several levels (e.g. - 0, 1, 2)
 
 # table data is not of type string
 invalid_table_example_1: Table = [
@@ -106,10 +107,9 @@ def run_test(assertion: str, verbose: bool = True) -> bool:
     try:
         exec(assertion)
   
-    except AssertionError as err:
+    except AssertionError:
 
         if verbose:
-            logging.debug(err)
             logging.debug('FAIL')
             
         return False
@@ -247,7 +247,7 @@ def test_suite(verbose: bool = True) -> NoReturn:
 
 ##### CUSTOM ASSERTIONS #####
 
-def assert_equal(expected_result, func, *args, **kwargs) -> str:
+def assert_equal(expected_result, func, *args, **kwargs) -> bool:
     """Tests that a function's return value equals an expected result.
 
     This is a custom assertion designed to display improved output for a
@@ -255,9 +255,9 @@ def assert_equal(expected_result, func, *args, **kwargs) -> str:
     is desired i.e. - when running multiple test cases in a test runner.
     
     To illustrate, if the return value of the function does not equal
-    the value of the expected_result, the failure message returned will
-    include the name of the function, the values of the args used in the
-    test, and the expected result.
+    the value of the expected_result, the test case readout displayed
+    will include the name of the function, the values of the args used in
+    the test, and the expected result.
 
     Here is an example of output for a failed test case:
 
@@ -272,24 +272,28 @@ def assert_equal(expected_result, func, *args, **kwargs) -> str:
 
     Doing this should produce the following failed test case output:
 
-    'FAIL: add(1,2) == 2'
+    '---> add(1,2) == 2'
+
+    This info is meant to supplement the 'FAIL' message that is already
+    printed by the test runner (when running tests in verbose mode).
 
     Just to be crystal clear, the function add() when run with the
     parameters provided for the *args, in this case 1 and 2, returned a
     value that did not match the value of the parameter provided for the
     arg expected_result, which was 2 in this case. Ergo, the test case
-    failed and the corresponding failure message was returned.
+    failed and the corresponding failure message was displayed. More
+    coffee please...
 
-    More coffee please...
-    
+    Returns True if func returns a value that equals expected_result or 
+    Returns False otherwise
 
     """
 
     try:
         assert expected_result == func(*args, **kwargs)
         
-    except AssertionError as err:
-        message = f'FAIL: {func.__name__}('
+    except AssertionError:
+        message = f'---> {func.__name__}('
 
         if len(args) > 0:
             if type(args[0]) == str:
@@ -319,13 +323,20 @@ def assert_equal(expected_result, func, *args, **kwargs) -> str:
 
         message = message + ') == ' +  str(expected_result)
 
-        return message               
+        logging.debug(message)
+        
+        return False
 
     except Exception as err:
-        return f'Unexpected exception raised during test execution: \n{err}'
+        
+        logging.debug('Unexpected exception raised during test execution:')
+        logging.debug(err)
+        
+        return False
 
     else:
-        return "PASS"
+       
+        return True
 
 ##### UNIT TESTS FOR TWOSQUARE FUNCTIONS #####
 
@@ -356,7 +367,7 @@ tests_decrypt: List[str] = [
     ]
 
 tests_display_table: List[str] = [
-##    "assert_equal(False, display_table, 'string')",
+    "assert assert_equal(False, display_table, 'string')",
     "assert not display_table(list)",
     "assert not display_table(123)",      
     "assert not display_table({'dict': 'ionary'})",
