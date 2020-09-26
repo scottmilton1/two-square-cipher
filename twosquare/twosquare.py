@@ -1860,15 +1860,17 @@ def __main__(argv):
         # encrypt
         elif argv[0] in ['-e', '--encrypt'] and len(argv) == 4:
 
+            # if message is a text file
             if argv[1].endswith('.txt'):
 
+                # load the message
                 text: str = _file_io('load', argv[1])
 
                 if not text:
 
                     text = 'Error: Unable to load .txt file.'
 
-                else:
+                else: # encrypt the message passed as arg
 
                     text: str = encrypt(text, argv[2], argv[3])
 
@@ -1884,6 +1886,8 @@ def __main__(argv):
 
             invalid: bool = True
 
+            # validate the passed args
+
             # if invalid number of arguments passed
             if len(argv) < 4 or len(argv) > 6:
               
@@ -1894,18 +1898,21 @@ def __main__(argv):
 
                 pass
 
+            # if dash only with no option letter
             elif any(arg.startswith('-')
                      and len(arg) < 2
                          for arg in argv[0:-3]):
 
                 pass
 
+            # if two dashes only with no option letter
             elif any(arg.startswith('--') and
                      arg != '--decrypt'
                          for arg in argv[0:-3]):
 
                 pass
 
+            # check that arg length does not exceed total possible options
             elif any(arg != '--decrypt' and 
                 arg.startswith('-')
                      and len(arg) > 4
@@ -1926,23 +1933,19 @@ def __main__(argv):
            
                 pass
 
-            else: # if passed validation checks, proceed...
+            else: # if all validation checks pass, proceed with decryption
 
                 invalid: bool = False
                 omit_j: bool = False
                 remove_z: bool = False
 
                 # check for omit_j option
-                if any(arg in ['-j', '-dj', '-jz', '-zj', 'jdz', \
-                            '-jzd', '-djz', '-zjd', '-dzj', '-zdj']
-                                for arg in argv[0:-3]):
+                if any('j' in arg for arg in argv[0:-3] if arg != '--decrypt'):
 
                     omit_j = True
 
                 # check for remove_z option
-                if any(arg in ['-z', '-dz', '-zj', '-jz', 'zdj', \
-                            '-zjd', '-dzj', '-jzd', '-djz', '-jdz']
-                                for arg in argv[0:-3]):
+                if any('z' in arg for arg in argv[0:-3] if arg != '--decrypt'):
 
                     remove_z = True
               
@@ -1960,7 +1963,7 @@ def __main__(argv):
                         text: str = decrypt(text, argv[-2], argv[-1], omit_j,
                                             remove_z)
 
-                else: # decrypt string message
+                else: # decrypt message passed as arg
                 
                     text: str = decrypt(argv[-3], argv[-2], argv[-1], omit_j,
                                         remove_z)
@@ -1975,8 +1978,10 @@ def __main__(argv):
             print('Invalid format for command line usage.')
             print('For help run again with --help option.')
             
-        # exit program
+        # exit program for non-interactive command line use
         exit()
+
+    # begin program for interactive mode with full menu
 
     # display program title
     _display_title(program_name, program_description)   
