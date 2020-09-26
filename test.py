@@ -449,7 +449,16 @@ tests_encrypt: List[str] = [
     'assert type(encrypt("Retürns Fälse", "python", "tricks")) is bool', 
     ]
 
-##tests_validate_ciphertext: List[str] = ['']
+tests_validate_ciphertext: List[str] = [
+    "assert assert_equal(True, validate_ciphertext, 'VALID')",
+    "assert assert_equal(False, validate_ciphertext, 'InVaLid')", # not capitals
+    "assert assert_equal(False, validate_ciphertext, '')", # empty string
+    "assert assert_equal(False, validate_ciphertext, 'NO!!!??')", # punctuation
+    "assert assert_equal(False, validate_ciphertext, 'B A D')", # white space
+    "assert assert_equal(False, validate_ciphertext, 'áéíóúü')", # unicode chars
+    "assert assert_equal(False, validate_ciphertext, '123')", # digits in string
+    "assert assert_equal(False, validate_ciphertext, 123)", # not a string    
+    ]
 
 tests_validate_key: List[str] = [
     "assert validate_key('astring')",
