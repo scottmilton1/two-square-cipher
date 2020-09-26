@@ -340,6 +340,45 @@ def assert_equal(expected_result, func, *args, **kwargs) -> bool:
 
 ##### UNIT TESTS FOR TWOSQUARE FUNCTIONS #####
 
+tests__get_coordinates: List[str] = [
+    "assert assert_equal((0, 0), _get_coordinates, valid_table_example, 'P')",
+    "assert not assert_equal((0,0),_get_coordinates, valid_table_example, 'Z')",
+    "assert assert_equal((4, 4), _get_coordinates, valid_table_example, 'Z')",
+    "assert assert_equal((-1, -1), _get_coordinates, valid_table_example, '5')",
+    # works because _get_coordinates does not enforce data types internally
+    "assert assert_equal((0, 0), _get_coordinates, invalid_table_example_1, 1)",
+    "assert assert_equal((-1, -1), _get_coordinates, 'bad table', 'P')",
+    "assert not assert_equal((-1, -1), _get_coordinates, 123, 'P')", # bad table
+    ]
+
+tests__xcrypt: List[str] = [
+    "assert _xcrypt('e', 'This should pass', 'falcon', 'osprey')",
+    "assert _xcrypt('e', 'This should pass', 'falcon', 'osprey')",
+    "assert not _xcrypt('e', 'One invalid keyword', 'keyword', 'pythonista')",
+    "assert not _xcrypt('e', 123, 'not', 'string')",
+    "assert not _xcrypt('e', '', 'empty', 'plaintex')",
+    "assert not _xcrypt('e', '$^&@.', 'only', 'symbol')",
+    "assert not _xcrypt('e', '1234', 'only', 'digts')", 
+    "assert not _xcrypt('e', '1.234', 'only', 'numbers')",
+    "assert not _xcrypt('e', '    ', 'only', 'whitespac')",
+    "assert not _xcrypt('e', 'accént', 'foreign', 'chars')",
+    "assert not _xcrypt('e', 'umläütö', 'foreign', 'chars')", 
+    "assert not _xcrypt('e', '文字', 'foreign', 'chars')",
+    "assert type(_xcrypt('e', 'This should pass', 'falcon', 'osprey')) == str",
+    "assert type(_xcrypt('e', 'Retürns Fälse', 'python', 'tricks')) is bool",
+    "assert _xcrypt('d', 'THISSHOULDPASS', 'key', 'keytwo')",
+    "assert not _xcrypt('d', 'THISSHOULDNOTPASS', 'key', 'keytwo')", # key odd length
+    "assert not _xcrypt('d', 'THISSHOULDFAIL', '123', 'keytwo')", # digits in key
+    "assert not _xcrypt('d', 'THISSHOULDFAIL', 123, 'keytwo')", # key not string
+    "assert not _xcrypt('d', 'InVaLiDcIpHeRtExT!', 'key', 'keytwo')", # bad cipher
+    "assert not _xcrypt('d', 'IN', 'key', 'keytwo', 0, False)", # bad type omit_j   
+    "assert not _xcrypt('d', 'IN', 'key', 'keytwo', False, 0)", # bad type remove_z
+    # make sure decoded output correctly matches expected results
+    "assert _xcrypt('d', 'BHATOKTEDZ','python', 'algo') == 'DECRYPTED'",
+    "assert _xcrypt('d', 'ENQKOW', 'python', 'algo', False) == 'IJIJMMY'",
+    "assert _xcrypt('d', 'ENQKOW', 'python', 'algo', True, False) == 'IIMMYZ'",
+    ]
+
 tests_create_table: List[str] = [
     "assert create_table('string')",
     "assert not create_table(str)",
@@ -409,8 +448,6 @@ tests_encrypt: List[str] = [
     'assert type(encrypt("This should pass", "falcon", "osprey")) == str',
     'assert type(encrypt("Retürns Fälse", "python", "tricks")) is bool', 
     ]
-
-##tests__get_coordinates: List[str] = ['']
 
 ##tests_validate_ciphertext: List[str] = ['']
 
@@ -496,34 +533,6 @@ tests_validate_table: List[str] = [
     "assert type(validate_table('keyword')) in [list, bool]",
     "assert type(validate_table('keyword')) not in [str, int, tuple, dict]",
     "assert type(validate_table('keyword')) not in [True, None, [ ], '']",
-    ]
-
-tests__xcrypt: List[str] = [
-    "assert _xcrypt('e', 'This should pass', 'falcon', 'osprey')",
-    "assert _xcrypt('e', 'This should pass', 'falcon', 'osprey')",
-    "assert not _xcrypt('e', 'One invalid keyword', 'keyword', 'pythonista')",
-    "assert not _xcrypt('e', 123, 'not', 'string')",
-    "assert not _xcrypt('e', '', 'empty', 'plaintex')",
-    "assert not _xcrypt('e', '$^&@.', 'only', 'symbol')",
-    "assert not _xcrypt('e', '1234', 'only', 'digts')", 
-    "assert not _xcrypt('e', '1.234', 'only', 'numbers')",
-    "assert not _xcrypt('e', '    ', 'only', 'whitespac')",
-    "assert not _xcrypt('e', 'accént', 'foreign', 'chars')",
-    "assert not _xcrypt('e', 'umläütö', 'foreign', 'chars')", 
-    "assert not _xcrypt('e', '文字', 'foreign', 'chars')",
-    "assert type(_xcrypt('e', 'This should pass', 'falcon', 'osprey')) == str",
-    "assert type(_xcrypt('e', 'Retürns Fälse', 'python', 'tricks')) is bool",
-    "assert _xcrypt('d', 'THISSHOULDPASS', 'key', 'keytwo')",
-    "assert not _xcrypt('d', 'THISSHOULDNOTPASS', 'key', 'keytwo')", # key odd length
-    "assert not _xcrypt('d', 'THISSHOULDFAIL', '123', 'keytwo')", # digits in key
-    "assert not _xcrypt('d', 'THISSHOULDFAIL', 123, 'keytwo')", # key not string
-    "assert not _xcrypt('d', 'InVaLiDcIpHeRtExT!', 'key', 'keytwo')", # bad cipher
-    "assert not _xcrypt('d', 'IN', 'key', 'keytwo', 0, False)", # bad type omit_j   
-    "assert not _xcrypt('d', 'IN', 'key', 'keytwo', False, 0)", # bad type remove_z
-    # make sure decoded output correctly matches expected results
-    "assert _xcrypt('d', 'BHATOKTEDZ','python', 'algo') == 'DECRYPTED'",
-    "assert _xcrypt('d', 'ENQKOW', 'python', 'algo', False) == 'IJIJMMY'",
-    "assert _xcrypt('d', 'ENQKOW', 'python', 'algo', True, False) == 'IIMMYZ'",
     ]
 
 ##### Inner functions in Twosquare main program #####

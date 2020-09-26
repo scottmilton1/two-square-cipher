@@ -50,7 +50,7 @@ Table = List[Row]
 print = partial(print, flush = True)
 
 def _get_coordinates(table: Table, letter: str) -> Tuple[int, int]:
-    """Gets a letters coordinates from a Playfair table.
+    """Gets a letter's coordinates from a Playfair table.
 
     Helper function for _xcrypt function.
 
@@ -59,10 +59,10 @@ def _get_coordinates(table: Table, letter: str) -> Tuple[int, int]:
     
     Returns a tuple of two integers: (row_number, column_number) if
     successful or returns a a tuple of two integer values of (-1, -1)
-    if unsuccessful.
+    if letter not found in table.
 
     Dependencies:
-        None
+    None
     
     """
 
