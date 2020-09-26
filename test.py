@@ -247,48 +247,6 @@ def test_suite(verbose: bool = True) -> NoReturn:
 
 ##### CUSTOM ASSERTIONS #####
 
-def assert_False():
-    """TO BE IMPLEMENTED...
-
-    """
-    
-    pass
-
-def assert_in():
-    """TO BE IMPLEMENTED...
-
-    """
-    
-    pass
-
-def assert_is():
-    """TO BE IMPLEMENTED...
-
-    """
-    
-    pass
-
-def assert_is_instance():
-    """TO BE IMPLEMENTED...
-
-    """
-    
-    pass
-
-def assert_is_None():
-    """TO BE IMPLEMENTED...
-
-    """
-    
-    pass
-
-def assert_True():
-    """TO BE IMPLEMENTED...
-
-    """
-    
-    pass
-
 def assert_equal(expected_result, func, *args, **kwargs) -> str:
     """Tests that a function's return value equals an expected result.
 
