@@ -11,7 +11,7 @@ This implementation has a main program with two modes: interactive and
 command-line. The interactive mode offers users a a full menu of 
 options for encrypting and decrypting messages. The program can be
 run from the command-line to encrypt and decrypt messages as well, but
-with fewer options. Here is a guide to command-line usage.
+with fewer options. Here is a guide to command-line usage:
 
 Command-line usage: 
 * twosquare [OPTION] FILENAME KEY1 KEY2
@@ -33,7 +33,7 @@ without adding any command-line arguments.
 The functions in the global scope of this implementation can
 also be used as a module.
 
-This implementation also includes a custom test suite (test.py) and
+This implementation includes a custom test suite (test.py) and
 custom error classes (exceptions.py).
 
 The Twosquare cipher uses two keys to encrypt and decrypt messages.

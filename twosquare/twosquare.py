@@ -21,6 +21,7 @@ from typing import NoReturn
 from typing import Tuple
 from typing import Union
 
+# set import path - resolves path for test suite in parent directory
 if __name__ == 'twosquare.twosquare':
     _import_path = 'twosquare.exceptions'
     
@@ -39,7 +40,8 @@ _custom_error_classes = [
 for _error_class in _custom_error_classes:
     exec(f'from {_import_path} import {_error_class}') 
 
-# globals
+##### globals #####
+
 VERSION = '1.0.0'
 
 # use type aliases for type hints on complex types
@@ -48,6 +50,8 @@ Table = List[Row]
 
 # set all print statements globally with setting flush = True
 print = partial(print, flush = True)
+
+##### ##### #####
 
 def _get_coordinates(table: Table, letter: str) -> Tuple[int, int]:
     """Gets a letter's coordinates from a Playfair table.
@@ -68,7 +72,7 @@ def _get_coordinates(table: Table, letter: str) -> Tuple[int, int]:
 
     try:
 
-        # create row counter
+        # create row counter that will be used to return index
         row_number: int = 0
 
         if letter == 'I' or letter == 'J':
@@ -268,6 +272,7 @@ def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
             row1, column1 = _get_coordinates(first_table, letter1)
             row2, column2 = _get_coordinates(second_table, letter2)
 
+            # if any letter not found, raise error
             if min(row1, row2, column1, column2) < 0:
                 
                 raise FooBarError('Table mismatch error. Unable to find ' + \
@@ -357,32 +362,29 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
 
     """
 
-    # set table size
     MAX_ROWS: int = 5
     MAX_COLUMNS: int = 5
+
+    alphabet: str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"     
+    key_as_letters: List[str] = [ ]
+    letters_not_in_key: List[str] = [ ]
+    table: Table = [ ]
 
     try:
 
         if not validate_key(key):
             raise BadValueError('Invalid key format.')
         
-        # capitalize all letters in the key
         key: str = key.upper()
-
-        # create empty list for storage
-        key_as_letters: list = [ ]
 
         # check for I and J in key and combine into single IJ letter
         for letter in key:         
             if letter == 'I' or letter == 'J':
                 letter = 'IJ'
-            key_as_letters.append(letter)
+            key_as_letters.append(letter)    
 
-        # create full list of letters to track letters not in key
-        alphabet: str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"           
-        letters_not_in_key: list = [ ]
-
-        # combine I and J into IJ
+        # add all letters in alphabet to list and combine I and J as one
+        # this will be used to track which letters are not in key
         for letter in alphabet:
             if letter == 'J':
                 letter = 'IJ'
@@ -398,9 +400,6 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
         # the table below: linear time instead of quadratic for pops
         key_as_letters.reverse()
         letters_not_in_key.reverse()
-
-        # create empty table
-        table: list = [ ]
 
         # create and populate the table
         for row in range(MAX_ROWS):
@@ -742,6 +741,8 @@ def validate_key(key: str) -> bool:
 
     from string import ascii_uppercase
 
+    letters_in_key: list = [ ]
+
     try:
         # check that key is a string
         if type(key) is not str:
@@ -753,9 +754,6 @@ def validate_key(key: str) -> bool:
             raise BadValueError('Key must not be empty.')
                             
         key: str = key.upper()
-
-        # make list to track which letters are in the key
-        letters_in_key: list = [ ]
 
         for character in key:
 
@@ -915,6 +913,7 @@ def validate_plaintext(message: str) -> bool:
 
     from string import printable
 
+    contains_a_letter: bool = False
     message_type: str = 'plaintext'
     printable_chars: str = printable
 
@@ -942,8 +941,6 @@ def validate_plaintext(message: str) -> bool:
         if not message.isascii():
             raise BadValueError(f'Error: {message_type} can consist of ' + \
                                 'ASCII characters only.\n')
-
-        contains_a_letter: bool = False
 
         # check for non-printable characters
         for character in message:
@@ -993,8 +990,8 @@ def validate_table(table: Table) -> bool:
 
     """
 
-    letters_in_table = [ ]
-    letter_count = 0
+    letters_in_table: List[str] = [ ]
+    letter_count: int = 0
 
     try:
         if type(table) is not list:
@@ -1071,15 +1068,6 @@ def __main__(argv):
     run the program without adding arguments.
     
     """ 
-          
-    def _coming_soon() -> NoReturn:
-        """Prints a message indicating that a program's feature is coming soon.
-
-        """
-
-        print('\nThat feature is coming soon...')
-
-        return True
 
     def _create_key(key_list: List[str], ordinal: List[str], \
          index: int, action: str = 'create') -> NoReturn:
@@ -1219,6 +1207,7 @@ def __main__(argv):
 
             filename: str = ''            
            
+           # prompt user for filename
             while not (filename := input('Enter filename >> ')):
 
                 # if user leaves blank return abort code
@@ -1263,7 +1252,8 @@ def __main__(argv):
 
             if len(ordinal) > 0:
                 ordinal += " "
-                
+
+            # prompt user for key 
             while not (key := input("Enter %skeyword or key phrase >> " % ordinal)):
 
                 print("Invalid entry. Please try again.")
@@ -1341,6 +1331,7 @@ def __main__(argv):
 
         try:
 
+            # validate args
             if type(options) is not list:
                 raise TypeMismatchError('Error: options must be a list.')
 
@@ -1477,6 +1468,7 @@ def __main__(argv):
 
         try:
 
+            # validate args
             if type(mode) is not str:
 
                 raise TypeMismatchError('Mode must be a string.')
@@ -1529,6 +1521,7 @@ def __main__(argv):
                 # if filename is empty, get it from user
                 while filename == '':
 
+                    # display instructions
                     for line in instructions.get(mode):
                         print(line)
                         
@@ -1537,6 +1530,7 @@ def __main__(argv):
                     # prompt user for filename                    
                     filename = _get_filename()
 
+                    # if abort code, exit early
                     if filename == -1:
 
                         return -1
@@ -1547,6 +1541,7 @@ def __main__(argv):
 
                     while loop_get_choice:
 
+                        # get choice from user
                         choice: int = _get_selection(options, header, '')                    
 
                         if choice == 0: # proceed
@@ -1840,7 +1835,7 @@ def __main__(argv):
         'encrypt and decrypt messages for you. These two tables',
         'are each generated using one of the keys you create.',
         ]
-    tables: Union[Table, bool] = [[''], ['']] # SET HINT AS TABLE OR LIST???
+    tables: Union[Table, bool] = [[''], ['']]
 
     # check for command-line arguments
     if len(argv) > 0:
@@ -1870,7 +1865,7 @@ def __main__(argv):
 
                     text = 'Error: Unable to load .txt file.'
 
-                else: # encrypt the message passed as arg
+                else: # encrypt the message passed in args
 
                     text: str = encrypt(text, argv[2], argv[3])
 
@@ -1898,14 +1893,14 @@ def __main__(argv):
 
                 pass
 
-            # if dash only with no option letter
+            # if dash only without any option letters
             elif any(arg.startswith('-')
                      and len(arg) < 2
                          for arg in argv[0:-3]):
 
                 pass
 
-            # if two dashes only with no option letter
+            # if two dashes only without any option letters
             elif any(arg.startswith('--') and
                      arg != '--decrypt'
                          for arg in argv[0:-3]):
@@ -1963,7 +1958,7 @@ def __main__(argv):
                         text: str = decrypt(text, argv[-2], argv[-1], omit_j,
                                             remove_z)
 
-                else: # decrypt message passed as arg
+                else: # decrypt message passed in args
                 
                     text: str = decrypt(argv[-3], argv[-2], argv[-1], omit_j,
                                         remove_z)
@@ -1981,7 +1976,7 @@ def __main__(argv):
         # exit program for non-interactive command line use
         exit()
 
-    # begin program for interactive mode with full menu
+    ##### begin program for interactive mode with full menu #####
 
     # display program title
     _display_title(program_name, program_description)   
@@ -1994,6 +1989,7 @@ def __main__(argv):
 
         while True:
             try:
+                # prompt user for a menu selection
                 selection = int(input('Enter selection number >> '))
                 
                 if selection < 0 or selection > number:
@@ -2041,7 +2037,6 @@ def __main__(argv):
                         break
 
                     # print a brief description of process and requirements
-                    # give option for more detailed information
                     for index in range(len(more_info)): # range(4):
                         for line in more_info[index]:
                             print(line)
@@ -2137,6 +2132,7 @@ def __main__(argv):
                             'Exit to main menu',
                             ]
 
+                        # prompt user for message action
                         message_action: str = _get_selection( \
                             message_action_options, message_action_header, '')                         
 
@@ -2159,6 +2155,7 @@ def __main__(argv):
 
                             filename: str = ''
 
+                            # attempt file write
                             save_status: int = \
                                 _file_io('s', filename, processed_text)
 
@@ -2246,9 +2243,10 @@ def __main__(argv):
 
                 print('')
                 
-                # check for empty key slot to set as target for new key
+                # set target slot for new key as one with shortest length...
                 target: int = 0 if len(keys[0]) <= len(keys[1]) else 1
 
+                # if the target slot is empty, create the key
                 if len(keys[target]) == 0:
 
                     _create_key(keys, ordinal, target)
@@ -2312,9 +2310,11 @@ def __main__(argv):
 
             print(' ')
             
+            # display info on tables
             for line in table_description:
                 print(line)               
 
+            # make sure keys exist
             if len(keys[0]) == 0:
                 print('\nYou have not created any keys yet so')
                 print('no tables can be generated using them.\n')
@@ -2405,6 +2405,7 @@ def __main__(argv):
 
                 try:
 
+                    # prompt user for message type
                     message_type = _get_selection(message_type_options,
                                                   message_type_header,
                                                   '')
