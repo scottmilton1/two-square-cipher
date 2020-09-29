@@ -7,6 +7,14 @@ and horizontal, depending on how the two Playfair tables are arranged.
 This implementation uses the first variation, so the two tables are
 placed vertically.
 
+System Requirements:
+
+Python 3.8 or greater is required to run this program.
+
+Dependencies:
+
+No third-party packages are required.
+
 This implementation has a main program with two modes: interactive and
 command-line. The interactive mode offers users a a full menu of 
 options for encrypting and decrypting messages. The program can be
