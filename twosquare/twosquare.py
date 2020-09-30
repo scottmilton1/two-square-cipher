@@ -8,6 +8,14 @@ and horizontal, depending on how the two Playfair tables are arranged.
 This implementation uses the first variation, so the two tables are
 placed vertically.
 
+System Requirements:
+
+Python 3.8 or greater is required to run this program.
+
+Dependencies:
+
+No third-party packages are required.
+
 """ 
 
 from functools import partial
@@ -1835,6 +1843,13 @@ def __main__(argv):
         'are each generated using one of the keys you create.',
         ]
     tables: Union[Table, bool] = [[''], ['']]
+
+    if (sys.version_info.major < 3 or sys.version_info.minor < 8):
+
+        print('Python version 3.8 or greater is required to run this program.' +
+              '\nPlease update your Python software to the latest version.')
+
+        return False
 
     # check for command-line arguments
     if len(argv) > 0:
