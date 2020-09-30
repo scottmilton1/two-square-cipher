@@ -83,9 +83,7 @@ def _get_coordinates(table: Table, letter: str) -> Tuple[int, int]:
         # create row counter that will be used to return index
         row_number: int = 0
 
-##        if letter == 'I' or letter == 'J':
-##            letter = "IJ"
-
+        # replace J letter character with I
         if letter == 'J':
             letter = "I"
 
@@ -233,8 +231,6 @@ def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
                 if character in ascii_uppercase: # ignore Unicode letters
                     filtered_text += 'I' if character == 'J' else character
                     
-##                    filtered_text += character
-
             # if length is odd add a 'Z' to end to make it even
             if len(filtered_text) % 2 != 0:
                 filtered_text += 'Z'
@@ -242,11 +238,6 @@ def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
         elif mode == 'decrypt':
 
             filtered_text: str = message
-
-
-##            # remove J's from ciphertext string since they
-##            # are combined with I's in the encypted text
-##            filtered_text: str = message.replace('J', '')
 
             # if length of purged ciphertext is odd after removing Js raise  
             if len(filtered_text) % 2 != 0:
@@ -312,15 +303,6 @@ def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
             else: # nope, that's not lazy, that's what the cipher says to do
                 processed_letter1 = letter1
                 processed_letter2 = letter2
-
-##            # remove J's from output if optional flag set
-##            if (mode == 'decrypt' and omit_j == True):
-##                
-##                if processed_letter1 == 'IJ':
-##                    processed_letter1 = 'I'
-##                    
-##                if processed_letter2 == 'IJ':
-##                    processed_letter2 = 'I'
 
             # add the two processed letters to the processed_text
             processed_text = processed_text + processed_letter1 + \
@@ -402,14 +384,11 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
         # add all letters in alphabet to list and combine I and J as one
         # this will be used to track which letters are not in key
         for letter in alphabet:
-##            if letter == 'J':
-##                letter = 'IJ'
-
 
             if letter == 'J':
                 letter = 'I'
-
                 letters_not_in_key.remove('I')
+                
             letters_not_in_key.append(letter)
 
         # remove key letters from list of letters not in key
