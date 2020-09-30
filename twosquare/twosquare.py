@@ -1952,37 +1952,41 @@ def __main__(argv):
                 invalid: bool = False
                 omit_j: bool = False
                 remove_z: bool = False
+                command_line_options: List[str] = argv[0:-3]
+                message: str = argv[-3]
+                key_one: str = argv[-2]
+                key_two: str = argv[-1]
 
                 # check for omit_j option
-                if any('j' in arg for arg in argv[0:-3] if arg != '--decrypt'):
+                if any('j' in arg for arg in command_line_options):
 
                     omit_j = True
 
                 # check for remove_z option
-                if any('z' in arg for arg in argv[0:-3] if arg != '--decrypt'):
+                if any('z' in arg for arg in command_line_options):
 
                     remove_z = True
               
                 # load text from file if filename provided
-                if argv[-3].endswith('.txt'):
+                if message.endswith('.txt'):
 
-                    text: str = _file_io('load', argv[-3])
+                    file: str = _file_io('load', message)
 
-                    if not text:
+                    if not file: # then text will be error message
 
                         text = 'Error: Unable to load .txt file.'
 
-                    else:
+                    else: # decrypt message loaded from file
 
-                        text: str = decrypt(text, argv[-2], argv[-1], omit_j,
+                        text: str = decrypt(file, key_one, key_two, omit_j,
                                             remove_z)
 
                 else: # decrypt message passed in args
-                
-                    text: str = decrypt(argv[-3], argv[-2], argv[-1], omit_j,
+                                  
+                    text: str = decrypt(message, key_one, key_two, omit_j,
                                         remove_z)
 
-            print(text, end = '')
+            print(text)
 
         else:
                 invalid: bool = True
