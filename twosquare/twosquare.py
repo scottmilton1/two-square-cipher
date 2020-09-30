@@ -57,14 +57,14 @@ def _get_coordinates(table: Table, letter: str) -> Tuple[int, int]:
     """Gets a letter's coordinates from a Playfair table.
 
     Helper function for _xcrypt function.
-
+    
     Letter should be a str containing a single ASCII letter character.
     Table must be prepopulated and have a valid format.
     
     Returns a tuple of two integers: (row_number, column_number) if
     successful or returns a a tuple of two integer values of (-1, -1)
     if letter not found in table.
-
+    
     Dependencies:
     None
     
@@ -114,39 +114,40 @@ def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
     interface provided by the encrypt and decrypt functions. See the
     documentation for those two functions for more detailed information
     about each particular operation type.
-
+    
     Parameters:
-
+    
     mode must be a non-empty string.
+    
     Valid values are:
         'e' or 'encrypt' for encryption
         'd' or 'decrypt' for decryption
-
+        
     message must be a non-empty string containing the plaintext or
     ciphertext message to be rendered by the [en/de]cryption process.
     For the formatting rules required for validation of either message
     type, see the documentation for the corresponding function (encrypt
     or decrypt).
-
+    
     keys must be non-empty strings with valid format. See the
     documentation for the encrypt function for more information about
     specific requirements.
-
+    
     omit_j and remove_z are optional parameters and if included must be
     bool types. They are used for decryption operations only, and have
     no effect on message encryption. See the documentation for the
     decrypt function for more details on their use and effects.
-
+    
     Returns:
-
+    
     the [en/de]crypted message if the operation is successful        
     False if the operation is unsuccessful
-
+    
     Dependencies:
-
+    
     From string:
     ascii_uppercase
-
+    
     from twosquare:
     _get_coordinates  
     BadValueError
@@ -157,11 +158,11 @@ def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
     TypeMismatchError
     validate_ciphertext
     validate_key
-    validate_plaintext    
-
+    validate_plaintext
+    
     from typing:
     List
-
+    
     """
 
     from string import ascii_uppercase
@@ -346,20 +347,20 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
     Creates a Playfair table using the provided key. This table is a
     5 x 5 matrix that is used by the cipher to encrypt and decrypt
     messages.
-
+    
     key must be a string in valid format. The validate_key()
     function can be used to verify that a key meets all necessary
     requirements prior to calling this function.
     
     Returns a valid populated table if successful or 
     prints a failure message and returns False if unsuccessful.
-
+    
     Dependencies:
-
+    
     From twosquare:
     BadValueError
     validate_key
-
+    
     """
 
     MAX_ROWS: int = 5
@@ -444,13 +445,12 @@ def decrypt(ciphertext: str, key1: str, key2: str, omit_j = True,
     """Decrypts a message using the Twosquare cipher.
 
     Decrypts a ciphertext message using the two keys provided.
-
     This function is a basically a thin wrapper that serves as the
     public interface for the _xcrypt function, which is the backend for
     both the encrypt and decrypt functions.
-
+    
     Parameters:
-
+    
     Each key must be a valid keyword or key phrase:  
     a non-empty string with no more than twenty-five letters,
     ASCII letter characters only; no Unicode characters allowed,
@@ -459,42 +459,40 @@ def decrypt(ciphertext: str, key1: str, key2: str, omit_j = True,
     by this cipher and are therefore counted as the same letter,
     no digits allowed - any numbers must be spelled out,
     no white space, punctuation, or special characters.
-
+    
     Keys must be identical to the original keys used to encrypt the
     plaintext message and must be given in the same order or the
     decryption will not be accurate.
-
+    
     ciphertext must be a valid string containing one or more alphabetic
     letters from the ASCII character set. Punctuation, special
     characters, unicode characters, digits, and white space are not
     allowed. All letters must be capitalized.
-
+    
     If present, omit_j and remove_z must be boolean values and have the
     following effects:
-
+    
     Setting omit_j to True will change the output of the deciphered
     message so that I and J characters are no longer combined as one.
     All J's will be removed so any I or J characters in the original
     plaintext message will be represented only as an I in the deciphered
     message output.
-
+    
     Setting remove_z to True will remove a Z character from the end of
     the deciphered message, but only if the message has an even number
     of letters. Any combined IJ characters in the message are counted as
     one single letter in this tally. This assumes that the Z was added
     to an original plaintext that had an odd number of characters so
     that the Z was added to encrypt it.
-
+    
     Note:
-
     Any white space removed from the original plaintext during
     the encryption process will not be replaced in the decrypted message.
-
+    
     Returns:
-
     a string containing the decrypted message if successful
     False if the decryption operation is unsuccessful
-
+    
     Dependencies:
     
     from twosquare:
@@ -510,9 +508,9 @@ def display_table(table: Table) -> bool:
     Prints a Playfair table to the console for viewing purposes.
     
     Returns True if successful or False if an error occurs.
-
+    
     Dependencies:
-
+    
     from twosquare:
     BadValueError
     validate_table
@@ -559,9 +557,9 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
     This function is a basically a thin wrapper that serves as the
     public interface for the _xcrypt function, which is the backend for
     both the encrypt and decrypt functions.
-
+    
     Parameters:
-
+    
     Each key must be a valid keyword or key phrase:  
     a non-empty string with no more than twenty-five letters,
     ASCII letter characters only; no Unicode characters allowed,
@@ -570,7 +568,7 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
     by this cipher and are therefore counted as the same letter,
     no digits allowed - any numbers must be spelled out,
     no white space, punctuation, or special characters.
-
+    
     The value of plaintext must be a non-empty string. Please note the
     following: All white space, special characters, and digits will be
     removed from the plaintext during the encryption process. Basically,
@@ -578,7 +576,7 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
     removed from the message. No data is stored about what was removed
     and therefore, when the ciphertext is later decrypted, the white
     space and punctuation will not be restored.
-
+    
     Another thing to keep in mind is that 'I' and 'J' characters are
     combined into a single IJ letter by this cipher. While not ideal by
     any means, that is the way the cipher was designed. Hence, there
@@ -586,7 +584,7 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
     ciphertext is decrypted back to a plaintext. In practicality, this
     makes little difference, as the decoded message is still typically
     easy to read and understand.
-
+    
     If the number of characters in the plaintext is odd after removing
     all white space, special characters, and digits a Z is added to the
     end to make the number of characters even. This is necessary for
@@ -594,7 +592,7 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
     (two-letter combinations) during the encoding or decoding process.
     This trailing character is, of course, easy enough to remove or
     simply to ignore when reading the decrypted message.
-
+    
     For these reasons, among others, the Twosquare cipher is not a tool
     with practical use for encrypting and decrypting files and documents
     where a loss of data would be unacceptable, or where high levels of
@@ -602,12 +600,12 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
     relatively simple means of sending English alphabetic messages and
     is perhaps valuable in real terms mainly for its historical
     significance and for educational purposes.
-
+    
     Returns:
-
+    
     a string containing the encoded ciphertext if successful
     False if the operation is unsuccessful
-
+    
     Dependencies:
     
     From twosquare:
@@ -630,19 +628,19 @@ def validate_ciphertext(message: str) -> bool:
     *All letters must be capitalized
     *White space is not allowed
     *Digits are not allowed
-
+    
     Returns True if message passes validation as ciphertext.
     Returns False if message fails validation or if an error occurs.
-
+    
     Dependencies:
-
+    
     From String:
     ascii_uppercase
-
+    
     From Twosquare:
     BadValueError
     TypeMismatchError
-
+    
     """
 
     from string import ascii_uppercase
@@ -715,8 +713,8 @@ def validate_key(key: str) -> bool:
 
     Takes a string as input and validates it against the formatting
     specifications of a keyword or key phrase for a Playfair table.
-
-    To pass, a key must be a valid keyword or key phrase:  
+    
+    To pass, a key must be a valid keyword or key phrase:    
     a non-empty string with no more than twenty-five letters,
     ASCII letter characters only; no Unicode characters allowed,
     no duplicate letters; each letter may be used only once in each key,
@@ -724,19 +722,19 @@ def validate_key(key: str) -> bool:
     by this cipher and are therefore counted as the same letter,
     no digits allowed - any numbers must be spelled out,
     no white space, punctuation, or special characters.
-
+    
     Returns True if key passes all checks.
     Prints a failure message and returns False if key is invalid.
-
+    
     Dependencies:
-
+    
     From string:
     ascii_uppercase
-
+    
     From twosquare:
     BadValueError
     TypeMismatchError
-
+    
     """
 
     from string import ascii_uppercase
@@ -819,33 +817,33 @@ def validate_message(message: str, mode: str = 'plain') -> bool:
 
     Validates a plaintext or ciphertext message according to the 
     requirements and expected values of the Twosquare cipher.
-
     Value for message parameter should be a string containing the
     plaintext or ciphertext to be validated.
-
+    
     Value for mode parameter should be a string indicating the type of
     message to validate.
+    
     Value should be either 'plain' or 'p' for a plaintext message.
     Value should be either 'cipher' or 'c' for a ciphertext message.
-
-    Calls validate_ciphertext or validate_plaintext based on value of
-    mode.
     
-    Returns the return value returned by the function called.
+    Calls either validate_ciphertext or validate_plaintext based on
+    value of mode.
+    
+    Returns the return value returned by the function called.    
     The expected return values are:
     True if the message is valid.
     False if the message is invalid or if an error occurs.
-
+    
     Dependencies:
-
+    
     From string:
-    printable        
-
+    printable
+    
     From twosquare:
     TypeMismatchError
     validate_ciphertext
     validate_plaintext
-
+    
     """
 
     try:
@@ -887,10 +885,10 @@ def validate_plaintext(message: str) -> bool:
 
     Validates a plaintext according to the requirements and expected values
     of the Twosquare cipher.
-
-    Returns True if the message is valid as a plaintext.
+    
+    Returns True if the message is valid as a plaintext.    
     Returns False if the message is invalid or if an error occurs.
-
+    
     To pass validation, a plaintext message has these requirements:
     *Must be a non-empty string containing one or more alphabetic letters
     *English-language letters from the ASCII character set count
@@ -899,12 +897,12 @@ def validate_plaintext(message: str) -> bool:
     *Punctuation and special characters are allowed, but are ignored
     *Non-printable ASCII characters are not allowed
     *White space is allowed, but will be ignored
-
+    
     Dependencies:
-
+    
     From string:
-    printable        
-
+    printable
+    
     From twosquare:
     BadValueError
     TypeMismatchError
@@ -981,13 +979,13 @@ def validate_table(table: Table) -> bool:
     """Validates a Playfair table.
 
     Returns True if the table is valid or returns False otherwise.
-
+    
     Dependencies:
-
+    
     From twosquare:
     BadValueError
     TypeMismatchError
-
+    
     """
 
     letters_in_table: List[str] = [ ]
@@ -1052,7 +1050,7 @@ def __main__(argv):
 
     The functions placed in the global scope of this implementation can
     also be used as a module.
-
+    
     Command-line usage: twosquare [OPTION] FILENAME KEY1 KEY2
                     or: twosquare [OPTION] "MESSAGE" KEY1 KEY2
     
@@ -1071,27 +1069,30 @@ def __main__(argv):
 
     def _create_key(key_list: List[str], ordinal: List[str], \
          index: int, action: str = 'create') -> NoReturn:
-        """Gets a valid key from the user and adds it to the list of keys.
+        """Gets a valid key from user and adds it to the list of keys.
 
         Prompts the user for a keyword or keyphrase, passes it to the
         validate_key function for validation, and inserts it in the
         key_list at the insertion point specified by the value of the
         index parameter.
-
+        
         Parameters:
         
         key_list: list with values of type str prepopulated with values;
             empty strings are okay.
+
         ordinal: list of strings used for print formatting. It should
             contain values that are the ordinal numbers for the keys
             being created ('first', 'second').
+
         index: int value that must point to a valid index in the key_list
             and the list of ordinal numbers
+
         action: optional string value that indicates what is being done
             (e.g. - 'create' a new key or 'update' an existing key)
 
         Dependencies:
-
+        
         From twosquare:
         _get_key
         validate_key
@@ -1126,7 +1127,7 @@ def __main__(argv):
 
         Dependencies:
         None
-
+        
         """
     
         print('\nHere are your current keys: \n')
@@ -1146,10 +1147,10 @@ def __main__(argv):
         Returns number of menu_options in list if successful
         or returns False if an exception occurs. Keep this in mind,
         and handle potential Exceptions accordingly.
-
+        
         Dependencies:
         None
-
+        
         """
 
         try:   
@@ -1176,10 +1177,10 @@ def __main__(argv):
 
         Dependencies:
         None
-
+        
         TODOs - Ideas for additional features:
         Add keyword arg for text_alignment with default = 'center'
-
+        
         """
         
         print('{:^80}'.format('>> ' + title.upper() + ' <<'))
@@ -1197,10 +1198,10 @@ def __main__(argv):
 
         Returns a string containing the filename entered by the user if
         successful or returns a value of -1 if the user aborts.
-
+        
         Dependencies:
         None
-
+        
         """
 
         while True:
@@ -1235,15 +1236,14 @@ def __main__(argv):
         Prompts user for keyword or key phrase. Does not perform any
         validity checks of user input for proper key formatting
         restrictions, which is left to validate_key() function.
-
+        
         The arg ordinal is optional string value for print formatting. If
         provided, it should be an ordinal number (e.g. - 'first', 'second').
-
         Returns the string value entered by the user.
-
+        
         Dependencies:
         None
-
+        
         """
 
         try:
@@ -1278,16 +1278,16 @@ def __main__(argv):
 
         Prompts the user for input. The input validation only accepts
         [upper/lower]case variants of 'Y' and 'N'.
-
+        
         Example use case: to check whether or not the user wants to perform
         another action in a loop or exit (to main menu / quit program, etc.).
-
+        
         Returns True if user selects 'Y'
         Returns False if user selects 'N'
         
         Dependencies:
         None
-
+        
         """
     
         while True:
@@ -1319,12 +1319,12 @@ def __main__(argv):
         selected by the user if successful.
         Returns an int value of -1 if an expected error occurs during
         execution.
-
+        
         Dependencies:
-
+        
         From twosquare:
         TypeMismatchError
-
+        
         """
 
         valid_choices: List[str] = [ ]
@@ -1396,14 +1396,14 @@ def __main__(argv):
         are supported. To load a file, the file must exist in the current
         directory. To save a file, the file must not already exist in the
         current directory.
-
+        
         Parameters:
         
         mode must be a non-empty string.
         Valid values are:
         'l' or 'load' for file input operations
         's' or 'save' for file output operations.
-
+        
         filename, if included, must be a string representing a valid
         filename and must include the .txt file type extension in the
         name. If a filename is not included, the function will prompt
@@ -1411,26 +1411,25 @@ def __main__(argv):
         
         message is required as parameter for save operations only
         and any value passed for load operations will be ignored
-
-        Returns:
         
+        Returns:
         the message if loaded successfully OR
         an int value of 1 if file saved successfully
         an int value of 0 if unsuccessful
         an int value of -1 if user aborts operation
-
+        
         Dependencies:
-
+        
         From os:
         path.exists
-
+        
         From twosquare:
         BadValueError
         FooBarError
         _get_filename
         _get_selection
         TypeMismatchError
-   
+
         """
 
         from os.path import exists
@@ -2617,3 +2616,4 @@ def __main__(argv):
 
 if __name__ == '__main__':
     __main__(sys.argv[1:])
+
