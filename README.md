@@ -4,7 +4,7 @@ An implementation of the two-square cipher in Python 3
 This program encypts and decrypts messages using the two-square cipher,
 aka double Playfair. There are two variations of the cipher, vertical
 and horizontal, depending on how the two Playfair tables are arranged.
-This implementation uses the first variation, so the two tables are
+This implementation uses the first variation with the two tables 
 placed vertically.
 
 System Requirements:
@@ -67,16 +67,14 @@ message. No data is stored about what was removed and
 therefore, when the ciphertext is later decrypted, the white
 space, digits, and punctuation will not be restored.
  
-Another thing to keep in mind is that 'I' and 'J' characters 
-are combined into a single IJ letter by this cipher. The main
-reason for this is to allow the entire twenty-six letter 
-alphabet to fit into a 5 x 5 Playfair table with only twenty-
-five cells. While this design choice solves the extra letter
-problem, it can result in some loss of information when 
-the process is reversed and the ciphertext is decrypted back 
-to a plaintext. In practicality, this makes little 
-difference, as the decoded message typically is still easy to 
-read and understand.
+Another thing to keep in mind is all 'J' letter characters are
+replaced with an 'I' character by this cipher. This is done to allow
+the entire twenty-six letter alphabet to fit in a 5 x 5 Playfair
+table with only twenty-five cells. While this design choice solves
+the extra letter problem, it can result in some loss of information
+when the process is reversed and the ciphertext is decrypted back 
+to a plaintext. In practicality, this makes little difference, as
+the decoded message is still typically easy to read and understand. 
  
 If the number of characters in the plaintext is odd after 
 removing all white space, special characters, and digits, a 

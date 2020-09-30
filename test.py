@@ -86,7 +86,7 @@ invalid_table_example_4: Table = [
 valid_table_example: Table = [
      ['P', 'Y', 'T', 'H', 'O'],
      ['N', 'A', 'B', 'C', 'D'],
-     ['E', 'F', 'G', 'IJ', 'K'],
+     ['E', 'F', 'G', 'I', 'K'],
      ['L', 'M', 'Q', 'R', 'S'],
      ['U', 'V', 'W', 'X', 'Z'],
      ]
@@ -371,12 +371,10 @@ tests__xcrypt: List[str] = [
     "assert not _xcrypt('d', 'THISSHOULDFAIL', '123', 'keytwo')", # digits in key
     "assert not _xcrypt('d', 'THISSHOULDFAIL', 123, 'keytwo')", # key not string
     "assert not _xcrypt('d', 'InVaLiDcIpHeRtExT!', 'key', 'keytwo')", # bad cipher
-    "assert not _xcrypt('d', 'IN', 'key', 'keytwo', 0, False)", # bad type omit_j   
-    "assert not _xcrypt('d', 'IN', 'key', 'keytwo', False, 0)", # bad type remove_z
+    "assert not _xcrypt('d', 'IN', 'key', 'keytwo', 0)", # bad type remove_z
     # make sure decoded output correctly matches expected results
     "assert _xcrypt('d', 'BHATOKTEDZ','python', 'algo') == 'DECRYPTED'",
-    "assert _xcrypt('d', 'ENQKOW', 'python', 'algo', False) == 'IJIJMMY'",
-    "assert _xcrypt('d', 'ENQKOW', 'python', 'algo', True, False) == 'IIMMYZ'",
+    "assert _xcrypt('d', 'ENQKOW', 'python', 'algo', False) == 'IIMMYZ'",
     ]
 
 tests_create_table: List[str] = [
@@ -397,12 +395,11 @@ tests_decrypt: List[str] = [
     "assert not decrypt('THISSHOULDFAIL', '123', 'keytwo')", # digits in key
     "assert not decrypt('THISSHOULDFAIL', 123, 'keytwo')", # key not string
     "assert not decrypt('InVaLiDcIpHeRtExT!', 'key', 'keytwo')", # bad cipher
-    "assert not decrypt('IN', 'key', 'keytwo', 0, False)", # bad type omit_j   
-    "assert not decrypt('IN', 'key', 'keytwo', False, 0)", # bad type remove_z
+    "assert not decrypt('IN', 'key', 'keytwo', 0)", # bad type remove_z
     # make sure decoded output correctly matches expected results
     "assert decrypt('BHATOKTEBPGQLBGE','python', 'algo') == 'DECRYPTEDMESSAGE'",
-    "assert decrypt('ENQKPKOHDV', 'python', 'algo', False) == 'IJIJMMYIJOHN'",
-    "assert decrypt('ENQKPKOHDV', 'python', 'algo',True,False) == 'IIMMYIOHNZ'",
+    "assert decrypt('ENQKPKOHDV', 'python', 'algo') == 'IIMMYIOHN'",
+    "assert decrypt('ENQKPKOHDV', 'python', 'algo', False) == 'IIMMYIOHNZ'",
     ]
 
 tests_display_table: List[str] = [

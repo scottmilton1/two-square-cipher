@@ -5,7 +5,7 @@
 This program encypts and decrypts messages using the two-square cipher,
 aka double Playfair. There are two variations of the cipher, vertical
 and horizontal, depending on how the two Playfair tables are arranged.
-This implementation uses the first variation, so the two tables are
+This implementation uses the first variation with the two tables
 placed vertically.
 
 System Requirements:
@@ -70,7 +70,7 @@ def _get_coordinates(table: Table, letter: str) -> Tuple[int, int]:
     Table must be prepopulated and have a valid format.
     
     Returns a tuple of two integers: (row_number, column_number) if
-    successful or returns a a tuple of two integer values of (-1, -1)
+    successful or returns a tuple of two integer values of (-1, -1)
     if letter not found in table.
     
     Dependencies:
@@ -105,7 +105,7 @@ def _get_coordinates(table: Table, letter: str) -> Tuple[int, int]:
     except Exception as err:
         from inspect import currentframe as cf
         print('Unexpected exception type raised during execution:')
-        print(f'In function: {cf().f_code.co_name}') # function name
+        print(f'In function: {cf().f_code.co_name}')
         print(type(err))
         print(err)
         raise
@@ -115,7 +115,7 @@ def _get_coordinates(table: Table, letter: str) -> Tuple[int, int]:
         # to indicate that a non-fatal error has occured
         return (-1, -1)
 
-def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
+def _xcrypt(mode: str, message: str, key1: str, key2: str,
             remove_z = True) -> Union[str, bool]:
     """Encrypts or decrypts a message using the Twosquare cipher.
 
@@ -142,10 +142,10 @@ def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
     documentation for the encrypt function for more information about
     specific requirements.
     
-    omit_j and remove_z are optional parameters and if included must be
-    bool types. They are used for decryption operations only, and have
+    remove_z is an optional parameter and if included must be a
+    bool type. It is used for decryption operations only and has
     no effect on message encryption. See the documentation for the
-    decrypt function for more details on their use and effects.
+    decrypt function for more details on its use and effects.
     
     Returns:
     
@@ -212,10 +212,6 @@ def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
         
         if not validate_message(message, message_type):
             raise BadValueError(f'Invalid {message_type}text error.')
-
-        # validate omit_j
-        if type(omit_j) is not bool:
-            raise TypeMismatchError('Type for omit_j must be bool.')
 
         # validate remove_z
         if type(remove_z) is not bool:
@@ -311,8 +307,7 @@ def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
         # remove trailing 'Z' from end of text if decrypt and optional flag set
         if mode == 'decrypt':
             
-            if (remove_z == True and processed_text[-1] == 'Z'):
-                
+            if (remove_z == True and processed_text[-1] == 'Z'):                
                 processed_text = processed_text[0:-1]
 
     except BadValueError as err:
@@ -331,7 +326,7 @@ def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
     except Exception as err:
         from inspect import currentframe as cf
         print('Unexpected exception type raised during execution:')
-        print(f'In function: {cf().f_code.co_name}') # function name
+        print(f'In function: {cf().f_code.co_name}')
         print(type(err))
         print(err)
         raise
@@ -377,7 +372,10 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
         key: str = key.upper()
 
         # check for I and J in key and combine into single IJ letter
-        for letter in key:         
+        for letter in key:
+
+            if letter == 'J':
+                letter = 'I'                
 
             key_as_letters.append(letter)    
 
@@ -431,7 +429,7 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
     except Exception as err:
         from inspect import currentframe as cf
         print('Unexpected exception type raised during execution:')
-        print(f'In function: {cf().f_code.co_name}') # function name
+        print(f'In function: {cf().f_code.co_name}')
         print(type(err))
         print(err)
         raise
@@ -439,8 +437,8 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
     else:
         return table
 
-def decrypt(ciphertext: str, key1: str, key2: str, omit_j = True,
-            remove_z = True) -> Union[str, bool]:
+def decrypt(ciphertext: str, key1: str, key2: str, remove_z = True) \
+            -> Union[str, bool]:
     """Decrypts a message using the Twosquare cipher.
 
     Decrypts a ciphertext message using the two keys provided.
@@ -468,25 +466,20 @@ def decrypt(ciphertext: str, key1: str, key2: str, omit_j = True,
     characters, unicode characters, digits, and white space are not
     allowed. All letters must be capitalized.
     
-    If present, omit_j and remove_z must be boolean values and have the
-    following effects:
-    
-    Setting omit_j to True will change the output of the deciphered
-    message so that I and J characters are no longer combined as one.
-    All J's will be removed so any I or J characters in the original
-    plaintext message will be represented only as an I in the deciphered
-    message output.
-    
+    If present, remove_z must be be a bool type. It has the
+    following effects:    
+  
     Setting remove_z to True will remove a Z character from the end of
     the deciphered message, but only if the message has an even number
-    of letters. Any combined IJ characters in the message are counted as
-    one single letter in this tally. This assumes that the Z was added
-    to an original plaintext that had an odd number of characters so
-    that the Z was added to encrypt it.
+    of letters. This assumes that the Z was added to an original 
+    plaintext that had an odd number of characters so that the Z was
+    added to encrypt it.
     
     Note:
     Any white space removed from the original plaintext during
     the encryption process will not be replaced in the decrypted message.
+    Likewise, any 'J' letter characters that were changed to 'I's during
+    encryption will not be changed back during decryption.
     
     Returns:
     a string containing the decrypted message if successful
@@ -499,7 +492,7 @@ def decrypt(ciphertext: str, key1: str, key2: str, omit_j = True,
   
     """
 
-    return _xcrypt('decrypt', ciphertext, key1, key2, omit_j, remove_z)
+    return _xcrypt('decrypt', ciphertext, key1, key2, remove_z)
 
 def display_table(table: Table) -> bool:
     """Print a Playfair table to the screen.
@@ -540,7 +533,7 @@ def display_table(table: Table) -> bool:
     except Exception as err:
         from inspect import currentframe as cf
         print('Unexpected exception type raised during execution:')
-        print(f'In function: {cf().f_code.co_name}') # function name
+        print(f'In function: {cf().f_code.co_name}')
         print(type(err))
         print(err)
         raise
@@ -576,13 +569,14 @@ def encrypt(plaintext: str, key1: str, key2: str) -> Union[str, bool]:
     and therefore, when the ciphertext is later decrypted, the white
     space and punctuation will not be restored.
     
-    Another thing to keep in mind is that 'I' and 'J' characters are
-    combined into a single IJ letter by this cipher. While not ideal by
-    any means, that is the way the cipher was designed. Hence, there
-    can be some loss of information when the process is reversed and the
-    ciphertext is decrypted back to a plaintext. In practicality, this
-    makes little difference, as the decoded message is still typically
-    easy to read and understand.
+    Another thing to keep in mind is all 'J' letter characters are
+    replaced by an 'I' character by this cipher. This is done to allow
+    the entire twenty-six letter alphabet to fit in a 5 x 5 Playfair
+    table with only twenty-five cells. While this design choice solves
+    the extra letter problem, it can result in some loss of information
+    when the process is reversed and the ciphertext is decrypted back 
+    to a plaintext. In practicality, this makes little difference, as
+    the decoded message is still typically easy to read and understand.  
     
     If the number of characters in the plaintext is odd after removing
     all white space, special characters, and digits a Z is added to the
@@ -874,7 +868,7 @@ def validate_message(message: str, mode: str = 'plain') -> bool:
     except Exception as err:
         from inspect import currentframe as cf
         print('Unexpected exception type raised during execution:')
-        print(f'In function: {cf().f_code.co_name}') # function name
+        print(f'In function: {cf().f_code.co_name}')
         print(type(err))
         print(err)
         raise  
@@ -966,7 +960,7 @@ def validate_plaintext(message: str) -> bool:
     except Exception as err:
         from inspect import currentframe as cf
         print('Unexpected exception type raised during execution:')
-        print(f'In function: {cf().f_code.co_name}') # function name
+        print(f'In function: {cf().f_code.co_name}')
         print(type(err))
         print(err)
         raise
@@ -1005,7 +999,7 @@ def validate_table(table: Table) -> bool:
 
             # check each cell in current row
             for cell in row:
-                if type(cell) is not str or len(cell) > 2:
+                if type(cell) is not str or len(cell) > 1:
                     raise(BadValueError('Bad table data.'))
 
                 if not (cell.isascii() and cell.isprintable()):
@@ -1021,8 +1015,8 @@ def validate_table(table: Table) -> bool:
 
                 letter_count += len(cell)
 
-                if letter_count > 26:
-                    raise(ValueError('Table contains more than 26 letters.'))
+                if letter_count > 25:
+                    raise(ValueError('Table contains more than 25 letters.'))
                 
     except BadValueError as err:
         print(err)
@@ -1036,7 +1030,7 @@ def validate_table(table: Table) -> bool:
     except Exception as err:
         from inspect import currentframe as cf
         print('Unexpected exception type raised during execution:')
-        print(f'In function: {cf().f_code.co_name}') # function name
+        print(f'In function: {cf().f_code.co_name}')
         print(type(err))
         print(err)
         raise
@@ -1057,7 +1051,6 @@ def __main__(argv):
        -e, --encrypt  encrypt MESSAGE using KEY1 and KEY2
        -d, --decrypt  decrypt MESSAGE using KEY1 and KEY2
        -z, --remove_z remove trailing Z from MESSAGE :: decryption only
-       -j, --omit_j   omit the letter J from MESSAGE :: decryption only
        -h, --help     display this help and exit
        -v, --version  output version information and exit
     
@@ -1262,9 +1255,8 @@ def __main__(argv):
             return False
 
         except Exception as err:
-            from inspect import currentframe as cf
             print('Unexpected exception type raised during execution:')
-            print(f'In function: {cf().f_code.co_name}') # function name
+            print(f'In function: _get_key')
             print(type(err))
             print(err)
             raise
@@ -1382,7 +1374,7 @@ def __main__(argv):
 
         except Exception as err:
             print('Unexpected exception type raised during execution:')
-            print('In function: _get_selection') # function name
+            print('In function: _get_selection')
             print(type(err))
             print(err)
             raise
@@ -1714,7 +1706,6 @@ def __main__(argv):
         '   -e, --encrypt  encrypt MESSAGE using KEY1 and KEY2',
         '   -d, --decrypt  decrypt MESSAGE using KEY1 and KEY2',
         '   -z, --remove_z remove trailing Z from MESSAGE :: decryption only',
-        '   -j, --omit_j   omit the letter J from MESSAGE :: decryption only',
         '   -h, --help     display this help and exit',
         '   -v, --version  output version information and exit',
         ' ',
@@ -1783,22 +1774,23 @@ def __main__(argv):
         'When encrypting a plaintext message, please note the ',
         'following: All white space, punctuation, special characters,',
         'and digits will be removed from the plaintext during the ',
-        'encryption process. In basic terms, all non-alpha characters,',
-        'while allowed, will be ignored and thus removed from the ',
+        'encryption process. In basic terms, all non-letter characters,',
+        'are allowed, but will be ignored and removed from the',
         'message. No data is stored about what was removed and ',
         'therefore, when the ciphertext is later decrypted, the white',
         'space, digits, and punctuation will not be restored.',
         ' ',
         ],
         [
-        "Another thing to keep in mind is that 'I' and 'J' characters ",
-        'are combined into a single IJ letter by this cipher. While ',
-        'not ideal by any means, that is the way the cipher was ',
-        'designed. Hence, there can be some loss of information when ',
-        'the process is reversed and the ciphertext is decrypted back ',
-        'to a plaintext. In practicality, this makes little ',
-        'difference, as the decoded message is still typically easy to ',
-        'read and understand.',
+        "Another thing to keep in mind is all 'J' letter characters",
+        "are replaced with an 'I' character by this cipher. This is done",
+        "to allow the entire twenty-six letter alphabet to fit in a 5 x 5",
+        "Playfair table with only twenty-five cells. While this design",
+        "choice solves the extra letter problem, it can result in some",
+        "loss of information when the process is reversed and the",
+        "ciphertext is decrypted back to a plaintext. In practicality,",
+        "this makes little difference, as the decoded message is still",
+        "typically easy to read and understand.",
         ' ',
         ],
         [
@@ -1894,7 +1886,7 @@ def __main__(argv):
             # validate the passed args
 
             # if invalid number of arguments passed
-            if len(argv) < 4 or len(argv) > 6:
+            if len(argv) < 4 or len(argv) > 5:
               
                 pass
             
@@ -1927,7 +1919,7 @@ def __main__(argv):
 
             # check for invalid letters in options
             elif any(arg != '--decrypt' and 
-                any(letter not in ['-', 'd', 'j', 'z'] for letter in arg)
+                any(letter not in ['-', 'd', 'z'] for letter in arg)
                      for arg in argv[0:-3]):
 
                 pass
@@ -1941,17 +1933,11 @@ def __main__(argv):
             else: # if all validation checks pass, proceed with decryption
 
                 invalid: bool = False
-                omit_j: bool = False
                 remove_z: bool = False
                 command_line_options: List[str] = argv[0:-3]
                 message: str = argv[-3]
                 key_one: str = argv[-2]
                 key_two: str = argv[-1]
-
-                # check for omit_j option
-                if any('j' in arg for arg in command_line_options):
-
-                    omit_j = True
 
                 # check for remove_z option
                 if any('z' in arg for arg in command_line_options):
@@ -1969,13 +1955,11 @@ def __main__(argv):
 
                     else: # decrypt message loaded from file
 
-                        text: str = decrypt(file, key_one, key_two, omit_j,
-                                            remove_z)
+                        text: str = decrypt(file, key_one, key_two, remove_z)
 
                 else: # decrypt message passed in args
                                   
-                    text: str = decrypt(message, key_one, key_two, omit_j,
-                                        remove_z)
+                    text: str = decrypt(message, key_one, key_two, remove_z)
 
             print(text)
 
@@ -2631,4 +2615,3 @@ def __main__(argv):
 
 if __name__ == '__main__':
     __main__(sys.argv[1:])
-
