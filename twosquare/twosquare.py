@@ -83,8 +83,11 @@ def _get_coordinates(table: Table, letter: str) -> Tuple[int, int]:
         # create row counter that will be used to return index
         row_number: int = 0
 
-        if letter == 'I' or letter == 'J':
-            letter = "IJ"
+##        if letter == 'I' or letter == 'J':
+##            letter = "IJ"
+
+        if letter == 'J':
+            letter = "I"
 
         # check each row of the table for the letter
         for row in table:
@@ -228,7 +231,9 @@ def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
             # filter to remove everything but ASCII letter characters
             for character in capitalized:
                 if character in ascii_uppercase: # ignore Unicode letters
-                    filtered_text += character
+                    filtered_text += 'I' if character == 'J' else character
+                    
+##                    filtered_text += character
 
             # if length is odd add a 'Z' to end to make it even
             if len(filtered_text) % 2 != 0:
@@ -236,9 +241,12 @@ def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
 
         elif mode == 'decrypt':
 
-            # remove J's from ciphertext string since they
-            # are combined with I's in the encypted text
-            filtered_text: str = message.replace('J', '')
+            filtered_text: str = message
+
+
+##            # remove J's from ciphertext string since they
+##            # are combined with I's in the encypted text
+##            filtered_text: str = message.replace('J', '')
 
             # if length of purged ciphertext is odd after removing Js raise  
             if len(filtered_text) % 2 != 0:
@@ -305,14 +313,14 @@ def _xcrypt(mode: str, message: str, key1: str, key2: str, omit_j = True,
                 processed_letter1 = letter1
                 processed_letter2 = letter2
 
-            # remove J's from output if optional flag set
-            if (mode == 'decrypt' and omit_j == True):
-                
-                if processed_letter1 == 'IJ':
-                    processed_letter1 = 'I'
-                    
-                if processed_letter2 == 'IJ':
-                    processed_letter2 = 'I'
+##            # remove J's from output if optional flag set
+##            if (mode == 'decrypt' and omit_j == True):
+##                
+##                if processed_letter1 == 'IJ':
+##                    processed_letter1 = 'I'
+##                    
+##                if processed_letter2 == 'IJ':
+##                    processed_letter2 = 'I'
 
             # add the two processed letters to the processed_text
             processed_text = processed_text + processed_letter1 + \
@@ -388,15 +396,19 @@ def create_table(key: str) -> Union[Table, bool]: # return either Table or False
 
         # check for I and J in key and combine into single IJ letter
         for letter in key:         
-            if letter == 'I' or letter == 'J':
-                letter = 'IJ'
+
             key_as_letters.append(letter)    
 
         # add all letters in alphabet to list and combine I and J as one
         # this will be used to track which letters are not in key
         for letter in alphabet:
+##            if letter == 'J':
+##                letter = 'IJ'
+
+
             if letter == 'J':
-                letter = 'IJ'
+                letter = 'I'
+
                 letters_not_in_key.remove('I')
             letters_not_in_key.append(letter)
 
