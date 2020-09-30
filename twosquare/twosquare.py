@@ -1867,25 +1867,30 @@ def __main__(argv):
             print(f'Twosquare {VERSION}')
             
         # encrypt
-        elif argv[0] in ['-e', '--encrypt'] and len(argv) == 4:
+        elif argv[0] in ['-e', '--encrypt'] and  \
+             len(argv) == 4: # length with the maximum allowed args
+
+            message: str = argv[1]
+            key_one: str = argv[2]
+            key_two: str = argv[3]
 
             # if message is a text file
-            if argv[1].endswith('.txt'):
+            if message.endswith('.txt'):
 
                 # load the message
-                text: str = _file_io('load', argv[1])
+                file: str = _file_io('load', message)
 
-                if not text:
+                if not file: # if error, text will be an error message
 
                     text = 'Error: Unable to load .txt file.'
 
-                else: # encrypt the message passed in args
+                else: # encrypt the loaded file
 
-                    text: str = encrypt(text, argv[2], argv[3])
+                    text: str = encrypt(file, key_one, key_two)
 
-            else:
+            else: # encrypt the message passed in args
             
-                text: str = encrypt(argv[1], argv[2], argv[3])
+                text: str = encrypt(message, key_one, key_two)
 
             print(text)
 
